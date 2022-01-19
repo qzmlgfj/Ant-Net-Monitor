@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask_cors import CORS
 
 def create_app(test_config=None):
     # create and configure the app
@@ -27,5 +28,10 @@ def create_app(test_config=None):
     @app.route("/hello")
     def hello():
         return "Hello, World!"
+
+    CORS(app)
+
+    from . import db
+    db.init_app(app)
 
     return app
