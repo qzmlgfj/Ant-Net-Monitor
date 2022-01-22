@@ -3,7 +3,7 @@ from backend import *
 
 class TestClientMethods(unittest.TestCase):
     def __init__(self, methodName: str = ...) -> None:
-        self.app = create_app()
+        self.app = create_app(test_config={'TEST':'TRUE'})
         super().__init__(methodName)
 
     def test_hello(self):

@@ -53,7 +53,7 @@ def set_status_thread(app):
     """Register status thread."""
     def save_status_loop(app):
         with app.app_context():
-            while True:
+            for i in range(3):
                 save_status(Status())
                 time.sleep(1)
 
