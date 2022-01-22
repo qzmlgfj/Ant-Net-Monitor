@@ -15,12 +15,12 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object("backend.config")
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+    # if test_config is None:
+    #    # load the instance config, if it exists, when not testing
+    #    app.config.from_pyfile("config.py", silent=True)
+    # else:
+    #    # load the test config if passed in
+    #    app.config.from_mapping(test_config)
 
     # ensure the instance folder exists
     try:
@@ -37,20 +37,26 @@ def create_app(test_config=None):
 
     register_extensions(app)
     add_command(app)
-    set_status_thread(app)
+    if app.config["APPLICATION_ENV"] == "INSTANCE":
+        set_status_thread(app)
 
     return app
+
 
 def register_extensions(app):
     """Register Flask extensions."""
     db.init_app(app)
 
+
 def add_command(app):
     """Register Flask CLI commands."""
     app.cli.add_command(init_db_command)
 
+
+# TODO 测试情况下的环境变量
 def set_status_thread(app):
     """Register status thread."""
+
     def save_status_loop(app):
         with app.app_context():
             for i in range(3):
