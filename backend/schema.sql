@@ -1,5 +1,3 @@
-DROP TABLE random_text;
-
 CREATE TABLE status (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   time_stamp TIMESTAMP NOT NULL DEFAULT (datetime('now','localtime')),
@@ -7,3 +5,5 @@ CREATE TABLE status (
   mem_availiable REAL,
   disk_usage REAL
 );
+
+DELETE FROM status;

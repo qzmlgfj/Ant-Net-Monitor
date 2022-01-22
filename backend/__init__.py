@@ -1,15 +1,19 @@
 import os
+import threading
+import time
 
 from flask import Flask
 from flask_cors import CORS
 
+from .cli import init_db_command
+from .extensions import db
+from .status import Status, save_status
+
+
 def create_app(test_config=None):
-    # create and configure the app
+    """create and configure the app"""
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY="dev",
-        DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"),
-    )
+    app.config.from_object("backend.config")
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -31,7 +35,27 @@ def create_app(test_config=None):
 
     CORS(app)
 
-    from . import db
-    db.init_app(app)
+    register_extensions(app)
+    add_command(app)
+    set_status_thread(app)
 
     return app
+
+def register_extensions(app):
+    """Register Flask extensions."""
+    db.init_app(app)
+
+def add_command(app):
+    """Register Flask CLI commands."""
+    app.cli.add_command(init_db_command)
+
+def set_status_thread(app):
+    """Register status thread."""
+    def save_status_loop(app):
+        with app.app_context():
+            while True:
+                save_status(Status())
+                time.sleep(1)
+
+    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
+    save_status_thread.start()
