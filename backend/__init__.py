@@ -37,6 +37,7 @@ def create_app(test_config=None):
 
     register_extensions(app)
     add_command(app)
+
     if app.config["APPLICATION_ENV"] == "INSTANCE":
         set_status_thread(app)
 

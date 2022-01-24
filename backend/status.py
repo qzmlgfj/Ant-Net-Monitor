@@ -2,7 +2,6 @@ from datetime import datetime
 import psutil
 from .extensions import db
 
-# TODO 封装对象
 class Status(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time_stamp = db.Column(
