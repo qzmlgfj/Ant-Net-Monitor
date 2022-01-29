@@ -42,7 +42,7 @@ export default {
         },1000)
     }
 };
-/*setInterval 中的function this会指向Window*/
+//*setInterval 中的function this会指向Window
 </script>
 
 <style scoped>

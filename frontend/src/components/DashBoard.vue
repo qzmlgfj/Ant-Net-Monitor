@@ -1,82 +1,28 @@
 <template>
-    <v-chart class="chart" :option="option" />
+    <gauge-chart :argv="argv[0]" />
 </template>
 
 <script>
-import { use } from "echarts/core";
-import { GaugeChart } from "echarts/charts";
-import { CanvasRenderer } from "echarts/renderers";
-import VChart, { THEME_KEY } from "vue-echarts";
-use([GaugeChart, CanvasRenderer]);
+import GaugeChart from "./charts/GaugeChart.vue";
 
 export default {
-    name: "DashBoard",
     components: {
-        VChart
+        GaugeChart,
     },
-    provide: {
-        [THEME_KEY]: "white",
-    },
-    data: function () {
+    data() {
         return {
-            option: {
-                series: [
-                    {
-                        type: "gauge",
-                        axisLine: {
-                            lineStyle: {
-                                width: 30,
-                                color: [
-                                    [0.3, "#67e0e3"],
-                                    [0.7, "#37a2da"],
-                                    [1, "#fd666d"],
-                                ],
-                            },
-                        },
-                        pointer: {
-                            itemStyle: {
-                                color: "auto",
-                            },
-                        },
-                        axisTick: {
-                            distance: -30,
-                            length: 8,
-                            lineStyle: {
-                                color: "#fff",
-                                width: 2,
-                            },
-                        },
-                        splitLine: {
-                            distance: -30,
-                            length: 30,
-                            lineStyle: {
-                                color: "#fff",
-                                width: 4,
-                            },
-                        },
-                        axisLabel: {
-                            color: "auto",
-                            distance: 40,
-                            fontSize: 20,
-                        },
-                        detail: {
-                            valueAnimation: true,
-                            formatter: "{value} %",
-                            color: "auto",
-                        },
-                        data: [
-                            {
-                                value: 70,
-                            },
-                        ],
-                    },
-                ],
-            },
+            argv: [],
         };
     },
-    beforeMount: function () {
+    methods: {
+        addArgv(name, type, value) {
+            this.argv.push({ name, type, value });
+        },
+    },
+    beforeMount() {
+        this.addArgv("CPU", "Main", 50);
         setInterval(() => {
-            this.option.series[0].data[0].value = (Math.random() * 100).toFixed(2)
+            this.argv[0].value = Math.floor(Math.random() * 100);
         }, 1000);
     },
 };
