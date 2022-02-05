@@ -4,6 +4,7 @@
 
 <script>
 import GaugeChart from "./charts/GaugeChart.vue";
+import {getStatus} from "../utils/request";
 
 export default {
     components: {
@@ -22,7 +23,8 @@ export default {
     beforeMount() {
         this.addArgv("CPU", "Main", 50);
         setInterval(() => {
-            this.argv[0].value = Math.floor(Math.random() * 100);
+            //this.argv[0].value = Math.floor(Math.random() * 100);
+            getStatus();
         }, 1000);
     },
 };

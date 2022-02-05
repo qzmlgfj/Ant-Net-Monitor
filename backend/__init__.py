@@ -2,12 +2,12 @@ import os
 import threading
 import time
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 from .cli import init_db_command
 from .extensions import db
-from .status import Status, save_status
+from .status import Status, get_last_status
 
 
 def create_app(test_config=None):
@@ -32,6 +32,10 @@ def create_app(test_config=None):
     @app.route("/hello")
     def hello():
         return "Hello, World!"
+
+    @app.route("/status")
+    def getStatus():
+        return jsonify(get_last_status())
 
     CORS(app)
 

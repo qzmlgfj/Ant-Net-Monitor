@@ -20,3 +20,7 @@ class TestClientMethods(unittest.TestCase):
         logging.info(self.app.config["APPLICATION_ENV"])
         ret = self.app.test_client().get("/hello")
         self.assertEqual(b"Hello, World!", ret.data)
+
+    def test_get_status(self):
+        ret = self.app.test_client().get("/status")
+        logging.info(ret.data)
