@@ -11,10 +11,11 @@ logger.addHandler(stream_handler)
 
 
 class TestClientMethods(unittest.TestCase):
-    def __init__(self, methodName: str = ...) -> None:
-        #self.app = create_app(test_config={"TEST": "TRUE"})
+    def setUp(self):
         self.app = create_app()
-        super().__init__(methodName)
+        self.app_context = self.app.app_context()
+        with self.app_context:
+            db.create_all()
 
     def test_hello(self):
         logging.info(self.app.config["APPLICATION_ENV"])

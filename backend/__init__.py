@@ -7,7 +7,7 @@ from flask_cors import CORS
 
 from .cli import init_db_command
 from .extensions import db
-from .status import Status, get_last_status
+from .status import Status, get_last_status, save_status
 
 
 def create_app(test_config=None):
@@ -16,11 +16,11 @@ def create_app(test_config=None):
     app.config.from_object("backend.config")
 
     # if test_config is None:
-    #    # load the instance config, if it exists, when not testing
-    #    app.config.from_pyfile("config.py", silent=True)
+    #   # load the instance config, if it exists, when not testing
+    #   app.config.from_pyfile("config.py", silent=True)
     # else:
-    #    # load the test config if passed in
-    #    app.config.from_mapping(test_config)
+    #   # load the test config if passed in
+    #   app.config.from_mapping(test_config)
 
     # ensure the instance folder exists
     try:
@@ -42,8 +42,7 @@ def create_app(test_config=None):
     register_extensions(app)
     add_command(app)
 
-    if app.config["APPLICATION_ENV"] == "INSTANCE":
-        set_status_thread(app)
+    set_status_thread(app)
 
     return app
 
@@ -64,9 +63,14 @@ def set_status_thread(app):
 
     def save_status_loop(app):
         with app.app_context():
-            for i in range(3):
-                save_status(Status())
-                time.sleep(1)
+            if app.config["APPLICATION_ENV"] == "dev":
+                while True:
+                    save_status(Status())
+                    time.sleep(1)
+            elif app.config["APPLICATION_ENV"] == "test":
+                for i in range(3):
+                    save_status(Status())
+                    time.sleep(1)
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()

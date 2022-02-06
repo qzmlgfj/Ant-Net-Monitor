@@ -1,5 +1,5 @@
 <template>
-    <gauge-chart :argv="argv[0]" />
+    <gauge-chart :argv="CPU" />
 </template>
 
 <script>
@@ -12,19 +12,17 @@ export default {
     },
     data() {
         return {
-            argv: [],
+            status: {},
+            CPU: 0,
         };
     },
-    methods: {
-        addArgv(name, type, value) {
-            this.argv.push({ name, type, value });
-        },
-    },
+    methods: {},
     beforeMount() {
-        this.addArgv("CPU", "Main", 50);
         setInterval(() => {
-            //this.argv[0].value = Math.floor(Math.random() * 100);
-            getStatus();
+            getStatus().then((response) => {
+                this.status = response.data;
+                this.CPU = this.status.cpu;
+            });
         }, 1000);
     },
 };

@@ -50,7 +50,7 @@ export default {
         //! I hate syntactic sugar
         argv: {
             handler: function (argv) {
-                this.option.series[0].data[0].value = argv.value;
+                this.option.series[0].data[0].value = argv;
             },
             deep: true,
             immediate: true,
