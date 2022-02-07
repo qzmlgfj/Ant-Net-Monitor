@@ -2,7 +2,7 @@ import os
 import threading
 import time
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 
 from .cli import init_db_command
@@ -12,8 +12,13 @@ from .status import Status, get_last_status, save_status
 
 def create_app(test_config=None):
     """create and configure the app"""
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object("backend.config")
+    app = Flask(
+        __name__,
+        instance_relative_config=True,
+        static_folder="./dist/static",
+        template_folder="./dist",
+    )
+    app.config.from_object("ant_net_monitor.config")
 
     # if test_config is None:
     #   # load the instance config, if it exists, when not testing
@@ -27,6 +32,12 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<string:path>")
+    @app.route("/<path:path>")
+    def catch_all(path):
+        return render_template("index.html")
 
     # a simple page that says hello
     @app.route("/hello")

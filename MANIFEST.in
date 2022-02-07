@@ -1,0 +1,2 @@
+graft ant_net_monitor/dist
+global-exclude *.pyc

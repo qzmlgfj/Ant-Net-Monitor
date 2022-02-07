@@ -2,7 +2,7 @@ import imp
 import unittest
 import logging
 import sys
-from backend import *
+from ant_net_monitor import *
 
 logger = logging.getLogger()
 logger.level = logging.DEBUG
