@@ -7,10 +7,11 @@ from .extensions import db
 @with_appcontext
 def init_db_command():
     """Clear the existing data and create new tables."""
+    init_db()
+    click.echo('Application inited.')
 
+def init_db():
     # if database file folder doesn't exists
     if not os.path.exists(os.path.dirname(db.engine.url.database)):
         os.makedirs(os.path.dirname(db.engine.url.database))
-        click.echo("Create database file folder.")
     db.create_all()
-    click.echo('Application inited.')

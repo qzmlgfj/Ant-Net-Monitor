@@ -7,10 +7,10 @@ from dataclasses import dataclass
 @dataclass
 class Status(db.Model):
     id:int
-    time_stamp: datetime = datetime.now()
     cpu:float
     memory:int
     disk:int
+    time_stamp: datetime = datetime.now()
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time_stamp = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)

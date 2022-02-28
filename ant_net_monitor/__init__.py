@@ -1,3 +1,4 @@
+import logging
 import os
 import threading
 import time
@@ -5,7 +6,7 @@ import time
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 
-from .cli import init_db_command
+from .cli import init_db, init_db_command
 from .extensions import db
 from .status import Status, get_last_status, save_status
 
@@ -53,6 +54,8 @@ def create_app(test_config=None):
     register_extensions(app)
     add_command(app)
 
+    check_table_exist(app)
+
     set_status_thread(app)
 
     return app
@@ -73,15 +76,31 @@ def set_status_thread(app):
     """Register status thread."""
 
     def save_status_loop(app):
+        #    with app.app_context():
+        #        if app.config["APPLICATION_ENV"] == "dev":
+        #            while True:
+        #                save_status(Status())
+        #                time.sleep(1)
+        #        elif app.config["APPLICATION_ENV"] == "test":
+        #            for i in range(3):
+        #                save_status(Status())
+        #                time.sleep(1)
         with app.app_context():
-            if app.config["APPLICATION_ENV"] == "dev":
-                while True:
-                    save_status(Status())
-                    time.sleep(1)
-            elif app.config["APPLICATION_ENV"] == "test":
-                for i in range(3):
-                    save_status(Status())
-                    time.sleep(1)
+            while True:
+                save_status(Status())
+                time.sleep(1)
+                if app.config["FINISH_TESTING"]:
+                    break
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
+
+
+def check_table_exist(app):
+    """Check if `status` table exists."""
+    with app.app_context():
+        engine = db.get_engine()
+        insp = db.inspect(engine)
+        if not insp.has_table("status"):
+            init_db()
+            logging.info("Create table `status`.")
