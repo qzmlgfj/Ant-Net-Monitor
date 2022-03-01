@@ -15,11 +15,14 @@ export default {
 </script>
 
 <style lang='scss'>
-
 body {
-    min-height: 100vh;
-    min-width: 100vw;
+    height: 100vh;
     margin: 0;
+}
+
+#app {
+    height: 100%;
+    width: 100%;
 }
 
 #root {
