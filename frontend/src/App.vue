@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <dash-board />
+    <div id="root">
+        <dash-board id="dashboard" />
     </div>
 </template>
 
@@ -9,13 +9,27 @@ import DashBoard from "./components/DashBoard.vue";
 
 export default {
     components: {
-        DashBoard
-    }
+        DashBoard,
+    },
 };
 </script>
 
-<style scoped>
-.chart {
-    height: 400px;
+<style lang='scss'>
+
+body {
+    min-height: 100vh;
+    min-width: 100vw;
+    margin: 0;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+#dashboard {
+    width: 100%;
+    height: 40%;
+    display: flex;
 }
 </style>

@@ -89,8 +89,6 @@ def set_status_thread(app):
             while True:
                 save_status(Status())
                 time.sleep(1)
-                if app.config["FINISH_TESTING"]:
-                    break
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()

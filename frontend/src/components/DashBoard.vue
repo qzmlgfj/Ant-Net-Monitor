@@ -1,10 +1,13 @@
 <template>
-    <gauge-chart :argv="CPU" />
+    <div>
+        <gauge-chart id="CPU" :argv="CPU" />
+        <gauge-chart :argv="CPU" />
+    </div>
 </template>
 
 <script>
 import GaugeChart from "./charts/GaugeChart.vue";
-import {getStatus} from "../utils/request";
+import { getStatus } from "../utils/request";
 
 export default {
     components: {

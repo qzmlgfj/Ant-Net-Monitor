@@ -58,3 +58,11 @@ export default {
     },
 };
 </script>
+
+<style>
+.chart {
+    width: 25%;
+    height: 100%;
+    display: inline-block;
+}
+</style>
