@@ -14,7 +14,7 @@ export default {
 };
 </script>
 
-<style lang='scss'>
+<style>
 body {
     height: 100vh;
     margin: 0;
@@ -28,11 +28,5 @@ body {
 #root {
     width: 100%;
     height: 100%;
-}
-
-#dashboard {
-    width: 100%;
-    height: 40%;
-    display: flex;
 }
 </style>
