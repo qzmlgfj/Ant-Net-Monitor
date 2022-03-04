@@ -2,20 +2,20 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
     {
-        path: "/A",
-        name: "Test-A",
+        path: "/CPU",
+        name: "CPU-Info",
         meta: {
-            title: "Test-A"
+            title: "CPU-Info"
         },
-        component: () => import("../components/TestA.vue")
+        component: () => import("../components/info/CPU.vue")
     },
     {
-        path: "/B",
-        name: "Test-B",
+        path: "/RAM",
+        name: "RAM-Info",
         meta: {
-            title: "Test-B"
+            title: "RAM-Info"
         },
-        component: () => import("../components/TestB.vue")
+        component: () => import("../components/info/RAM.vue")
     },
 ]
 

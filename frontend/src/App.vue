@@ -26,6 +26,9 @@ export default {
 body {
     height: 100vh;
     margin: 0;
+    font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol";
 }
 
 #app {

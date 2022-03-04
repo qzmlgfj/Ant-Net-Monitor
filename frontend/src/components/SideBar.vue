@@ -14,14 +14,14 @@ const menuOptions = [
                 RouterLink,
                 {
                     to: {
-                        name: "Test-A",
+                        name: "CPU-Info",
                     },
                 },
                 {
-                    default: () => "Change to A",
+                    default: () => "CPU",
                 }
             ),
-        key: "Test-A",
+        key: "CPU",
     },
     {
         label: () =>
@@ -29,14 +29,14 @@ const menuOptions = [
                 RouterLink,
                 {
                     to: {
-                        name: "Test-B",
+                        name: "RAM-Info",
                     },
                 },
                 {
-                    default: () => "Change to B",
+                    default: () => "RAM",
                 }
             ),
-        key: "Test-B",
+        key: "RAM",
     },
 ];
 
