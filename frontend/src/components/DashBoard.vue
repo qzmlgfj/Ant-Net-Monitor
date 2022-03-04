@@ -1,5 +1,5 @@
 <template>
-    <div id='dashboard'>
+    <div id="dashboard">
         <gauge-chart :argv="CPUStatus" />
         <gauge-chart :argv="MemStatus" />
     </div>
@@ -9,7 +9,7 @@
 import GaugeChart from "./charts/GaugeChart.vue";
 import { getStatus } from "../utils/request";
 
-//TODO 建立完整仪表盘，以及前端部分标记测试的环境变量
+//TODO 建立完整仪表盘
 
 export default {
     components: {
@@ -18,12 +18,12 @@ export default {
     data() {
         return {
             status: {},
-            CPUStatus:{
+            CPUStatus: {
                 name: "CPU",
                 value: 0,
                 height: "90%",
             },
-            MemStatus:{
+            MemStatus: {
                 name: "Used RAM",
                 value: 0,
                 height: "75%",
@@ -33,11 +33,16 @@ export default {
     methods: {},
     beforeMount() {
         setInterval(() => {
-            getStatus().then((response) => {
-                this.status = response.data;
-                this.CPUStatus.value = this.status.cpu;
-                this.MemStatus.value = this.status.memory;
-            });
+            if (process.env.NODE_ENV === "development") {
+                this.CPUStatus.value = (Math.random() * 100).toFixed(1);
+                this.MemStatus.value = (Math.random() * 100).toFixed(1);
+            } else {
+                getStatus().then((response) => {
+                    this.status = response.data;
+                    this.CPUStatus.value = this.status.cpu;
+                    this.MemStatus.value = this.status.memory;
+                });
+            }
         }, 1000);
     },
 };

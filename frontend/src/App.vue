@@ -40,12 +40,12 @@ body {
 }
 
 #sidebar {
-    width: 15%;
+    width: 12%;
     height: 100%;
 }
 
 #main {
-    width: 85%;
+    width: 88%;
     height: 100%;
 }
 </style>
