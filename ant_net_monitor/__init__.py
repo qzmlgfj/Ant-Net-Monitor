@@ -1,19 +1,25 @@
+import logging
 import os
 import threading
 import time
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 
-from .cli import init_db_command
+from .cli import init_db, init_db_command
 from .extensions import db
 from .status import Status, get_last_status, save_status
 
 
 def create_app(test_config=None):
     """create and configure the app"""
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object("backend.config")
+    app = Flask(
+        __name__,
+        instance_relative_config=True,
+        static_folder="./dist/static",
+        template_folder="./dist",
+    )
+    app.config.from_object("ant_net_monitor.config")
 
     # if test_config is None:
     #   # load the instance config, if it exists, when not testing
@@ -28,6 +34,12 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<string:path>")
+    @app.route("/<path:path>")
+    def catch_all(path):
+        return render_template("index.html")
+
     # a simple page that says hello
     @app.route("/hello")
     def hello():
@@ -41,6 +53,8 @@ def create_app(test_config=None):
 
     register_extensions(app)
     add_command(app)
+
+    check_table_exist(app)
 
     set_status_thread(app)
 
@@ -62,15 +76,29 @@ def set_status_thread(app):
     """Register status thread."""
 
     def save_status_loop(app):
+        #    with app.app_context():
+        #        if app.config["APPLICATION_ENV"] == "dev":
+        #            while True:
+        #                save_status(Status())
+        #                time.sleep(1)
+        #        elif app.config["APPLICATION_ENV"] == "test":
+        #            for i in range(3):
+        #                save_status(Status())
+        #                time.sleep(1)
         with app.app_context():
-            if app.config["APPLICATION_ENV"] == "dev":
-                while True:
-                    save_status(Status())
-                    time.sleep(1)
-            elif app.config["APPLICATION_ENV"] == "test":
-                for i in range(3):
-                    save_status(Status())
-                    time.sleep(1)
+            while True:
+                save_status(Status())
+                time.sleep(1)
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
+
+
+def check_table_exist(app):
+    """Check if `status` table exists."""
+    with app.app_context():
+        engine = db.get_engine()
+        insp = db.inspect(engine)
+        if not insp.has_table("status"):
+            init_db()
+            logging.info("Create table `status`.")

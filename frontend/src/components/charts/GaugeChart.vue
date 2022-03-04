@@ -1,5 +1,5 @@
 <template>
-    <v-chart class="chart" :option="option" />
+    <v-chart class="chart" :option="option" autoresize />
 </template>
 
 <script>
@@ -44,17 +44,26 @@ export default {
                     },
                 ],
             },
+            height: this.argv.height,
         };
     },
     watch: {
         //! I hate syntactic sugar
         argv: {
             handler: function (argv) {
-                this.option.series[0].data[0].value = argv;
+                this.option.series[0].data[0].value = argv.value;
             },
             deep: true,
             immediate: true,
-        },
+        }
     },
 };
 </script>
+
+<style>
+.chart {
+    width: 25%;
+    height: v-bind(height);
+    display: inline-block;
+}
+</style>

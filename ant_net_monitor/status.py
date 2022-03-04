@@ -7,10 +7,10 @@ from dataclasses import dataclass
 @dataclass
 class Status(db.Model):
     id:int
-    time_stamp: datetime = datetime.now()
     cpu:float
-    memory:int
+    memory:float # The percent of memory available to the system.
     disk:int
+    time_stamp: datetime = datetime.now()
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time_stamp = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
@@ -20,7 +20,7 @@ class Status(db.Model):
 
     def __init__(self):
         self.cpu = psutil.cpu_percent(interval=1)
-        self.memory = psutil.virtual_memory().available
+        self.memory = psutil.virtual_memory().percent
         self.disk = psutil.disk_usage("/").used
         # self.network = psutil.net_io_counters().bytes_recv
         # self.time = psutil.cpu_times_percent(interval=1)
