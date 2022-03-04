@@ -45,7 +45,6 @@ export default {
 
 <style>
 #dashboard {
-    width: 100%;
     height: 50%;
     display: flex;
     align-items: center;

@@ -1,15 +1,23 @@
 <template>
     <div id="root">
-        <dash-board id="dashboard" />
+        <div id="sidebar">
+            <side-bar />
+        </div>
+        <div id="main">
+            <dash-board />
+            <router-view />
+        </div>
     </div>
 </template>
 
 <script>
 import DashBoard from "./components/DashBoard.vue";
+import SideBar from "./components/SideBar.vue";
 
 export default {
     components: {
         DashBoard,
+        SideBar,
     },
 };
 </script>
@@ -27,6 +35,17 @@ body {
 
 #root {
     width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+#sidebar {
+    width: 15%;
+    height: 100%;
+}
+
+#main {
+    width: 85%;
     height: 100%;
 }
 </style>
