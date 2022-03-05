@@ -3,7 +3,7 @@ import os
 import threading
 import time
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 
 from .cli import init_db, init_db_command
@@ -34,16 +34,15 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    @app.route('/favicon.png')
+    def fav():
+        return send_from_directory(os.path.join(app.root_path, 'dist'),'favicon.png')
+
     @app.route("/", defaults={"path": ""})
     @app.route("/<string:path>")
     @app.route("/<path:path>")
     def catch_all(path):
         return render_template("index.html")
-
-    # a simple page that says hello
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
 
     @app.route("/status")
     def getStatus():

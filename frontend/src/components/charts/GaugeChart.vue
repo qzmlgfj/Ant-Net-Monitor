@@ -6,7 +6,7 @@
 import { use } from "echarts/core";
 import { GaugeChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
-import VChart, { THEME_KEY } from "vue-echarts";
+import VChart from "vue-echarts";
 use([GaugeChart, CanvasRenderer]);
 
 export default {
@@ -15,9 +15,6 @@ export default {
         VChart,
     },
     props: ["argv"],
-    provide: {
-        [THEME_KEY]: "white",
-    },
     data: function () {
         return {
             option: {
@@ -56,7 +53,7 @@ export default {
             deep: true,
             immediate: true,
         }
-    },
+    }
 };
 </script>
 

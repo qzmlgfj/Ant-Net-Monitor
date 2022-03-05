@@ -1,6 +1,6 @@
 <template>
     <div>
-        <n-config-provider :theme="theme">
+        <n-config-provider :theme="naiveTheme">
             <n-layout id="container">
                 <n-layout-header id="header">
                     <head-bar @changeTheme="changeTheme" />
@@ -20,12 +20,18 @@
 </template>
 
 <script>
-import {ref} from "vue";
+import { ref, computed } from "vue";
 import { NLayout, NConfigProvider, darkTheme } from "naive-ui";
+import { THEME_KEY } from "vue-echarts";
+import { registerTheme } from "echarts/core";
+import DarkModeJson from "./assets/DarkMode.json";
+
 import HeadBar from "./components/HeadBar.vue";
 import SideBar from "./components/SideBar.vue";
 import DashBoard from "./components/DashBoard.vue";
 import Info from "./components/Info.vue";
+
+registerTheme("dark-mode", DarkModeJson);
 
 export default {
     name: "App",
@@ -40,12 +46,23 @@ export default {
     setup() {
         return {
             darkTheme,
-            theme: ref(null),
+            naiveTheme: ref(null),
+            chartTheme: ref("white"),
+        };
+    },
+    provide() {
+        return {
+            [THEME_KEY]: computed(() => this.chartTheme),
         };
     },
     methods: {
+        //! Echarts 主题与naive-ui 主题切换速度不同步，建议将Echarts背景设为透明
+        //TODO 调整仪表盘在深色模式下颜色过浅的问题
         changeTheme() {
-            this.theme = this.theme === null ? darkTheme : null;
+            this.$store.commit("changeTheme");
+            this.naiveTheme = this.naiveTheme === null ? darkTheme : null;
+            this.chartTheme =
+                this.chartTheme === "white" ? "dark-mode" : "white";
         },
     },
 };
