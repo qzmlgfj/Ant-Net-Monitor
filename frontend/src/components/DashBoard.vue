@@ -50,7 +50,8 @@ export default {
 
 <style>
 #dashboard {
-    height: 50%;
+    width: 88vw;
+    height: 45vh;
     display: flex;
     align-items: center;
     justify-content: center;

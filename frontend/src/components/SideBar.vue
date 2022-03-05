@@ -1,5 +1,5 @@
 <template>
-    <n-menu :options="menuOptions" />
+    <n-menu id="sidebar" :options="menuOptions" />
 </template>
 
 <script>
@@ -51,3 +51,9 @@ export default {
     },
 };
 </script>
+
+<style>
+#sidebar {
+    width: 12vw;
+}
+</style>

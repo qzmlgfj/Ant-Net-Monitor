@@ -1,23 +1,52 @@
 <template>
-    <div id="root">
-        <div id="sidebar">
-            <side-bar />
-        </div>
-        <div id="main">
-            <dash-board />
-            <router-view />
-        </div>
+    <div>
+        <n-config-provider :theme="theme">
+            <n-layout id="container">
+                <n-layout-header id="header">
+                    <head-bar @changeTheme="changeTheme" />
+                </n-layout-header>
+                <n-layout has-sider>
+                    <n-layout-sider>
+                        <side-bar />
+                    </n-layout-sider>
+                    <n-layout-content>
+                        <dash-board />
+                        <info />
+                    </n-layout-content>
+                </n-layout>
+            </n-layout>
+        </n-config-provider>
     </div>
 </template>
 
 <script>
-import DashBoard from "./components/DashBoard.vue";
+import {ref} from "vue";
+import { NLayout, NConfigProvider, darkTheme } from "naive-ui";
+import HeadBar from "./components/HeadBar.vue";
 import SideBar from "./components/SideBar.vue";
+import DashBoard from "./components/DashBoard.vue";
+import Info from "./components/Info.vue";
 
 export default {
+    name: "App",
     components: {
-        DashBoard,
+        NConfigProvider,
+        NLayout,
+        HeadBar,
         SideBar,
+        DashBoard,
+        Info,
+    },
+    setup() {
+        return {
+            darkTheme,
+            theme: ref(null),
+        };
+    },
+    methods: {
+        changeTheme() {
+            this.theme = this.theme === null ? darkTheme : null;
+        },
     },
 };
 </script>
@@ -31,24 +60,11 @@ body {
         "Segoe UI Symbol";
 }
 
-#app {
-    height: 100%;
-    width: 100%;
+#container {
+    height: 100vh;
 }
 
-#root {
-    width: 100%;
-    height: 100%;
-    display: flex;
-}
-
-#sidebar {
-    width: 12%;
-    height: 100%;
-}
-
-#main {
-    width: 88%;
-    height: 100%;
+#header > * {
+    display: inline-block;
 }
 </style>
