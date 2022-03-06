@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "cy:open": "cypress open --browser electron"
   },
   "dependencies": {
     "axios": "^0.25.0",
@@ -26,6 +27,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/test-utils": "^2.0.0-0",
     "babel-eslint": "^10.1.0",
+    "cypress": "^9.5.1",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
     "naive-ui": "^2.26.0",
