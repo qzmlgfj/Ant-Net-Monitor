@@ -56,13 +56,18 @@ export default {
         };
     },
     methods: {
-        //! Echarts 主题与naive-ui 主题切换速度不同步，建议将Echarts背景设为透明
+        //! Echarts 主题与naive-ui 主题切换速度不同步，因此将Echarts背景设为透明
         //TODO 调整仪表盘在深色模式下颜色过浅的问题
         changeTheme() {
+            if (!this.$store.state.darkMode) {
+                this.naiveTheme = darkTheme;
+                this.chartTheme = "dark-mode";
+            } else {
+                this.naiveTheme = null;
+                this.chartTheme = "white";
+            }
+
             this.$store.commit("changeTheme");
-            this.naiveTheme = this.naiveTheme === null ? darkTheme : null;
-            this.chartTheme =
-                this.chartTheme === "white" ? "dark-mode" : "white";
         },
     },
 };

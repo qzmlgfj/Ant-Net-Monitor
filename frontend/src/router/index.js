@@ -20,8 +20,11 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHistory(),
     routes
 });
+
+//* 用于测试的导出路由表
+export {routes};
 
 export default router;

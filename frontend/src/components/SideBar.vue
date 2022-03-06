@@ -44,7 +44,7 @@ export default {
     components: {
         NMenu,
     },
-    setup() {
+    data(){
         return {
             menuOptions,
         };
