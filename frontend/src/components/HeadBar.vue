@@ -1,7 +1,7 @@
 <template>
     <n-space>
         <n-h1>Ant Net Monitor</n-h1>
-        <n-button @click="changeTheme">Change</n-button>
+        <n-button @click="changeTheme" id="change-theme">Change</n-button>
     </n-space>
 </template>
 

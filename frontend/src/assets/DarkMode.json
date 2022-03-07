@@ -1,4 +1,3 @@
-
 {
     "color": [
         "#fc97af",
@@ -10,14 +9,14 @@
         "#d2f5a6",
         "#76f2f2"
     ],
-    "backgroundColor": "rgba(0,0,0,0)",
+    "backgroundColor": "rgba(255,255,255,0)",
     "textStyle": {},
     "title": {
         "textStyle": {
-            "color": "rgba(255,255,255,1)"
+            "color": "#ffffff"
         },
         "subtextStyle": {
-            "color": "rgba(221,221,221,1)"
+            "color": "#dddddd"
         }
     },
     "line": {
@@ -87,7 +86,19 @@
     "gauge": {
         "itemStyle": {
             "borderWidth": 0,
-            "borderColor": "#ccc"
+            "borderColor": "rgba(255, 255, 255, 0.9)"
+        },
+        "axisLabel": {
+            "color": "rgba(255, 255, 255, 0.9)"
+        },
+        "axisLine": {
+            "color": "rgba(255, 255, 255, 0.9)"
+        },
+        "title": {
+            "color": "rgba(255, 255, 255, 0.9)"
+        },
+        "detail": {
+            "color": "rgba(255, 255, 255, 0.9)"
         }
     },
     "candlestick": {
@@ -307,27 +318,27 @@
     },
     "toolbox": {
         "iconStyle": {
-            "borderColor": "rgba(153,153,153,1)"
+            "borderColor": "#999999"
         },
         "emphasis": {
             "iconStyle": {
-                "borderColor": "rgba(102,102,102,1)"
+                "borderColor": "#666666"
             }
         }
     },
     "legend": {
         "textStyle": {
-            "color": "rgba(153,153,153,1)"
+            "color": "#999999"
         }
     },
     "tooltip": {
         "axisPointer": {
             "lineStyle": {
-                "color": "rgba(204,204,204,1)",
+                "color": "#cccccc",
                 "width": 1
             },
             "crossStyle": {
-                "color": "rgba(204,204,204,1)",
+                "color": "#cccccc",
                 "width": 1
             }
         }
