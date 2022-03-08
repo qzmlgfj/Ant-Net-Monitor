@@ -57,7 +57,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .chart {
     width: 25%;
     height: v-bind(height);
