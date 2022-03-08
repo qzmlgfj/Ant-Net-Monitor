@@ -1,18 +1,22 @@
 <template>
-    <div id="dashboard">
-        <gauge-chart :argv="CPUStatus" />
-        <gauge-chart :argv="MemStatus" />
-    </div>
+        <n-card hoverable>
+            <div id="dashboard">
+                <gauge-chart :argv="CPUStatus" />
+                <gauge-chart :argv="MemStatus" />
+            </div>
+        </n-card>
 </template>
 
 <script>
 import GaugeChart from "./charts/GaugeChart.vue";
 import { getStatus } from "../utils/request";
+import { NCard } from "naive-ui";
 
 //TODO 建立完整仪表盘
 
 export default {
     components: {
+        NCard,
         GaugeChart,
     },
     data() {
@@ -21,12 +25,12 @@ export default {
             CPUStatus: {
                 name: "CPU",
                 value: 0,
-                height: "90%",
+                height: "40vh",
             },
             MemStatus: {
                 name: "Used RAM",
                 value: 0,
-                height: "75%",
+                height: "35vh",
             },
         };
     },
@@ -50,8 +54,8 @@ export default {
 
 <style>
 #dashboard {
-    width: 88vw;
-    height: 45vh;
+    width: 79vw;
+    height: 40vh;
     display: flex;
     align-items: center;
     justify-content: center;

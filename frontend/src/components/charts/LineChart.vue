@@ -121,8 +121,7 @@ export default {
 
 <style scoped>
 .chart {
-    width: 59%;
-    height: 44vh;
-    display: inline-block;
+    height: 37vh;
+    width: 48vw;
 }
 </style>

@@ -10,8 +10,10 @@
                         <side-bar />
                     </n-layout-sider>
                     <n-layout-content>
-                        <dash-board />
-                        <info />
+                        <n-space vertical>
+                            <dash-board />
+                            <info />
+                        </n-space>
                     </n-layout-content>
                 </n-layout>
             </n-layout>
@@ -21,7 +23,7 @@
 
 <script>
 import { ref, computed } from "vue";
-import { NLayout, NConfigProvider, darkTheme } from "naive-ui";
+import { NLayout, NConfigProvider, NSpace, darkTheme } from "naive-ui";
 import { THEME_KEY } from "vue-echarts";
 import { registerTheme } from "echarts/core";
 import DarkModeJson from "./assets/DarkMode.json";
@@ -38,6 +40,7 @@ export default {
     components: {
         NConfigProvider,
         NLayout,
+        NSpace,
         HeadBar,
         SideBar,
         DashBoard,
@@ -74,18 +77,19 @@ export default {
 
 <style>
 body {
-    height: 100vh;
+    max-height: 100vh;
     margin: 0;
     font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
         "Segoe UI Symbol";
 }
 
-#container {
-    height: 100vh;
-}
-
 #header > * {
     display: inline-block;
+}
+
+#container {
+    height: 100vh;
+    padding: 10px;
 }
 </style>

@@ -59,7 +59,7 @@ export default {
 
 <style scoped>
 .chart {
-    width: 25%;
+    width: 22vw;
     height: v-bind(height);
     display: inline-block;
 }

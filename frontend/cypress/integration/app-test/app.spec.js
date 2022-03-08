@@ -23,7 +23,7 @@ describe('Test the frontend part', () => {
 
     it('renders info component when munu item clicked', () => {
         cy.get('.n-menu-item a').each((el) => {
-            cy.visit(el.prop('href'))
+            cy.wrap(el).click()
             cy.get('#info .n-h1').contains(el.text())
         })
     })

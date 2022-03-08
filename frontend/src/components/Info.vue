@@ -13,7 +13,7 @@ export default {
 
 <style>
 #info {
-    height: 45vh;
+    height: 44vh;
     width: 88vw;
 }
 </style>
