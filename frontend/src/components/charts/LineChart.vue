@@ -38,7 +38,7 @@ export default {
         const oneDay = 24 * 3600 * 1000;
         const fakedata = [[base, Math.random() * 300]];
         const fakedata1 = [[base, Math.random() * 300]];
-        for (let i = 1; i < 20000; i++) {
+        for (let i = 1; i < 100; i++) {
             const now = new Date((base += oneDay));
             fakedata.push([
                 +now,

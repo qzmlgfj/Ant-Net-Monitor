@@ -7,8 +7,8 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "cy:develop": "cypress open --env mode='develop' --browser chrome",
-    "cy:e2e": "cypress open --env mode='e2e' --browser chrome"
+    "cy:develop": "cypress open --env mode='develop'",
+    "cy:e2e": "cypress open --env mode='e2e'"
   },
   "dependencies": {
     "axios": "^0.25.0",

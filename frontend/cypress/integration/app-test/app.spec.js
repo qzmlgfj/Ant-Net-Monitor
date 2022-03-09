@@ -6,7 +6,7 @@ describe('Test the frontend part', () => {
             cy.visit('http://127.0.0.1:5000/')
     })
 
-    it('displays head bar and changes theme correctly', () => {
+    it('renders head bar and changes theme correctly', () => {
         cy.get('#header .n-h1').contains('Ant Net Monitor')
 
         // White at first time
@@ -27,4 +27,10 @@ describe('Test the frontend part', () => {
             cy.get('#info .n-h1').contains(el.text())
         })
     })
+
+    it('renders dashboard component correctly', () => {
+        cy.get('#swap-status').should('exist')
+        cy.get('#cpu-status').should('exist')
+        cy.get('#ram-status').should('exist')
+     })
 })

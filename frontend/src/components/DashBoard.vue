@@ -1,8 +1,9 @@
 <template>
         <n-card hoverable>
             <div id="dashboard">
-                <gauge-chart :argv="CPUStatus" />
-                <gauge-chart :argv="MemStatus" />
+                <gauge-chart id="swap-status" :argv="SwapStatus" />
+                <gauge-chart id="cpu-status" :argv="CPUStatus" />
+                <gauge-chart id="ram-status" :argv="RAMStatus" />
             </div>
         </n-card>
 </template>
@@ -25,10 +26,15 @@ export default {
             CPUStatus: {
                 name: "CPU",
                 value: 0,
-                height: "40vh",
+                height: "45vh",
             },
-            MemStatus: {
+            RAMStatus: {
                 name: "Used RAM",
+                value: 0,
+                height: "35vh",
+            },
+            SwapStatus: {
+                name: "Used Swap",
                 value: 0,
                 height: "35vh",
             },
@@ -39,12 +45,14 @@ export default {
         setInterval(() => {
             if (process.env.NODE_ENV === "development") {
                 this.CPUStatus.value = (Math.random() * 100).toFixed(1);
-                this.MemStatus.value = (Math.random() * 100).toFixed(1);
+                this.RAMStatus.value = (Math.random() * 100).toFixed(1);
+                this.SwapStatus.value = (Math.random() * 100).toFixed(1);
             } else {
                 getStatus().then((response) => {
                     this.status = response.data;
                     this.CPUStatus.value = this.status.cpu_percent;
-                    this.MemStatus.value = this.status.ram_percent;
+                    this.RAMStatus.value = this.status.ram_percent;
+                    this.SwapStatus.value = this.status.swap_percent;
                 });
             }
         }, 1000);
