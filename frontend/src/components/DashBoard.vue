@@ -43,8 +43,8 @@ export default {
             } else {
                 getStatus().then((response) => {
                     this.status = response.data;
-                    this.CPUStatus.value = this.status.cpu;
-                    this.MemStatus.value = this.status.memory;
+                    this.CPUStatus.value = this.status.cpu_percent;
+                    this.MemStatus.value = this.status.ram_percent;
                 });
             }
         }, 1000);

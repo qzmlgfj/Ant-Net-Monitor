@@ -8,7 +8,8 @@ from flask_cors import CORS
 
 from .cli import init_db, init_db_command
 from .extensions import db
-from .status import Status, get_last_status, save_status
+from .basic_status import BasicStatus, get_last_basic_status, save_status
+from .status import status_bp
 
 
 def create_app(test_config=None):
@@ -44,9 +45,7 @@ def create_app(test_config=None):
     def catch_all(path):
         return render_template("index.html")
 
-    @app.route("/status")
-    def getStatus():
-        return jsonify(get_last_status())
+    app.register_blueprint(status_bp)
 
     CORS(app)
 
@@ -86,7 +85,7 @@ def set_status_thread(app):
         #                time.sleep(1)
         with app.app_context():
             while True:
-                save_status(Status())
+                save_status(BasicStatus())
                 time.sleep(1)
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))

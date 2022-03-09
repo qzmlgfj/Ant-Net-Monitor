@@ -32,6 +32,6 @@ class TestClientMethods(unittest.TestCase):
 
     def test_get_status(self):
         with self.app_context:
-            save_status(Status())
-        ret = self.app.test_client().get("/status")
+            save_status(BasicStatus())
+        ret = self.app.test_client().get("/status/basic_status")
         logging.info(ret.data)
