@@ -12,7 +12,7 @@
                     <n-layout-content>
                         <n-space vertical>
                             <dash-board />
-                            <info />
+                            <router-view />
                         </n-space>
                     </n-layout-content>
                 </n-layout>
@@ -31,7 +31,6 @@ import DarkModeJson from "./assets/DarkMode.json";
 import HeadBar from "./components/HeadBar.vue";
 import SideBar from "./components/SideBar.vue";
 import DashBoard from "./components/DashBoard.vue";
-import Info from "./components/Info.vue";
 
 registerTheme("dark-mode", DarkModeJson);
 
@@ -44,7 +43,6 @@ export default {
         HeadBar,
         SideBar,
         DashBoard,
-        Info,
     },
     setup() {
         return {

@@ -3,6 +3,7 @@ import unittest
 import logging
 import sys
 from ant_net_monitor import *
+from ant_net_monitor.Status.cpu_status import CPUStatus, save_cpu_status
 
 logger = logging.getLogger()
 logger.level = logging.DEBUG
@@ -25,13 +26,19 @@ class TestClientMethods(unittest.TestCase):
         self.app.config["FINISH_TESTING"] = True
         logging.info("Finish testing.")
 
-    def test_hello(self):
-        logging.info(self.app.config["APPLICATION_ENV"])
-        ret = self.app.test_client().get("/hello")
-        self.assertEqual(b"Hello, World!", ret.data)
+    # def test_hello(self):
+    #    logging.info(self.app.config["APPLICATION_ENV"])
+    #    ret = self.app.test_client().get("/hello")
+    #    self.assertEqual(b"Hello, World!", ret.data)
 
     def test_get_status(self):
         with self.app_context:
-            save_status(BasicStatus())
+            save_basic_status(BasicStatus())
         ret = self.app.test_client().get("/status/basic_status")
+        logging.info(ret.data)
+
+    def test_get_cpu_status(self):
+        with self.app_context:
+            save_cpu_status(CPUStatus())
+        ret = self.app.test_client().get("/status/cpu_status")
         logging.info(ret.data)

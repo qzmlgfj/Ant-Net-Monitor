@@ -6,9 +6,11 @@ import time
 from flask import Flask, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 
+from ant_net_monitor.Status.cpu_status import CPUStatus, save_cpu_status
+
 from .cli import init_db, init_db_command
 from .extensions import db
-from .basic_status import BasicStatus, get_last_basic_status, save_status
+from .Status.basic_status import BasicStatus, get_last_basic_status, save_basic_status
 from .status import status_bp
 
 
@@ -85,7 +87,8 @@ def set_status_thread(app):
         #                time.sleep(1)
         with app.app_context():
             while True:
-                save_status(BasicStatus())
+                save_basic_status(BasicStatus())
+                save_cpu_status(CPUStatus())
                 time.sleep(1)
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))

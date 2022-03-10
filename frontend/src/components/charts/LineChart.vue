@@ -32,28 +32,7 @@ export default {
     components: {
         VChart,
     },
-    //props: ["argv"],
-    setup() {
-        let base = +new Date(1988, 9, 3);
-        const oneDay = 24 * 3600 * 1000;
-        const fakedata = [[base, Math.random() * 300]];
-        const fakedata1 = [[base, Math.random() * 300]];
-        for (let i = 1; i < 100; i++) {
-            const now = new Date((base += oneDay));
-            fakedata.push([
-                +now,
-                Math.round((Math.random() - 0.5) * 20 + fakedata[i - 1][1]),
-            ]);
-            fakedata1.push([
-                +now,
-                Math.round((Math.random() - 0.5) * 20 + fakedata1[i - 1][1]),
-            ]);
-        }
-        return {
-            fakedata,
-            fakedata1
-        };
-    },
+    props: ["argv"],
     data() {
         return {
             option: {
@@ -95,24 +74,7 @@ export default {
                         end: 20,
                     },
                 ],
-                series: [
-                    {
-                        name: "Fake Data",
-                        type: "line",
-                        smooth: true,
-                        symbol: "none",
-                        areaStyle: {},
-                        data: this.fakedata,
-                    },
-                    {
-                        name: "Fake Data1",
-                        type: "line",
-                        smooth: true,
-                        symbol: "none",
-                        areaStyle: {},
-                        data: this.fakedata1,
-                    },
-                ],
+                series: this.argv,
             },
         };
     },
