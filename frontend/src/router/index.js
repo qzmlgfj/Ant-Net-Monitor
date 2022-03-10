@@ -7,7 +7,7 @@ const routes = [
         component: () => import("@/components/Info.vue"),
         children: [
             {
-                path: "CPU",
+                path: "cpu_status",
                 name: "CPU-Info",
                 meta: {
                     title: "CPU-Info"
@@ -15,7 +15,7 @@ const routes = [
                 component: () => import("@/components/info/CPU.vue")
             },
             {
-                path: "RAM",
+                path: "ram_status",
                 name: "RAM-Info",
                 meta: {
                     title: "RAM-Info"

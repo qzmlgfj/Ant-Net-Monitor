@@ -23,7 +23,8 @@ describe('Test the frontend part', () => {
 
     it('renders info component when munu item clicked', () => {
         cy.get('.n-menu-item a').each((el) => {
-            cy.wrap(el).click()
+            //cy.wrap(el).click()
+            cy.visit(el.prop('href'))
             cy.get('#info .n-h1').contains(el.text())
         })
     })
@@ -32,5 +33,5 @@ describe('Test the frontend part', () => {
         cy.get('#swap-status').should('exist')
         cy.get('#cpu-status').should('exist')
         cy.get('#ram-status').should('exist')
-     })
+    })
 })
