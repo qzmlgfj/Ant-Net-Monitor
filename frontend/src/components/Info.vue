@@ -5,7 +5,7 @@
                 <router-view />
             </n-card>
             <n-card hoverable>
-                <line-chart :argv="CPUSeries" />
+                <line-chart :argv="Series" />
             </n-card>
         </n-space>
     </div>
@@ -15,6 +15,9 @@
 import { ref } from "vue";
 import { NCard, NSpace } from "naive-ui";
 import LineChart from "@/components/charts/LineChart.vue";
+import { useRouter } from "vue-router";
+import {initLineChart} from "@/utils/request";
+import {setCPUSeries} from "@/utils/cpu-series";
 
 //TODO 需要继续封装，最好复用折线图组件
 export default {
@@ -25,17 +28,9 @@ export default {
         LineChart,
     },
     setup() {
-        let data = ref([]);
-        const CPUSeries = [
-            {
-                name: "user",
-                type: "line",
-                smooth: true,
-                symbol: "none",
-                areaStyle: {},
-                data: data,
-            },
-        ];
+        const router = useRouter();
+        const data = ref([]);
+        let Series = ref({});
 
         // TODO 重构一下，太难看了
         const updateData = function () {
@@ -46,20 +41,46 @@ export default {
                 const now = new Date((base += oneDay));
                 data.value.push([
                     +now,
-                    Math.round((Math.random() - 0.5) * 20 + data.value[i - 1][1]),
+                    Math.round(
+                        (Math.random() - 0.5) * 20 + data.value[i - 1][1]
+                    ),
                 ]);
             }
+            console.log(router.currentRoute._value.path);
         };
 
-        updateData();
+        const initData = function (url) {
+            /*
+            if (process.env.NODE_ENV === "development") {
+                updateData();
+            } else {
+                initLineChart(url).then((response) => {
+                    console.log(response);
+                });
+            }
+            */
+            initLineChart(url).then((response) => {
+                initSeries(response.data);
+            });
+        };
+
+        const initSeries = function(data){
+            switch (router.currentRoute._value.name){
+                case "CPU-Info":
+                    Series.value = setCPUSeries(data);
+            }
+        }
+
+        initData(router.currentRoute._value.path);
 
         return {
-            CPUSeries,
             updateData,
+            initData,
+            Series,
         };
     },
-    beforeRouteUpdate() {
-        this.updateData();
+    beforeRouteUpdate(to) {
+        this.initData(to);
     },
 };
 </script>

@@ -42,3 +42,10 @@ class TestClientMethods(unittest.TestCase):
             save_cpu_status(CPUStatus())
         ret = self.app.test_client().get("/status/cpu_status")
         logging.info(ret.data)
+
+    def test_get_batch_cpu_status(self):
+        with self.app_context:
+            for i in range(10):
+                save_cpu_status(CPUStatus())
+        ret = self.app.test_client().get("/status/cpu_status?type=init")
+        logging.info(ret.data)

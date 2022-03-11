@@ -56,7 +56,8 @@ def create_app(test_config=None):
 
     check_table_exist(app)
 
-    set_status_thread(app)
+    set_basic_status_thread(app)
+    set_cpu_status_thread(app)
 
     return app
 
@@ -72,28 +73,28 @@ def add_command(app):
 
 
 # TODO 测试情况下的环境变量
-def set_status_thread(app):
+def set_basic_status_thread(app):
     """Register status thread."""
 
     def save_status_loop(app):
-        #    with app.app_context():
-        #        if app.config["APPLICATION_ENV"] == "dev":
-        #            while True:
-        #                save_status(Status())
-        #                time.sleep(1)
-        #        elif app.config["APPLICATION_ENV"] == "test":
-        #            for i in range(3):
-        #                save_status(Status())
-        #                time.sleep(1)
         with app.app_context():
             while True:
                 save_basic_status(BasicStatus())
-                save_cpu_status(CPUStatus())
-                time.sleep(1)
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
 
+
+def set_cpu_status_thread(app):
+    """Register status thread."""
+
+    def save_status_loop(app):
+        with app.app_context():
+            while True:
+                save_cpu_status(CPUStatus())
+
+    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
+    save_status_thread.start()
 
 def check_table_exist(app):
     """Check if `status` table exists."""

@@ -10,7 +10,7 @@
 
 <script>
 import GaugeChart from "./charts/GaugeChart.vue";
-import { getStatus } from "../utils/request";
+import { getBasicStatus } from "../utils/request";
 import { NCard } from "naive-ui";
 
 //TODO 建立完整仪表盘
@@ -48,7 +48,7 @@ export default {
                 this.RAMStatus.value = (Math.random() * 100).toFixed(1);
                 this.SwapStatus.value = (Math.random() * 100).toFixed(1);
             } else {
-                getStatus().then((response) => {
+                getBasicStatus().then((response) => {
                     this.status = response.data;
                     this.CPUStatus.value = this.status.cpu_percent;
                     this.RAMStatus.value = this.status.ram_percent;

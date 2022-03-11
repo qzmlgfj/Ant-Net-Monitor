@@ -1,10 +1,20 @@
 import service from "./service";
 
-function getStatus() {
+function getBasicStatus() {
     return service({
         method: "get",
         url: "/status/basic_status",
     })
 }
 
-export { getStatus };
+function initLineChart(url) {
+    return service({
+        method: "get",
+        url: url,
+        params: {
+            type: "init"
+        }
+    })
+}
+
+export { getBasicStatus, initLineChart };

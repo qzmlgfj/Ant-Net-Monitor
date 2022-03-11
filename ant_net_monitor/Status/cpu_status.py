@@ -16,6 +16,7 @@ class CPUStatus(db.Model):
     steal_percent: float
     guest_percent: float
     guest_nice_percent: float
+    time_stamp: datetime = datetime.now()
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time_stamp = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
@@ -52,3 +53,11 @@ def save_cpu_status(cpu_status):
 
 def get_last_cpu_status():
     return CPUStatus.query.order_by(CPUStatus.time_stamp.desc()).first()
+
+def get_batch_cpu_status():
+    # get count of CPUStatus
+    count = CPUStatus.query.count()
+    if count > 50:
+        count = 50
+    return CPUStatus.query.order_by(CPUStatus.time_stamp.desc()).limit(count).all()
+

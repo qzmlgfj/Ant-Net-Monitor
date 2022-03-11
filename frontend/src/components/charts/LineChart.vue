@@ -44,7 +44,7 @@ export default {
                 },
                 title: {
                     left: "center",
-                    text: "Large Ara Chart",
+                    text: "Historical Situation",
                 },
                 toolbox: {
                     feature: {
@@ -78,6 +78,16 @@ export default {
             },
         };
     },
+    watch: {
+        //! I hate syntactic sugar
+        argv: {
+            handler: function (argv) {
+                this.option.series = argv;
+            },
+            deep: true,
+            immediate: true,
+        }
+    }
 };
 </script>
 
