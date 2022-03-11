@@ -1,7 +1,6 @@
 import logging
 import os
 import threading
-import time
 
 from flask import Flask, jsonify, render_template, send_from_directory
 from flask_cors import CORS

@@ -24,7 +24,7 @@
 <script>
 import { ref, computed } from "vue";
 import { NLayout, NConfigProvider, NSpace, darkTheme } from "naive-ui";
-import { THEME_KEY } from "vue-echarts";
+import { THEME_KEY, UPDATE_OPTIONS_KEY } from "vue-echarts";
 import { registerTheme } from "echarts/core";
 import DarkModeJson from "./assets/DarkMode.json";
 
@@ -54,6 +54,9 @@ export default {
     provide() {
         return {
             [THEME_KEY]: computed(() => this.chartTheme),
+            [UPDATE_OPTIONS_KEY]: {
+                notMerge: false,
+            },
         };
     },
     methods: {

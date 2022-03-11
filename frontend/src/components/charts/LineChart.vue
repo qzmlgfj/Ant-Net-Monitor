@@ -9,7 +9,6 @@ import {
     ToolboxComponent,
     TooltipComponent,
     GridComponent,
-    DataZoomComponent,
 } from "echarts/components";
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
@@ -23,9 +22,10 @@ use([
     GridComponent,
     LineChart,
     CanvasRenderer,
-    UniversalTransition,
-    DataZoomComponent,
+    UniversalTransition
 ]);
+
+//TODO 暂时删去了DataZoomComponent
 
 export default {
     name: "LineChart",
@@ -63,17 +63,6 @@ export default {
                     type: "value",
                     boundaryGap: [0, "100%"],
                 },
-                dataZoom: [
-                    {
-                        type: "inside",
-                        start: 0,
-                        end: 20,
-                    },
-                    {
-                        start: 0,
-                        end: 20,
-                    },
-                ],
                 series: this.argv,
             },
         };
@@ -86,8 +75,8 @@ export default {
             },
             deep: true,
             immediate: true,
-        }
-    }
+        },
+    },
 };
 </script>
 

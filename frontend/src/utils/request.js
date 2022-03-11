@@ -17,4 +17,14 @@ function initLineChart(url) {
     })
 }
 
-export { getBasicStatus, initLineChart };
+function updateLineChart(url) {
+    return service({
+        method: "get",
+        url: url,
+        params: {
+            type: "update"
+        }
+    })
+}
+
+export { getBasicStatus, initLineChart, updateLineChart };

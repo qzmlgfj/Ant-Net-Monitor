@@ -11,10 +11,10 @@ class BasicStatus(db.Model):
     ram_percent: float  # The percent of memory used to the system.
     swap_percent: float
     disk: int
-    time_stamp: datetime = datetime.now()
+    time_stamp: datetime
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time_stamp = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    time_stamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     cpu_percent = db.Column(db.Float)
     ram_percent = db.Column(db.Float)
     swap_percent = db.Column(db.Float)

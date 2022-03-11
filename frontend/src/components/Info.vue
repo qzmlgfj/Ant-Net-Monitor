@@ -16,8 +16,8 @@ import { ref } from "vue";
 import { NCard, NSpace } from "naive-ui";
 import LineChart from "@/components/charts/LineChart.vue";
 import { useRouter } from "vue-router";
-import {initLineChart} from "@/utils/request";
-import {setCPUSeries} from "@/utils/cpu-series";
+import { initLineChart, updateLineChart } from "@/utils/request";
+import { setCPUSeries, updateCPUSeries } from "@/utils/cpu-series";
 
 //TODO 需要继续封装，最好复用折线图组件
 export default {
@@ -29,11 +29,11 @@ export default {
     },
     setup() {
         const router = useRouter();
-        const data = ref([]);
         let Series = ref({});
 
         // TODO 重构一下，太难看了
-        const updateData = function () {
+        const updateSeries = function (url) {
+            /*
             let base = +new Date(1988, 9, 3);
             const oneDay = 24 * 3600 * 1000;
             data.value = [[base, Math.random() * 300]];
@@ -46,41 +46,43 @@ export default {
                     ),
                 ]);
             }
-            console.log(router.currentRoute._value.path);
-        };
-
-        const initData = function (url) {
-            /*
-            if (process.env.NODE_ENV === "development") {
-                updateData();
-            } else {
-                initLineChart(url).then((response) => {
-                    console.log(response);
-                });
-            }
             */
-            initLineChart(url).then((response) => {
-                initSeries(response.data);
+            updateLineChart(url).then((response) => {
+                switch (router.currentRoute._value.name) {
+                    case "CPU-Info":
+                        updateCPUSeries(response.data);
+                }
             });
         };
 
-        const initSeries = function(data){
-            switch (router.currentRoute._value.name){
-                case "CPU-Info":
-                    Series.value = setCPUSeries(data);
-            }
-        }
+        const initSeries = function (url) {
+            initLineChart(url).then((response) => {
+                switch (router.currentRoute._value.name) {
+                    case "CPU-Info":
+                        Series.value = setCPUSeries(response.data);
+                }
+            });
+        };
 
-        initData(router.currentRoute._value.path);
+        initSeries(router.currentRoute._value.path);
+        
+        let interval = setInterval(() => {
+            updateSeries(router.currentRoute._value.path);
+        }, 1000);
 
         return {
-            updateData,
-            initData,
             Series,
+            interval,
+            initSeries,
+            updateSeries,
         };
     },
     beforeRouteUpdate(to) {
-        this.initData(to);
+        this.initSeries(to.path);
+        clearInterval(this.interval);
+        this.interval = setInterval(() => {
+            this.updateData(to.path);
+        }, 1000);
     },
 };
 </script>

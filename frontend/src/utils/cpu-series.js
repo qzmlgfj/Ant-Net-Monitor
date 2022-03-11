@@ -63,16 +63,43 @@ const CPUSeries = [
     steal,
 ];
 
+const clearCPUSeries = () => {
+    CPUSeries.forEach(item => {
+        item.data.value = [];
+    });
+}
+
 const setCPUSeries = (data) => {
-    data.forEach(item => {
-        user.data.value.push([Date.parse(item.time_stamp), item.user_percent]);
-        nice.data.value.push([Date.parse(item.time_stamp), item.nice_percent]);
-        system.data.value.push([Date.parse(item.time_stamp), item.system_percent]);
-        idle.data.value.push([Date.parse(item.time_stamp), item.idle_percent]);
-        iowait.data.value.push([Date.parse(item.time_stamp), item.iowait_percent]);
-        steal.data.value.push([Date.parse(item.time_stamp), item.steal_percent]);
+    clearCPUSeries();
+    data.reverse().forEach(item => {
+        user.data.value.push([new Date((item.time_stamp)), item.user_percent]);
+        nice.data.value.push([new Date(item.time_stamp), item.nice_percent]);
+        system.data.value.push([new Date(item.time_stamp), item.system_percent]);
+        idle.data.value.push([new Date(item.time_stamp), item.idle_percent]);
+        iowait.data.value.push([new Date(item.time_stamp), item.iowait_percent]);
+        steal.data.value.push([new Date(item.time_stamp), item.steal_percent]);
     });
     return CPUSeries;
 }
 
-export {setCPUSeries};
+const updateCPUSeries = (data) => {
+    user.data.value.shift();
+    user.data.value.push([new Date((data.time_stamp)), data.user_percent]);
+
+    nice.data.value.shift();
+    nice.data.value.push([new Date(data.time_stamp), data.nice_percent]);
+
+    system.data.value.shift();
+    system.data.value.push([new Date(data.time_stamp), data.system_percent]);
+
+    idle.data.value.shift();
+    idle.data.value.push([new Date(data.time_stamp), data.idle_percent]);
+
+    iowait.data.value.shift();
+    iowait.data.value.push([new Date(data.time_stamp), data.iowait_percent]);
+
+    steal.data.value.shift();
+    steal.data.value.push([new Date(data.time_stamp), data.steal_percent]);
+}
+
+export { setCPUSeries, updateCPUSeries };

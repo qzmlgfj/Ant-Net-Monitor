@@ -14,6 +14,6 @@ def return_basic_status():
 def return_cpu_status():
     if (request.args.get("type")=="init"):
         return jsonify(get_batch_cpu_status())
-    else:
+    elif (request.args.get("type")=="update"):
         return jsonify(get_last_cpu_status())
 
