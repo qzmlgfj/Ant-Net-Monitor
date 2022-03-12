@@ -113,9 +113,16 @@ def set_ram_status_thread(app):
 
 
 def check_table_exist(app):
-    """Check if `status` table exists."""
+    """Check if `basic_status` table exists."""
+
+    '''Check if instance folder exists and create it if not.'''
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
     with app.app_context():
         engine = db.get_engine()
         insp = db.inspect(engine)
-        if "status" not in insp.get_table_names():
+        if "basic_status" not in insp.get_table_names():
             init_db()
