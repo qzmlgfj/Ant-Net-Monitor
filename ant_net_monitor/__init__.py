@@ -1,14 +1,18 @@
 import logging
 import os
 import threading
-import time
+from time import sleep
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, render_template, send_from_directory
 from flask_cors import CORS
+
+from ant_net_monitor.Status.cpu_status import CPUStatus, save_cpu_status
+from ant_net_monitor.Status.ram_status import RAMStatus, save_ram_status
 
 from .cli import init_db, init_db_command
 from .extensions import db
-from .status import Status, get_last_status, save_status
+from .Status.basic_status import BasicStatus, save_basic_status
+from .status import status_bp
 
 
 def create_app(test_config=None):
@@ -34,20 +38,19 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + app.instance_path + '/backend.sqlite'
+
+    @app.route("/favicon.png")
+    def fav():
+        return send_from_directory(os.path.join(app.root_path, "dist"), "favicon.png")
+
     @app.route("/", defaults={"path": ""})
     @app.route("/<string:path>")
     @app.route("/<path:path>")
     def catch_all(path):
         return render_template("index.html")
 
-    # a simple page that says hello
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
-
-    @app.route("/status")
-    def getStatus():
-        return jsonify(get_last_status())
+    app.register_blueprint(status_bp)
 
     CORS(app)
 
@@ -56,7 +59,9 @@ def create_app(test_config=None):
 
     check_table_exist(app)
 
-    set_status_thread(app)
+    set_basic_status_thread(app)
+    set_cpu_status_thread(app)
+    set_ram_status_thread(app)
 
     return app
 
@@ -72,33 +77,48 @@ def add_command(app):
 
 
 # TODO 测试情况下的环境变量
-def set_status_thread(app):
-    """Register status thread."""
+def set_basic_status_thread(app):
+    """Register basic status thread."""
 
     def save_status_loop(app):
-        #    with app.app_context():
-        #        if app.config["APPLICATION_ENV"] == "dev":
-        #            while True:
-        #                save_status(Status())
-        #                time.sleep(1)
-        #        elif app.config["APPLICATION_ENV"] == "test":
-        #            for i in range(3):
-        #                save_status(Status())
-        #                time.sleep(1)
         with app.app_context():
             while True:
-                save_status(Status())
-                time.sleep(1)
+                save_basic_status(BasicStatus())
+
+    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
+    save_status_thread.start()
+
+
+def set_cpu_status_thread(app):
+    """Register cpu status thread."""
+
+    def save_status_loop(app):
+        with app.app_context():
+            while True:
+                save_cpu_status(CPUStatus())
+
+    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
+    save_status_thread.start()
+
+
+def set_ram_status_thread(app):
+    """Register ram status thread."""
+
+    def save_status_loop(app):
+        with app.app_context():
+            while True:
+                save_ram_status(RAMStatus())
+                sleep(1)
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
 
 
 def check_table_exist(app):
-    """Check if `status` table exists."""
+    """Check if `basic_status` table exists."""
+
     with app.app_context():
         engine = db.get_engine()
         insp = db.inspect(engine)
-        if not insp.has_table("status"):
+        if "basic_status" not in insp.get_table_names():
             init_db()
-            logging.info("Create table `status`.")

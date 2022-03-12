@@ -1,10 +1,60 @@
-import service from "./service";
+import { serviceDev, serviceProd } from "./service";
 
-function getStatus() {
-    return service({
-        method: "get",
-        url: "status",
-    })
+function getBasicStatus(env) {
+    if (env === "development") {
+        return serviceDev({
+            method: "get",
+            url: "/status/basic_status",
+        })
+    }
+    else {
+        return serviceProd({
+            method: "get",
+            url: "/status/basic_status",
+        })
+    }
 }
 
-export { getStatus };
+function initLineChart(env, url) {
+    if (env === "development") {
+        return serviceDev({
+            method: "get",
+            url: url,
+            params: {
+                type: "init"
+            }
+        })
+    }
+    else {
+        return serviceProd({
+            method: "get",
+            url: url,
+            params: {
+                type: "init"
+            }
+        })
+    }
+}
+
+function updateLineChart(env, url) {
+    if (env === "development") {
+        return serviceDev({
+            method: "get",
+            url: url,
+            params: {
+                type: "update"
+            }
+        })
+    }
+    else {
+        return serviceProd({
+            method: "get",
+            url: url,
+            params: {
+                type: "update"
+            }
+        })
+    }
+}
+
+export { getBasicStatus, initLineChart, updateLineChart };

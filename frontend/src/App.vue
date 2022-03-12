@@ -1,54 +1,93 @@
 <template>
-    <div id="root">
-        <div id="sidebar">
-            <side-bar />
-        </div>
-        <div id="main">
-            <dash-board />
-            <router-view />
-        </div>
+    <div>
+        <n-config-provider :theme="naiveTheme">
+            <n-layout id="container">
+                <n-layout-header id="header">
+                    <head-bar @changeTheme="changeTheme" />
+                </n-layout-header>
+                <n-layout has-sider>
+                    <n-layout-sider>
+                        <side-bar />
+                    </n-layout-sider>
+                    <n-layout-content>
+                        <n-space vertical>
+                            <dash-board />
+                            <router-view />
+                        </n-space>
+                    </n-layout-content>
+                </n-layout>
+            </n-layout>
+        </n-config-provider>
     </div>
 </template>
 
 <script>
-import DashBoard from "./components/DashBoard.vue";
+import { ref, computed } from "vue";
+import { NLayout, NConfigProvider, NSpace, darkTheme } from "naive-ui";
+import { THEME_KEY } from "vue-echarts";
+import { registerTheme } from "echarts/core";
+import DarkModeJson from "./assets/DarkMode.json";
+
+import HeadBar from "./components/HeadBar.vue";
 import SideBar from "./components/SideBar.vue";
+import DashBoard from "./components/DashBoard.vue";
+
+registerTheme("dark-mode", DarkModeJson);
 
 export default {
+    name: "App",
     components: {
-        DashBoard,
+        NConfigProvider,
+        NLayout,
+        NSpace,
+        HeadBar,
         SideBar,
+        DashBoard,
+    },
+    setup() {
+        return {
+            darkTheme,
+            naiveTheme: ref(null),
+            chartTheme: ref("white"),
+        };
+    },
+    provide() {
+        return {
+            [THEME_KEY]: computed(() => this.chartTheme)
+        };
+    },
+    methods: {
+        //! Echarts 主题与naive-ui 主题切换速度不同步，因此将Echarts背景设为透明
+        changeTheme() {
+            if (!this.$store.state.darkMode) {
+                this.naiveTheme = darkTheme;
+                this.chartTheme = "dark-mode";
+            } else {
+                this.naiveTheme = null;
+                this.chartTheme = "white";
+            }
+
+            this.$store.commit("changeTheme");
+        },
     },
 };
 </script>
 
 <style>
 body {
-    height: 100vh;
+    max-height: 100vh;
     margin: 0;
     font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
         "Segoe UI Symbol";
 }
 
-#app {
-    height: 100%;
-    width: 100%;
+#header > * {
+    display: inline-block;
 }
 
-#root {
-    width: 100%;
-    height: 100%;
-    display: flex;
-}
-
-#sidebar {
-    width: 12%;
-    height: 100%;
-}
-
-#main {
-    width: 88%;
-    height: 100%;
+#container {
+    height: 100vh;
+    padding: 10px;
 }
 </style>

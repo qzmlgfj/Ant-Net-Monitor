@@ -1,5 +1,5 @@
 <template>
-    <v-chart class="chart" :option="option" />
+    <v-chart class="chart" :option="option" autoresize />
 </template>
 
 <script>
@@ -9,44 +9,87 @@ import {
     ToolboxComponent,
     TooltipComponent,
     GridComponent,
-    LegendComponent,
 } from "echarts/components";
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
-import VChart, { THEME_KEY } from "vue-echarts";
+import VChart, { UPDATE_OPTIONS_KEY } from "vue-echarts";
 
 use([
     TitleComponent,
     ToolboxComponent,
     TooltipComponent,
     GridComponent,
-    LegendComponent,
     LineChart,
     CanvasRenderer,
     UniversalTransition,
 ]);
 
+//TODO 暂时删去了DataZoomComponent
+
 export default {
-    name: "Demo",
+    name: "LineChart",
     components: {
         VChart,
     },
-    props:['option'],
-    provide: {
-        [THEME_KEY]: "white",
+    props: ["argv"],
+    provide() {
+        return {
+            [UPDATE_OPTIONS_KEY]: {
+                notMerge: true,
+            },
+        };
     },
-    beforeMount: function(){
-        setInterval(()=>{
-            console.log(this.option.url);
-        },1000)
-    }
+    data() {
+        return {
+            option: {
+                tooltip: {
+                    trigger: "axis",
+                    position: function (pt) {
+                        return [pt[0], "10%"];
+                    },
+                },
+                title: {
+                    left: "center",
+                    text: "Historical Situation",
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: "none",
+                        },
+                        restore: {},
+                        saveAsImage: {},
+                    },
+                },
+                xAxis: {
+                    type: "time",
+                    boundaryGap: false,
+                },
+                yAxis: {
+                    type: "value",
+                    boundaryGap: [0, "100%"],
+                },
+                series: this.argv,
+            },
+        };
+    },
+    watch: {
+        //! I hate syntactic sugar
+        argv: {
+            handler: function (argv) {
+                this.option.series = argv;
+            },
+            deep: true,
+            immediate: true,
+        },
+    },
 };
-//*setInterval 中的function this会指向Window
 </script>
 
 <style scoped>
 .chart {
-    height: 400px;
+    height: 37vh;
+    width: 48vw;
 }
 </style>

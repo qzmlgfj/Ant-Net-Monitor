@@ -1,18 +1,23 @@
 <template>
-    <div id="dashboard">
-        <gauge-chart :argv="CPUStatus" />
-        <gauge-chart :argv="MemStatus" />
-    </div>
+        <n-card hoverable>
+            <div id="dashboard">
+                <gauge-chart id="swap-status" :argv="SwapStatus" />
+                <gauge-chart id="cpu-status" :argv="CPUStatus" />
+                <gauge-chart id="ram-status" :argv="RAMStatus" />
+            </div>
+        </n-card>
 </template>
 
 <script>
 import GaugeChart from "./charts/GaugeChart.vue";
-import { getStatus } from "../utils/request";
+import { getBasicStatus } from "../utils/request";
+import { NCard } from "naive-ui";
 
 //TODO 建立完整仪表盘
 
 export default {
     components: {
+        NCard,
         GaugeChart,
     },
     data() {
@@ -21,12 +26,17 @@ export default {
             CPUStatus: {
                 name: "CPU",
                 value: 0,
-                height: "90%",
+                height: "45vh",
             },
-            MemStatus: {
+            RAMStatus: {
                 name: "Used RAM",
                 value: 0,
-                height: "75%",
+                height: "35vh",
+            },
+            SwapStatus: {
+                name: "Used Swap",
+                value: 0,
+                height: "35vh",
             },
         };
     },
@@ -35,12 +45,14 @@ export default {
         setInterval(() => {
             if (process.env.NODE_ENV === "development") {
                 this.CPUStatus.value = (Math.random() * 100).toFixed(1);
-                this.MemStatus.value = (Math.random() * 100).toFixed(1);
+                this.RAMStatus.value = (Math.random() * 100).toFixed(1);
+                this.SwapStatus.value = (Math.random() * 100).toFixed(1);
             } else {
-                getStatus().then((response) => {
+                getBasicStatus(process.env.NODE_ENV).then((response) => {
                     this.status = response.data;
-                    this.CPUStatus.value = this.status.cpu;
-                    this.MemStatus.value = this.status.memory;
+                    this.CPUStatus.value = this.status.cpu_percent;
+                    this.RAMStatus.value = this.status.ram_percent;
+                    this.SwapStatus.value = this.status.swap_percent;
                 });
             }
         }, 1000);
@@ -50,7 +62,8 @@ export default {
 
 <style>
 #dashboard {
-    height: 50%;
+    width: 79vw;
+    height: 40vh;
     display: flex;
     align-items: center;
     justify-content: center;

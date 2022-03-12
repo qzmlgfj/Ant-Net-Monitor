@@ -1,11 +1,13 @@
 <template>
-    <n-menu :options="menuOptions" />
+    <n-menu id="sidebar" :options="menuOptions" />
 </template>
 
 <script>
 import { h } from "vue";
-import { NMenu } from "naive-ui";
+import { NMenu, NIcon } from "naive-ui";
 import { RouterLink } from "vue-router";
+import {Cpu} from "@vicons/tabler";
+import {Memory} from "@vicons/fa"
 
 const menuOptions = [
     {
@@ -22,6 +24,7 @@ const menuOptions = [
                 }
             ),
         key: "CPU",
+        icon: renderIcon(Cpu),
     },
     {
         label: () =>
@@ -37,17 +40,28 @@ const menuOptions = [
                 }
             ),
         key: "RAM",
+        icon: renderIcon(Memory),
     },
 ];
+
+function renderIcon(icon) {
+  return () => h(NIcon, null, { default: () => h(icon) });
+}
 
 export default {
     components: {
         NMenu,
     },
-    setup() {
+    data(){
         return {
             menuOptions,
         };
     },
 };
 </script>
+
+<style>
+#sidebar {
+    width: 12vw;
+}
+</style>
