@@ -13,7 +13,7 @@ import {
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
-import VChart from "vue-echarts";
+import VChart, { UPDATE_OPTIONS_KEY } from "vue-echarts";
 
 use([
     TitleComponent,
@@ -22,7 +22,7 @@ use([
     GridComponent,
     LineChart,
     CanvasRenderer,
-    UniversalTransition
+    UniversalTransition,
 ]);
 
 //TODO 暂时删去了DataZoomComponent
@@ -33,6 +33,13 @@ export default {
         VChart,
     },
     props: ["argv"],
+    provide() {
+        return {
+            [UPDATE_OPTIONS_KEY]: {
+                notMerge: true,
+            },
+        };
+    },
     data() {
         return {
             option: {

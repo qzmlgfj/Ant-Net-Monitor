@@ -1,11 +1,13 @@
 import logging
 import os
 import threading
+from time import sleep
 
 from flask import Flask, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 
 from ant_net_monitor.Status.cpu_status import CPUStatus, save_cpu_status
+from ant_net_monitor.Status.ram_status import RAMStatus, save_ram_status
 
 from .cli import init_db, init_db_command
 from .extensions import db
@@ -57,6 +59,7 @@ def create_app(test_config=None):
 
     set_basic_status_thread(app)
     set_cpu_status_thread(app)
+    set_ram_status_thread(app)
 
     return app
 
@@ -73,7 +76,7 @@ def add_command(app):
 
 # TODO 测试情况下的环境变量
 def set_basic_status_thread(app):
-    """Register status thread."""
+    """Register basic status thread."""
 
     def save_status_loop(app):
         with app.app_context():
@@ -85,12 +88,24 @@ def set_basic_status_thread(app):
 
 
 def set_cpu_status_thread(app):
-    """Register status thread."""
+    """Register cpu status thread."""
 
     def save_status_loop(app):
         with app.app_context():
             while True:
                 save_cpu_status(CPUStatus())
+
+    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
+    save_status_thread.start()
+
+def set_ram_status_thread(app):
+    """Register ram status thread."""
+
+    def save_status_loop(app):
+        with app.app_context():
+            while True:
+                save_ram_status(RAMStatus())
+                sleep(1)
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
@@ -102,4 +117,4 @@ def check_table_exist(app):
         insp = db.inspect(engine)
         if not insp.has_table("status"):
             init_db()
-            logging.info("Create table `status`.")
+            logging.info("Create table.")

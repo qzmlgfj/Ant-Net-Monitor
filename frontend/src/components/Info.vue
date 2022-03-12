@@ -5,19 +5,18 @@
                 <router-view />
             </n-card>
             <n-card hoverable>
-                <line-chart :argv="Series" />
+                <line-chart :argv="series" />
             </n-card>
         </n-space>
     </div>
 </template>
 
 <script>
-import { ref } from "vue";
 import { NCard, NSpace } from "naive-ui";
 import LineChart from "@/components/charts/LineChart.vue";
-import { useRouter } from "vue-router";
 import { initLineChart, updateLineChart } from "@/utils/request";
 import { setCPUSeries, updateCPUSeries } from "@/utils/cpu-series";
+import { setRAMSeries, updateRAMSeries } from "@/utils/ram-series";
 
 //TODO 需要继续封装，最好复用折线图组件
 export default {
@@ -27,12 +26,14 @@ export default {
         NSpace,
         LineChart,
     },
-    setup() {
-        const router = useRouter();
-        let Series = ref({});
-
-        // TODO 重构一下，太难看了
-        const updateSeries = function (url) {
+    data() {
+        return {
+            series:{},
+            interval: null,
+        };
+    },
+    methods: {
+        updateSeries(url) {
             /*
             let base = +new Date(1988, 9, 3);
             const oneDay = 24 * 3600 * 1000;
@@ -48,40 +49,42 @@ export default {
             }
             */
             updateLineChart(url).then((response) => {
-                switch (router.currentRoute._value.name) {
+                switch (this.$route.name) {
                     case "CPU-Info":
                         updateCPUSeries(response.data);
+                        break;
+                    case "RAM-Info":
+                        updateRAMSeries(response.data);
+                        break;
                 }
             });
-        };
+        },
 
-        const initSeries = function (url) {
+        initSeries (url) {
+            // TODO 怀疑是隔离性导致数据被污染
             initLineChart(url).then((response) => {
-                switch (router.currentRoute._value.name) {
+                switch (this.$route.name) {
                     case "CPU-Info":
-                        Series.value = setCPUSeries(response.data);
+                        this.series = setCPUSeries(response.data);
+                        break;
+                    case "RAM-Info":
+                        this.series = setRAMSeries(response.data);
+                        break;
                 }
             });
-        };
-
-        initSeries(router.currentRoute._value.path);
-        
-        let interval = setInterval(() => {
-            updateSeries(router.currentRoute._value.path);
+        }
+    },
+    mounted(){
+        this.initSeries(this.$route.path);
+        this.interval = setInterval(() => {
+            this.updateSeries(this.$route.path);
         }, 1000);
-
-        return {
-            Series,
-            interval,
-            initSeries,
-            updateSeries,
-        };
     },
     beforeRouteUpdate(to) {
-        this.initSeries(to.path);
         clearInterval(this.interval);
+        this.initSeries(to.path);
         this.interval = setInterval(() => {
-            this.updateData(to.path);
+            this.updateSeries(to.path);
         }, 1000);
     },
 };
