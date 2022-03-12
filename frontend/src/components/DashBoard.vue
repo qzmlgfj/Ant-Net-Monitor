@@ -48,7 +48,7 @@ export default {
                 this.RAMStatus.value = (Math.random() * 100).toFixed(1);
                 this.SwapStatus.value = (Math.random() * 100).toFixed(1);
             } else {
-                getBasicStatus().then((response) => {
+                getBasicStatus(process.env.NODE_ENV).then((response) => {
                     this.status = response.data;
                     this.CPUStatus.value = this.status.cpu_percent;
                     this.RAMStatus.value = this.status.ram_percent;

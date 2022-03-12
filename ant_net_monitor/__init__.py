@@ -38,6 +38,8 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + app.instance_path + '/backend.sqlite'
+
     @app.route("/favicon.png")
     def fav():
         return send_from_directory(os.path.join(app.root_path, "dist"), "favicon.png")
@@ -114,12 +116,6 @@ def set_ram_status_thread(app):
 
 def check_table_exist(app):
     """Check if `basic_status` table exists."""
-
-    '''Check if instance folder exists and create it if not.'''
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
 
     with app.app_context():
         engine = db.get_engine()

@@ -28,7 +28,7 @@ export default {
     },
     data() {
         return {
-            series:{},
+            series: {},
             interval: null,
         };
     },
@@ -48,7 +48,7 @@ export default {
                 ]);
             }
             */
-            updateLineChart(url).then((response) => {
+            updateLineChart(process.env.NODE_ENV, url).then((response) => {
                 switch (this.$route.name) {
                     case "CPU-Info":
                         updateCPUSeries(response.data);
@@ -60,9 +60,8 @@ export default {
             });
         },
 
-        initSeries (url) {
-            // TODO 怀疑是隔离性导致数据被污染
-            initLineChart(url).then((response) => {
+        initSeries(url) {
+            initLineChart(process.env.NODE_ENV, url).then((response) => {
                 switch (this.$route.name) {
                     case "CPU-Info":
                         this.series = setCPUSeries(response.data);
@@ -72,9 +71,9 @@ export default {
                         break;
                 }
             });
-        }
+        },
     },
-    mounted(){
+    created() {
         this.initSeries(this.$route.path);
         this.interval = setInterval(() => {
             this.updateSeries(this.$route.path);
