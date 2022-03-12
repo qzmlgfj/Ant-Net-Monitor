@@ -12,7 +12,17 @@
 
 ~~这事我最后的波纹了，JOJO！~~
 
-## 如何使用
+## 下载
+
+已于Pypi发布构建，可直接下载安装
+
+```bash
+$ pip install ant-net-monitor
+```
+
+如果需要尝鲜，可指定预发布版本（智将
+
+## 部署
 
 参照[Flask Docs](https://dormousehole.readthedocs.io/en/latest/deploying/wsgi-standalone.html)，可使用`Gunicorn`进行部署，即：
 
