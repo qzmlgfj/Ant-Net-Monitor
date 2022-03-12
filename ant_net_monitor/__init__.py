@@ -38,9 +38,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route('/favicon.png')
+    @app.route("/favicon.png")
     def fav():
-        return send_from_directory(os.path.join(app.root_path, 'dist'),'favicon.png')
+        return send_from_directory(os.path.join(app.root_path, "dist"), "favicon.png")
 
     @app.route("/", defaults={"path": ""})
     @app.route("/<string:path>")
@@ -98,6 +98,7 @@ def set_cpu_status_thread(app):
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
 
+
 def set_ram_status_thread(app):
     """Register ram status thread."""
 
@@ -110,11 +111,11 @@ def set_ram_status_thread(app):
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
 
+
 def check_table_exist(app):
     """Check if `status` table exists."""
     with app.app_context():
         engine = db.get_engine()
         insp = db.inspect(engine)
-        if not insp.has_table("status"):
+        if "status" not in insp.get_table_names():
             init_db()
-            logging.info("Create table.")
