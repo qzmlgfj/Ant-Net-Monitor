@@ -1,7 +1,7 @@
 import { ref } from "vue"
 
-const free = {
-    name: "user",
+const available = {
+    name: "available",
     type: "line",
     smooth: true,
     symbol: "none",
@@ -37,7 +37,7 @@ const buffers = {
 }
 
 const RAMSeries = [
-    free,
+    available,
     used,
     cached,
     buffers,
@@ -52,7 +52,7 @@ const clearRAMSeries = () => {
 const setRAMSeries = (data) => {
     clearRAMSeries()
     data.reverse().forEach(item => {
-        free.data.value.push([new Date(item.time_stamp), item.free])
+        available.data.value.push([new Date(item.time_stamp), item.available])
         used.data.value.push([new Date(item.time_stamp), item.used])
         cached.data.value.push([new Date(item.time_stamp), item.cached])
         buffers.data.value.push([new Date(item.time_stamp), item.buffers])
@@ -61,8 +61,8 @@ const setRAMSeries = (data) => {
 }
 
 const updateRAMSeries = (data) => {
-    free.data.value.shift()
-    free.data.value.push([new Date(data.time_stamp), data.free])
+    available.data.value.shift()
+    available.data.value.push([new Date(data.time_stamp), data.available])
 
     used.data.value.shift()
     used.data.value.push([new Date(data.time_stamp), data.used])

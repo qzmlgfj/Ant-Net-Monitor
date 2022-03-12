@@ -3,7 +3,7 @@ import os
 import threading
 from time import sleep
 
-from flask import Flask, jsonify, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory
 from flask_cors import CORS
 
 from ant_net_monitor.Status.cpu_status import CPUStatus, save_cpu_status
@@ -11,7 +11,7 @@ from ant_net_monitor.Status.ram_status import RAMStatus, save_ram_status
 
 from .cli import init_db, init_db_command
 from .extensions import db
-from .Status.basic_status import BasicStatus, get_last_basic_status, save_basic_status
+from .Status.basic_status import BasicStatus, save_basic_status
 from .status import status_bp
 
 

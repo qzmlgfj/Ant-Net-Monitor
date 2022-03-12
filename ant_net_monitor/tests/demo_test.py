@@ -61,5 +61,6 @@ class TestClientMethods(unittest.TestCase):
         with self.app_context:
             for i in range(10):
                 save_ram_status(RAMStatus())
+                sleep(1)
         ret = self.app.test_client().get("/status/ram_status?type=init")
-        logging.info(ret.data)
+        logging.info(ret.get_json())

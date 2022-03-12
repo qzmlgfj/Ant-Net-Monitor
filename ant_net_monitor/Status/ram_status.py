@@ -7,7 +7,7 @@ from dataclasses import dataclass
 @dataclass
 class RAMStatus(db.Model):
     id: int
-    free: float  # using GB
+    available: float  # using GB
     used: float  # using GB
     cached: float  # using GB
     buffers: float  # using GB
@@ -17,20 +17,20 @@ class RAMStatus(db.Model):
     time_stamp = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
-    free = db.Column(db.Float)
+    available = db.Column(db.Float)
     used = db.Column(db.Float)
     cached = db.Column(db.Float)
     buffers = db.Column(db.Float)
 
     def __init__(self):
         current_status = psutil.virtual_memory()
-        self.free = format(current_status.free / (1024 ** 3), ".2f")
+        self.available = format(current_status.free / (1024 ** 3), ".2f")
         self.used = format(current_status.used / (1024 ** 3), ".2f")
         self.cached = format(current_status.cached / (1024 ** 3), ".2f")
         self.buffers = format(current_status.buffers / (1024 ** 3), ".2f")
 
     def __str__(self):
-        return f"free:{self.free}, used:{self.used}, cached:{self.cached}, buffers:{self.buffers}"
+        return f"free:{self.available}, used:{self.used}, cached:{self.cached}, buffers:{self.buffers}"
 
 
 def save_ram_status(ram_status):
