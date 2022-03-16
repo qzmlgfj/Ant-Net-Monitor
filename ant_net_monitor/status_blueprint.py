@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request
-from ant_net_monitor.Status.basic_status import get_last_basic_status
+from ant_net_monitor.status.basic_status import get_last_basic_status
 
-from ant_net_monitor.Status.ram_status import get_batch_ram_status, get_last_ram_status
+from ant_net_monitor.status.ram_status import get_batch_ram_status, get_last_ram_status
 
-from .Status.cpu_status import get_batch_cpu_status, get_last_cpu_status
+from .status.cpu_status import get_batch_cpu_status, get_last_cpu_status
 
 
 status_bp = Blueprint("status", __name__, url_prefix="/status")

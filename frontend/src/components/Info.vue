@@ -18,7 +18,6 @@ import { initLineChart, updateLineChart } from "@/utils/request";
 import { setCPUSeries, updateCPUSeries } from "@/utils/series/cpu-series";
 import { setRAMSeries, updateRAMSeries } from "@/utils/series/ram-series";
 
-//TODO 需要继续封装，最好复用折线图组件
 export default {
     name: "Info",
     components: {

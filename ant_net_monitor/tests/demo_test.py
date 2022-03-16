@@ -1,10 +1,13 @@
-import imp
 import unittest
 import logging
 import sys
-from ant_net_monitor import *
-from ant_net_monitor.Status.cpu_status import CPUStatus, save_cpu_status
-from ant_net_monitor.Status.ram_status import RAMStatus, save_ram_status
+from time import sleep
+
+from ant_net_monitor import create_app
+from ant_net_monitor.extensions import db
+from ant_net_monitor.status.cpu_status import CPUStatus, save_cpu_status
+from ant_net_monitor.status.ram_status import RAMStatus, save_ram_status
+from ant_net_monitor.status.basic_status import BasicStatus, save_basic_status
 
 logger = logging.getLogger()
 logger.level = logging.DEBUG

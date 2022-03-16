@@ -27,8 +27,6 @@ use([
     DataZoomComponent,
 ]);
 
-//TODO 暂时删去了DataZoomComponent
-
 export default {
     name: "LineChart",
     components: {
