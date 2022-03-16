@@ -5,7 +5,7 @@
                 <router-view />
             </n-card>
             <n-card hoverable>
-                <line-chart :argv="series" />
+                <line-chart :argv="series" :enableZoom="enableZoom"/>
             </n-card>
         </n-space>
     </div>
@@ -15,8 +15,8 @@
 import { NCard, NSpace } from "naive-ui";
 import LineChart from "@/components/charts/LineChart.vue";
 import { initLineChart, updateLineChart } from "@/utils/request";
-import { setCPUSeries, updateCPUSeries } from "@/utils/cpu-series";
-import { setRAMSeries, updateRAMSeries } from "@/utils/ram-series";
+import { setCPUSeries, updateCPUSeries } from "@/utils/series/cpu-series";
+import { setRAMSeries, updateRAMSeries } from "@/utils/series/ram-series";
 
 //TODO 需要继续封装，最好复用折线图组件
 export default {
@@ -30,6 +30,7 @@ export default {
         return {
             series: {},
             interval: null,
+            enableZoom: false,
         };
     },
     methods: {
@@ -48,7 +49,7 @@ export default {
                 ]);
             }
             */
-            updateLineChart(process.env.NODE_ENV, url).then((response) => {
+            updateLineChart(url).then((response) => {
                 switch (this.$route.name) {
                     case "CPU-Info":
                         updateCPUSeries(response.data);
@@ -61,7 +62,7 @@ export default {
         },
 
         initSeries(url) {
-            initLineChart(process.env.NODE_ENV, url).then((response) => {
+            initLineChart(url).then((response) => {
                 switch (this.$route.name) {
                     case "CPU-Info":
                         this.series = setCPUSeries(response.data);

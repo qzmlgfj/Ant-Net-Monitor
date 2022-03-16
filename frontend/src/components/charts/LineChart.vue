@@ -9,6 +9,7 @@ import {
     ToolboxComponent,
     TooltipComponent,
     GridComponent,
+    DataZoomComponent,
 } from "echarts/components";
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
@@ -23,6 +24,7 @@ use([
     LineChart,
     CanvasRenderer,
     UniversalTransition,
+    DataZoomComponent,
 ]);
 
 //TODO 暂时删去了DataZoomComponent
@@ -32,7 +34,7 @@ export default {
     components: {
         VChart,
     },
-    props: ["argv"],
+    props: ["argv", "enableZoom"],
     provide() {
         return {
             [UPDATE_OPTIONS_KEY]: {
@@ -82,6 +84,25 @@ export default {
             },
             deep: true,
             immediate: true,
+        },
+        enableZoom: {
+            handler: function (enableZoom) {
+                if (enableZoom) {
+                    this.option.dataZoom = [
+                        {
+                            type: "inside",
+                            start: 0,
+                            end: 20,
+                        },
+                        {
+                            start: 0,
+                            end: 20,
+                        },
+                    ];
+                } else {
+                    this.option.dataZoom = null;
+                }
+            },
         },
     },
 };
