@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+import random
 import psutil
 from ..extensions import db
 from dataclasses import dataclass
@@ -22,12 +23,25 @@ class RAMStatus(db.Model):
     cached = db.Column(db.Float)
     buffers = db.Column(db.Float)
 
-    def __init__(self):
-        current_status = psutil.virtual_memory()
-        self.available = format(current_status.free / (1024 ** 3), ".2f")
-        self.used = format(current_status.used / (1024 ** 3), ".2f")
-        self.cached = format(current_status.cached / (1024 ** 3), ".2f")
-        self.buffers = format(current_status.buffers / (1024 ** 3), ".2f")
+    def __init__(self, *, blank=False, time_stamp=None, is_random=False):
+        if blank:
+            self.available = 0
+            self.used = 0
+            self.cached = 0
+            self.buffers = 0
+            self.time_stamp = time_stamp
+        elif is_random:
+            self.available = format(round(random.uniform(0, 100), 2), ".2f")
+            self.used = format(round(random.uniform(0, 100), 2), ".2f")
+            self.cached = format(round(random.uniform(0, 100), 2), ".2f")
+            self.buffers = format(round(random.uniform(0, 100), 2), ".2f")
+            self.time_stamp = time_stamp
+        else:
+            current_status = psutil.virtual_memory()
+            self.available = format(current_status.free / (1024 ** 3), ".2f")
+            self.used = format(current_status.used / (1024 ** 3), ".2f")
+            self.cached = format(current_status.cached / (1024 ** 3), ".2f")
+            self.buffers = format(current_status.buffers / (1024 ** 3), ".2f")
 
     def __str__(self):
         return f"free:{self.available}, used:{self.used}, cached:{self.cached}, buffers:{self.buffers}"
@@ -47,3 +61,23 @@ def get_batch_ram_status():
     if count > 100:
         count = 100
     return RAMStatus.query.order_by(RAMStatus.time_stamp.desc()).limit(count).all()
+
+
+def get_ram_status_in_one_day():
+    def date_range(start, end, delta):
+        current = start.replace(second=0, microsecond=0)
+        while current < end.replace(second=0, microsecond=0):
+            yield current
+            current += delta
+
+    result = []
+    start = datetime.utcnow() - timedelta(days=1)
+    end = datetime.utcnow()
+    for time_stamp in date_range(start, end, timedelta(minutes=1)):
+        tmp = RAMStatus.query.filter_by(time_stamp=time_stamp).first()
+        if tmp:
+            result.append(tmp)
+        else:
+            result.append(RAMStatus(blank=True, time_stamp=time_stamp))
+
+    return result

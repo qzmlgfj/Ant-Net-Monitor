@@ -2,6 +2,7 @@ import unittest
 import logging
 import sys
 from time import sleep
+from datetime import datetime, timedelta
 
 from ant_net_monitor import create_app
 from ant_net_monitor.extensions import db
@@ -29,6 +30,12 @@ class TestClientMethods(unittest.TestCase):
             db.drop_all()
         self.app.config["FINISH_TESTING"] = True
         logging.info("Finish testing.")
+
+    def date_range(self, start, end, delta):
+        current = start.replace(second=0, microsecond=0)
+        while current < end.replace(second=0, microsecond=0):
+            yield current
+            current += delta
 
     # def test_hello(self):
     #    logging.info(self.app.config["APPLICATION_ENV"])
@@ -66,4 +73,14 @@ class TestClientMethods(unittest.TestCase):
                 save_ram_status(RAMStatus())
                 sleep(1)
         ret = self.app.test_client().get("/status/ram_status?type=init")
+        logging.info(ret.get_json())
+
+    def test_get_ram_status_in_one_day(self):
+        with self.app_context:
+            start = datetime.utcnow() - timedelta(minutes=30)
+            end = datetime.utcnow()
+            delta = timedelta(minutes=1)
+            for time_stamp in self.date_range(start, end, delta):
+                save_ram_status(RAMStatus(is_random=True, time_stamp=time_stamp))
+        ret = self.app.test_client().get("/status/ram_status?type=day")
         logging.info(ret.get_json())

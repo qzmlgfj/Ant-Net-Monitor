@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from ant_net_monitor.status.basic_status import get_last_basic_status
 
-from ant_net_monitor.status.ram_status import get_batch_ram_status, get_last_ram_status
+from ant_net_monitor.status.ram_status import get_batch_ram_status, get_last_ram_status, get_ram_status_in_one_day
 
 from .status.cpu_status import get_batch_cpu_status, get_last_cpu_status
 
@@ -28,3 +28,5 @@ def return_ram_status():
         return jsonify(get_batch_ram_status())
     elif request.args.get("type") == "update":
         return jsonify(get_last_ram_status())
+    elif request.args.get("type") == "day":
+        return jsonify(get_ram_status_in_one_day())
