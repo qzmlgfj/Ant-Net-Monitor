@@ -15,7 +15,10 @@ def set_basic_status_thread(app):
     def save_status_loop(app):
         with app.app_context():
             while True:
-                save_basic_status(local_session, BasicStatus())
+                try:
+                    save_basic_status(local_session, BasicStatus())
+                except Exception as e:
+                    app.logger.error(e)
 
     local_session = db.create_scoped_session()
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
@@ -28,7 +31,10 @@ def set_cpu_status_thread(app):
     def save_status_loop(app):
         with app.app_context():
             while True:
-                save_cpu_status(local_session, CPUStatus())
+                try:
+                    save_cpu_status(local_session, CPUStatus())
+                except Exception as e:
+                    app.logger.error(e)
 
     local_session = db.create_scoped_session()
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
@@ -41,8 +47,11 @@ def set_ram_status_thread(app):
     def save_status_loop(app):
         with app.app_context():
             while True:
-                save_ram_status(local_session, RAMStatus())
-                sleep(1)
+                try:
+                    save_ram_status(local_session, RAMStatus())
+                    sleep(1)
+                except Exception as e:
+                    app.logger.error(e)
 
     local_session = db.create_scoped_session()
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))

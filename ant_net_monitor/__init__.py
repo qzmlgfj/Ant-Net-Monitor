@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, send_from_directory
 from flask_cors import CORS
+import logging
 
 from .threads import set_all_threads
 
@@ -19,6 +20,12 @@ def create_app(test_config=None):
         template_folder="./dist",
     )
     app.config.from_object("ant_net_monitor.config")
+
+    try:
+        gunicorn_error_logger = logging.getLogger("gunicorn.error")
+        app.logger.handlers.extend(gunicorn_error_logger.handlers)
+    except Exception as e:
+        print(e)
 
     # if test_config is None:
     #   # load the instance config, if it exists, when not testing
