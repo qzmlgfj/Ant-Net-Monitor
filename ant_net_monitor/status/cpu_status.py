@@ -51,9 +51,9 @@ class CPUStatus(db.Model):
         return f"user:{self.user_percent}, nice:{self.nice_percent}, system:{self.system_percent}, idle:{self.idle_percent}, iowait:{self.iowait_percent}, irq:{self.irq_percent}, softirq:{self.softirq_percent}, steal:{self.steal_percent}, guest:{self.guest_percent}, guest_nice:{self.guest_nice_percent}"
 
 
-def save_cpu_status(session, cpu_status):
-    session.add(cpu_status)
-    session.commit()
+def save_cpu_status(cpu_status):
+    db.session.add(cpu_status)
+    db.session.commit()
 
 
 def get_last_cpu_status():

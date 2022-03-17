@@ -33,9 +33,9 @@ class RAMStatus(db.Model):
         return f"free:{self.available}, used:{self.used}, cached:{self.cached}, buffers:{self.buffers}"
 
 
-def save_ram_status(session, ram_status):
-    session.add(ram_status)
-    session.commit()
+def save_ram_status(ram_status):
+    db.session.add(ram_status)
+    db.session.commit()
 
 
 def get_last_ram_status():

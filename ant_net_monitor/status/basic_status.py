@@ -33,9 +33,9 @@ class BasicStatus(db.Model):
         return f"cpu:{self.cpu_percent}%, memory:{round(self.ram_percent/(1024**3),2)}G, disk:{round(self.disk/(1024**3),2)}G"
 
 
-def save_basic_status(session, status):
-    session.add(status)
-    session.commit()
+def save_basic_status(status):
+    db.session.add(status)
+    db.session.commit()
 
 
 def get_last_basic_status():
