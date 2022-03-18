@@ -4,6 +4,7 @@ import psutil
 from ..extensions import db
 from dataclasses import dataclass
 
+from . import date_range
 
 @dataclass
 class RAMStatus(db.Model):
@@ -46,38 +47,35 @@ class RAMStatus(db.Model):
     def __str__(self):
         return f"free:{self.available}, used:{self.used}, cached:{self.cached}, buffers:{self.buffers}"
 
-
-def save_ram_status(ram_status):
-    db.session.add(ram_status)
-    db.session.commit()
-
-
-def get_last_ram_status():
-    return RAMStatus.query.order_by(RAMStatus.time_stamp.desc()).first()
-
-
-def get_batch_ram_status():
-    count = RAMStatus.query.count()
-    if count > 100:
-        count = 100
-    return RAMStatus.query.order_by(RAMStatus.time_stamp.desc()).limit(count).all()
-
-
-def get_ram_status_in_one_day():
-    def date_range(start, end, delta):
-        current = start.replace(second=0, microsecond=0)
-        while current < end.replace(second=0, microsecond=0):
-            yield current
-            current += delta
-
-    result = []
-    start = datetime.utcnow() - timedelta(days=1)
-    end = datetime.utcnow()
-    for time_stamp in date_range(start, end, timedelta(minutes=1)):
-        tmp = RAMStatus.query.filter_by(time_stamp=time_stamp).first()
-        if tmp:
-            result.append(tmp)
+    @staticmethod
+    def save(status=None):
+        if not status:
+            db.session.add(RAMStatus())
         else:
-            result.append(RAMStatus(blank=True, time_stamp=time_stamp))
+            db.session.add(status)
+        db.session.commit()
 
-    return result
+    @staticmethod
+    def get_last():
+        return RAMStatus.query.order_by(RAMStatus.time_stamp.desc()).first()
+
+    @staticmethod
+    def get_batch():
+        count = RAMStatus.query.count()
+        if count > 100:
+            count = 100
+        return RAMStatus.query.order_by(RAMStatus.time_stamp.desc()).limit(count).all()
+
+    @staticmethod
+    def get_in_one_day():
+        result = []
+        start = datetime.utcnow() - timedelta(days=1)
+        end = datetime.utcnow()
+        for time_stamp in date_range(start, end, timedelta(minutes=1)):
+            tmp = RAMStatus.query.filter_by(time_stamp=time_stamp).first()
+            if tmp:
+                result.append(tmp)
+            else:
+                result.append(RAMStatus(blank=True, time_stamp=time_stamp))
+
+        return result

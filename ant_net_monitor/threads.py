@@ -2,9 +2,9 @@ import threading
 from time import sleep
 
 from .extensions import db
-from .status.basic_status import BasicStatus, save_basic_status
-from .status.cpu_status import CPUStatus, save_cpu_status
-from .status.ram_status import RAMStatus, save_ram_status
+from .status.basic_status import BasicStatus
+from .status.cpu_status import CPUStatus
+from .status.ram_status import RAMStatus
 
 # TODO 整个函数变量进去，进一步封装
 
@@ -16,7 +16,7 @@ def set_basic_status_thread(app):
         with app.app_context():
             while True:
                 try:
-                    save_basic_status(BasicStatus())
+                    BasicStatus.save()
                 except Exception as e:
                     db.session.rollback()
                     app.logger.error(e)
@@ -32,7 +32,7 @@ def set_cpu_status_thread(app):
         with app.app_context():
             while True:
                 try:
-                    save_cpu_status(CPUStatus())
+                    CPUStatus.save()
                 except Exception as e:
                     db.session.rollback()
                     app.logger.error(e)
@@ -48,7 +48,7 @@ def set_ram_status_thread(app):
         with app.app_context():
             while True:
                 try:
-                    save_ram_status(RAMStatus())
+                    RAMStatus.save()
                     sleep(1)
                 except Exception as e:
                     db.session.rollback()

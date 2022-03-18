@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request
-from ant_net_monitor.status.basic_status import get_last_basic_status
+from ant_net_monitor.status.basic_status import BasicStatus
 
-from ant_net_monitor.status.ram_status import get_batch_ram_status, get_last_ram_status, get_ram_status_in_one_day
+from ant_net_monitor.status.ram_status import RAMStatus
 
-from .status.cpu_status import get_batch_cpu_status, get_last_cpu_status
+from .status.cpu_status import CPUStatus
 
 
 status_bp = Blueprint("status", __name__, url_prefix="/status")
@@ -11,22 +11,24 @@ status_bp = Blueprint("status", __name__, url_prefix="/status")
 
 @status_bp.route("basic_status", methods=["GET"])
 def return_basic_status():
-    return jsonify(get_last_basic_status())
+    return jsonify(BasicStatus.get_last())
 
 
 @status_bp.route("cpu_status", methods=["GET"])
 def return_cpu_status():
     if request.args.get("type") == "init":
-        return jsonify(get_batch_cpu_status())
+        return jsonify(CPUStatus.get_batch())
     elif request.args.get("type") == "update":
-        return jsonify(get_last_cpu_status())
+        return jsonify(CPUStatus.get_last())
+    elif request.args.get("type") == "day":
+        return jsonify(CPUStatus.get_in_one_day())
 
 
 @status_bp.route("ram_status", methods=["GET"])
 def return_ram_status():
     if request.args.get("type") == "init":
-        return jsonify(get_batch_ram_status())
+        return jsonify(RAMStatus.get_batch())
     elif request.args.get("type") == "update":
-        return jsonify(get_last_ram_status())
+        return jsonify(RAMStatus.get_last())
     elif request.args.get("type") == "day":
-        return jsonify(get_ram_status_in_one_day())
+        return jsonify(RAMStatus.get_in_one_day())
