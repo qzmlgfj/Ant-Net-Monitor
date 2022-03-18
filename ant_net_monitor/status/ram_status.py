@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from . import date_range
 
+
 @dataclass
 class RAMStatus(db.Model):
     id: int
@@ -16,9 +17,7 @@ class RAMStatus(db.Model):
     time_stamp: datetime
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time_stamp = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    time_stamp = db.Column(db.DateTime)
     available = db.Column(db.Float)
     used = db.Column(db.Float)
     cached = db.Column(db.Float)
@@ -43,6 +42,7 @@ class RAMStatus(db.Model):
             self.used = format(current_status.used / (1024 ** 3), ".2f")
             self.cached = format(current_status.cached / (1024 ** 3), ".2f")
             self.buffers = format(current_status.buffers / (1024 ** 3), ".2f")
+            self.time_stamp = datetime.utcnow().replace(microsecond=0)
 
     def __str__(self):
         return f"free:{self.available}, used:{self.used}, cached:{self.cached}, buffers:{self.buffers}"
@@ -64,7 +64,11 @@ class RAMStatus(db.Model):
         count = RAMStatus.query.count()
         if count > 100:
             count = 100
-        return RAMStatus.query.order_by(RAMStatus.time_stamp.desc()).limit(count).all()
+        return (
+            RAMStatus.query.order_by(RAMStatus.time_stamp.desc())
+            .limit(count)
+            .all()[::-1]
+        )
 
     @staticmethod
     def get_in_one_day():

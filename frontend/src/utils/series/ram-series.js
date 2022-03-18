@@ -51,7 +51,7 @@ const clearRAMSeries = () => {
 
 const setRAMSeries = (data) => {
     clearRAMSeries()
-    data.reverse().forEach(item => {
+    data.forEach(item => {
         available.data.value.push([new Date(item.time_stamp), item.available])
         used.data.value.push([new Date(item.time_stamp), item.used])
         cached.data.value.push([new Date(item.time_stamp), item.cached])

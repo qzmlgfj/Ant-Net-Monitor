@@ -6,6 +6,7 @@ import random
 
 from . import date_range
 
+
 @dataclass
 class CPUStatus(db.Model):
     id: int
@@ -22,9 +23,7 @@ class CPUStatus(db.Model):
     time_stamp: datetime  # 需要UTC标准时间，避免Javascript解析时暴毙
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time_stamp = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+    time_stamp = db.Column(db.DateTime)
     user_percent = db.Column(db.Float)
     nice_percent = db.Column(db.Float)
     system_percent = db.Column(db.Float)
@@ -73,6 +72,7 @@ class CPUStatus(db.Model):
             self.steal_percent = current_status.steal
             self.guest_percent = current_status.guest
             self.guest_nice_percent = current_status.guest_nice
+            self.time_stamp = datetime.utcnow().replace(microsecond=0)
 
     def __str__(self):
         return f"user:{self.user_percent}, nice:{self.nice_percent}, system:{self.system_percent}, idle:{self.idle_percent}, iowait:{self.iowait_percent}, irq:{self.irq_percent}, softirq:{self.softirq_percent}, steal:{self.steal_percent}, guest:{self.guest_percent}, guest_nice:{self.guest_nice_percent}"
@@ -94,7 +94,11 @@ class CPUStatus(db.Model):
         count = CPUStatus.query.count()
         if count > 100:
             count = 100
-        return CPUStatus.query.order_by(CPUStatus.time_stamp.desc()).limit(count).all()
+        return (
+            CPUStatus.query.order_by(CPUStatus.time_stamp.desc())
+            .limit(count)
+            .all()[::-1]
+        )
 
     @staticmethod
     def get_in_one_day():

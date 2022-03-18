@@ -17,7 +17,6 @@ function initLineChart(url) {
     })
 }
 
-
 function updateLineChart(url) {
     return service({
         method: "get",
@@ -28,5 +27,14 @@ function updateLineChart(url) {
     })
 }
 
+function getHistoryLineChart(url) {
+    return service({
+        method: "get",
+        url: url,
+        params: {
+            type: "day"
+        }
+    })
+}
 
-export { getBasicStatus, initLineChart, updateLineChart };
+export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart };

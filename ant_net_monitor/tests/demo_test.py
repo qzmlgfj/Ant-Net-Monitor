@@ -77,7 +77,7 @@ class TestClientMethods(unittest.TestCase):
 
     def test_get_ram_status_in_one_day(self):
         with self.app_context:
-            start = datetime.utcnow() - timedelta(minutes=30)
+            start = datetime.utcnow() - timedelta(minutes=15)
             end = datetime.utcnow()
             delta = timedelta(minutes=1)
             for time_stamp in self.date_range(start, end, delta):

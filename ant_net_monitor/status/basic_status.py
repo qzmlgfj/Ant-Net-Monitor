@@ -14,7 +14,7 @@ class BasicStatus(db.Model):
     time_stamp: datetime
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time_stamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    time_stamp = db.Column(db.DateTime)
     cpu_percent = db.Column(db.Float)
     ram_percent = db.Column(db.Float)
     swap_percent = db.Column(db.Float)
@@ -24,6 +24,7 @@ class BasicStatus(db.Model):
         self.cpu_percent = psutil.cpu_percent(interval=1)
         self.ram_percent = psutil.virtual_memory().percent
         self.swap_percent = psutil.swap_memory().percent
+        self.time_stamp = datetime.utcnow().replace(microsecond=0)
 
         # self.disk = psutil.disk_usage("/").used
         # self.network = psutil.net_io_counters().bytes_recv

@@ -5,16 +5,36 @@
                 <router-view />
             </n-card>
             <n-card hoverable>
-                <line-chart :argv="series" :enableZoom="enableZoom"/>
+                <n-button-group>
+                    <n-button type="default" round @click="switchToHistory">
+                        <template #icon>
+                            <n-icon><history /></n-icon>
+                        </template>
+                        24小时历史
+                    </n-button>
+                    <n-button type="default" round @click="switchToRealTime">
+                        <template #icon>
+                            <n-icon><chart-line /></n-icon>
+                        </template>
+                        实时状态
+                    </n-button>
+                </n-button-group>
+                <line-chart :argv="series" :enableZoom="enableZoom" />
             </n-card>
         </n-space>
     </div>
 </template>
 
 <script>
-import { NCard, NSpace } from "naive-ui";
+import { NCard, NSpace, NButtonGroup, NButton, NIcon } from "naive-ui";
+import { History,ChartLine } from "@vicons/fa";
+
 import LineChart from "@/components/charts/LineChart.vue";
-import { initLineChart, updateLineChart } from "@/utils/request";
+import {
+    initLineChart,
+    updateLineChart,
+    getHistoryLineChart,
+} from "@/utils/request";
 import { setCPUSeries, updateCPUSeries } from "@/utils/series/cpu-series";
 import { setRAMSeries, updateRAMSeries } from "@/utils/series/ram-series";
 
@@ -23,6 +43,11 @@ export default {
     components: {
         NCard,
         NSpace,
+        NButtonGroup,
+        NButton,
+        NIcon,
+        History,
+        ChartLine,
         LineChart,
     },
     data() {
@@ -59,7 +84,6 @@ export default {
                 }
             });
         },
-
         initSeries(url) {
             initLineChart(url).then((response) => {
                 switch (this.$route.name) {
@@ -71,6 +95,32 @@ export default {
                         break;
                 }
             });
+        },
+        switchToHistory() {
+            if (!this.enableZoom) {
+                this.enableZoom = true;
+                clearInterval(this.interval);
+                getHistoryLineChart(this.$route.path).then((response) => {
+                    switch (this.$route.name) {
+                        case "CPU-Info":
+                            this.series = setCPUSeries(response.data);
+                            break;
+                        case "RAM-Info":
+                            this.series = setRAMSeries(response.data);
+                            break;
+                    }
+                });
+            }
+        },
+        switchToRealTime() {
+            // TODO 有点脏，想个办法重构一下
+            if (this.enableZoom) {
+                this.enableZoom = false;
+                this.interval = setInterval(() => {
+                    this.updateSeries(this.$route.path);
+                }, 1000);
+                this.initSeries(this.$route.path);
+            }
         },
     },
     created() {
@@ -85,6 +135,7 @@ export default {
         this.interval = setInterval(() => {
             this.updateSeries(to.path);
         }, 1000);
+        this.enableZoom = false;
     },
 };
 </script>

@@ -71,7 +71,7 @@ const clearCPUSeries = () => {
 
 const setCPUSeries = (data) => {
     clearCPUSeries();
-    data.reverse().forEach(item => {
+    data.forEach(item => {
         user.data.value.push([new Date(item.time_stamp), item.user_percent]);
         nice.data.value.push([new Date(item.time_stamp), item.nice_percent]);
         system.data.value.push([new Date(item.time_stamp), item.system_percent]);
