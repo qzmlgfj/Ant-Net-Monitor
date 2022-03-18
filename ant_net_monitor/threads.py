@@ -1,6 +1,5 @@
 import threading
 from time import sleep
-from sqlite3 import OperationalError
 
 from .extensions import db
 from .status.basic_status import BasicStatus, save_basic_status
@@ -18,7 +17,7 @@ def set_basic_status_thread(app):
             while True:
                 try:
                     save_basic_status(BasicStatus())
-                except OperationalError as e:
+                except Exception as e:
                     db.session.rollback()
                     app.logger.error(e)
 
@@ -34,7 +33,7 @@ def set_cpu_status_thread(app):
             while True:
                 try:
                     save_cpu_status(CPUStatus())
-                except OperationalError as e:
+                except Exception as e:
                     db.session.rollback()
                     app.logger.error(e)
 
@@ -51,7 +50,7 @@ def set_ram_status_thread(app):
                 try:
                     save_ram_status(RAMStatus())
                     sleep(1)
-                except OperationalError as e:
+                except Exception as e:
                     db.session.rollback()
                     app.logger.error(e)
 
