@@ -106,7 +106,7 @@ class CPUStatus(db.Model):
         start = datetime.utcnow() - timedelta(days=1)
         return (
             CPUStatus.query.filter(CPUStatus.time_stamp >= start)
-            .filter(extract("minute", CPUStatus.time_stamp) % 10 == 0)
+            .filter(extract("minute", CPUStatus.time_stamp) % 5 == 0)
             .filter(extract("second", CPUStatus.time_stamp) == 0)
             .all()
         )

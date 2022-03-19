@@ -3,7 +3,7 @@ import { ref } from "vue"
 const available = {
     name: "available",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
@@ -12,7 +12,7 @@ const available = {
 const used = {
     name: "used",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
@@ -21,7 +21,7 @@ const used = {
 const cached = {
     name: "cached",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
@@ -30,7 +30,7 @@ const cached = {
 const buffers = {
     name: "buffers",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),

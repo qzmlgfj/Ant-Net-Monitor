@@ -76,7 +76,7 @@ class RAMStatus(db.Model):
         start = datetime.utcnow() - timedelta(days=1)
         return (
             RAMStatus.query.filter(RAMStatus.time_stamp >= start)
-            .filter(extract("minute", RAMStatus.time_stamp) % 10 == 0)
+            .filter(extract("minute", RAMStatus.time_stamp) % 5 == 0)
             .filter(extract("second", RAMStatus.time_stamp) == 0)
             .all()
         )

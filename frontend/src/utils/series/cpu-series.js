@@ -3,7 +3,7 @@ import { ref } from "vue";
 const user = {
     name: "user",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
@@ -12,7 +12,7 @@ const user = {
 const nice = {
     name: "nice",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
@@ -21,7 +21,7 @@ const nice = {
 const system = {
     name: "system",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
@@ -30,7 +30,7 @@ const system = {
 const idle = {
     name: "idle",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
@@ -39,7 +39,7 @@ const idle = {
 const iowait = {
     name: "iowait",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
@@ -48,7 +48,7 @@ const iowait = {
 const steal = {
     name: "steal",
     type: "line",
-    smooth: true,
+    smooth: false,
     symbol: "none",
     areaStyle: {},
     data: ref([]),
