@@ -3,7 +3,7 @@ import { service } from "./service";
 function getBasicStatus() {
     return service({
         method: "get",
-        url: "/status/basic_status",
+        url: "/api/status/basic_status",
     })
 }
 

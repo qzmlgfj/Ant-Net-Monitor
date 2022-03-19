@@ -6,7 +6,7 @@ from ant_net_monitor.status.ram_status import RAMStatus
 from .status.cpu_status import CPUStatus
 
 
-status_bp = Blueprint("status", __name__, url_prefix="/status")
+status_bp = Blueprint("/api/status", __name__, url_prefix="/api/status")
 
 
 @status_bp.route("basic_status", methods=["GET"])

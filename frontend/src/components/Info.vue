@@ -27,7 +27,7 @@
 
 <script>
 import { NCard, NSpace, NButtonGroup, NButton, NIcon } from "naive-ui";
-import { History,ChartLine } from "@vicons/fa";
+import { History, ChartLine } from "@vicons/fa";
 
 import LineChart from "@/components/charts/LineChart.vue";
 import {
@@ -100,40 +100,42 @@ export default {
             if (!this.enableZoom) {
                 this.enableZoom = true;
                 clearInterval(this.interval);
-                getHistoryLineChart(this.$route.path).then((response) => {
-                    switch (this.$route.name) {
-                        case "CPU-Info":
-                            this.series = setCPUSeries(response.data);
-                            break;
-                        case "RAM-Info":
-                            this.series = setRAMSeries(response.data);
-                            break;
+                getHistoryLineChart(this.$route.meta.apiUrl).then(
+                    (response) => {
+                        switch (this.$route.name) {
+                            case "CPU-Info":
+                                this.series = setCPUSeries(response.data);
+                                break;
+                            case "RAM-Info":
+                                this.series = setRAMSeries(response.data);
+                                break;
+                        }
                     }
-                });
+                );
             }
         },
         switchToRealTime() {
             // FIXME 有点脏，想个办法重构一下
             if (this.enableZoom) {
                 this.enableZoom = false;
+                this.initSeries(this.$route.meta.apiUrl);
                 this.interval = setInterval(() => {
-                    this.updateSeries(this.$route.path);
+                    this.updateSeries(this.$route.meta.apiUrl);
                 }, 1000);
-                this.initSeries(this.$route.path);
             }
         },
     },
     created() {
-        this.initSeries(this.$route.path);
+        this.initSeries(this.$route.meta.apiUrl);
         this.interval = setInterval(() => {
-            this.updateSeries(this.$route.path);
+            this.updateSeries(this.$route.meta.apiUrl);
         }, 1000);
     },
     beforeRouteUpdate(to) {
         clearInterval(this.interval);
-        this.initSeries(to.path);
+        this.initSeries(to.meta.apiUrl);
         this.interval = setInterval(() => {
-            this.updateSeries(to.path);
+            this.updateSeries(to.meta.apiUrl);
         }, 1000);
         this.enableZoom = false;
     },

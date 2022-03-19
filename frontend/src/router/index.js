@@ -10,17 +10,19 @@ const routes = [
                 path: "cpu_status",
                 name: "CPU-Info",
                 meta: {
-                    title: "CPU-Info"
+                    title: "CPU-Info",
+                    apiUrl: "/api/status/cpu_status"
                 },
-                component: () => import("@/components/info/CPU.vue")
+                component: () => import("@/components/info/CPU.vue"),
             },
             {
                 path: "ram_status",
                 name: "RAM-Info",
                 meta: {
-                    title: "RAM-Info"
+                    title: "RAM-Info",
+                    apiUrl: "/api/status/ram_status"
                 },
-                component: () => import("@/components/info/RAM.vue")
+                component: () => import("@/components/info/RAM.vue"),
             },
         ]
     },
@@ -32,7 +34,6 @@ const router = createRouter({
     routes
 });
 
-//* 用于测试的导出路由表
 export { routes };
 
 export default router;
