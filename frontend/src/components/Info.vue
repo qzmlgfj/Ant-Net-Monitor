@@ -113,7 +113,7 @@ export default {
             }
         },
         switchToRealTime() {
-            // TODO 有点脏，想个办法重构一下
+            // FIXME 有点脏，想个办法重构一下
             if (this.enableZoom) {
                 this.enableZoom = false;
                 this.interval = setInterval(() => {

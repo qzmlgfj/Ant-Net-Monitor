@@ -3,6 +3,7 @@ import psutil
 from ..extensions import db
 from dataclasses import dataclass
 import random
+from sqlalchemy import extract
 
 from . import date_range
 
@@ -102,14 +103,10 @@ class CPUStatus(db.Model):
 
     @staticmethod
     def get_in_one_day():
-        result = []
         start = datetime.utcnow() - timedelta(days=1)
-        end = datetime.utcnow()
-        for time_stamp in date_range(start, end, timedelta(minutes=1)):
-            tmp = CPUStatus.query.filter_by(time_stamp=time_stamp).first()
-            if tmp:
-                result.append(tmp)
-            else:
-                result.append(CPUStatus(blank=True, time_stamp=time_stamp))
-
-        return result
+        return (
+            CPUStatus.query.filter(CPUStatus.time_stamp >= start)
+            .filter(extract("minute", CPUStatus.time_stamp) % 10 == 0)
+            .filter(extract("second", CPUStatus.time_stamp) == 0)
+            .all()
+        )

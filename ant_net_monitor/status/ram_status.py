@@ -3,6 +3,7 @@ import random
 import psutil
 from ..extensions import db
 from dataclasses import dataclass
+from sqlalchemy import extract
 
 from . import date_range
 
@@ -72,14 +73,10 @@ class RAMStatus(db.Model):
 
     @staticmethod
     def get_in_one_day():
-        result = []
         start = datetime.utcnow() - timedelta(days=1)
-        end = datetime.utcnow()
-        for time_stamp in date_range(start, end, timedelta(minutes=1)):
-            tmp = RAMStatus.query.filter_by(time_stamp=time_stamp).first()
-            if tmp:
-                result.append(tmp)
-            else:
-                result.append(RAMStatus(blank=True, time_stamp=time_stamp))
-
-        return result
+        return (
+            RAMStatus.query.filter(RAMStatus.time_stamp >= start)
+            .filter(extract("minute", RAMStatus.time_stamp) % 10 == 0)
+            .filter(extract("second", RAMStatus.time_stamp) == 0)
+            .all()
+        )

@@ -3,7 +3,7 @@ import axios from "axios";
 axios.defaults.retry = 4;
 
 const serviceProd = axios.create({
-    timeout: 3000,
+    timeout: 10000,
 });
 
 const serviceDev = axios.create({
