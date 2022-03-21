@@ -14,7 +14,7 @@ class BasicStatus(db.Model):
     time_stamp: datetime
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time_stamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    time_stamp = db.Column(db.DateTime)
     cpu_percent = db.Column(db.Float)
     ram_percent = db.Column(db.Float)
     swap_percent = db.Column(db.Float)
@@ -24,6 +24,7 @@ class BasicStatus(db.Model):
         self.cpu_percent = psutil.cpu_percent(interval=1)
         self.ram_percent = psutil.virtual_memory().percent
         self.swap_percent = psutil.swap_memory().percent
+        self.time_stamp = datetime.utcnow().replace(microsecond=0)
 
         # self.disk = psutil.disk_usage("/").used
         # self.network = psutil.net_io_counters().bytes_recv
@@ -32,11 +33,11 @@ class BasicStatus(db.Model):
     def __str__(self):
         return f"cpu:{self.cpu_percent}%, memory:{round(self.ram_percent/(1024**3),2)}G, disk:{round(self.disk/(1024**3),2)}G"
 
+    @staticmethod
+    def save():
+        db.session.add(BasicStatus())
+        db.session.commit()
 
-def save_basic_status(status):
-    db.session.add(status)
-    db.session.commit()
-
-
-def get_last_basic_status():
-    return BasicStatus.query.order_by(BasicStatus.time_stamp.desc()).first()
+    @staticmethod
+    def get_last():
+        return BasicStatus.query.order_by(BasicStatus.time_stamp.desc()).first()

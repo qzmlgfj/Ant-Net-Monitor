@@ -5,31 +5,56 @@
                 <router-view />
             </n-card>
             <n-card hoverable>
-                <line-chart :argv="series" />
+                <n-button-group>
+                    <n-button type="default" round @click="switchToHistory">
+                        <template #icon>
+                            <n-icon><history /></n-icon>
+                        </template>
+                        24小时历史
+                    </n-button>
+                    <n-button type="default" round @click="switchToRealTime">
+                        <template #icon>
+                            <n-icon><chart-line /></n-icon>
+                        </template>
+                        实时状态
+                    </n-button>
+                </n-button-group>
+                <line-chart :argv="series" :enableZoom="enableZoom" />
             </n-card>
         </n-space>
     </div>
 </template>
 
 <script>
-import { NCard, NSpace } from "naive-ui";
-import LineChart from "@/components/charts/LineChart.vue";
-import { initLineChart, updateLineChart } from "@/utils/request";
-import { setCPUSeries, updateCPUSeries } from "@/utils/cpu-series";
-import { setRAMSeries, updateRAMSeries } from "@/utils/ram-series";
+import { NCard, NSpace, NButtonGroup, NButton, NIcon } from "naive-ui";
+import { History, ChartLine } from "@vicons/fa";
 
-//TODO 需要继续封装，最好复用折线图组件
+import LineChart from "@/components/charts/LineChart.vue";
+import {
+    initLineChart,
+    updateLineChart,
+    getHistoryLineChart,
+} from "@/utils/request";
+import { setCPUSeries, updateCPUSeries } from "@/utils/series/cpu-series";
+import { setRAMSeries, updateRAMSeries } from "@/utils/series/ram-series";
+
 export default {
     name: "Info",
     components: {
         NCard,
         NSpace,
+        NButtonGroup,
+        NButton,
+        NIcon,
+        History,
+        ChartLine,
         LineChart,
     },
     data() {
         return {
             series: {},
             interval: null,
+            enableZoom: false,
         };
     },
     methods: {
@@ -48,7 +73,7 @@ export default {
                 ]);
             }
             */
-            updateLineChart(process.env.NODE_ENV, url).then((response) => {
+            updateLineChart(url).then((response) => {
                 switch (this.$route.name) {
                     case "CPU-Info":
                         updateCPUSeries(response.data);
@@ -59,9 +84,8 @@ export default {
                 }
             });
         },
-
         initSeries(url) {
-            initLineChart(process.env.NODE_ENV, url).then((response) => {
+            initLineChart(url).then((response) => {
                 switch (this.$route.name) {
                     case "CPU-Info":
                         this.series = setCPUSeries(response.data);
@@ -72,19 +96,48 @@ export default {
                 }
             });
         },
+        switchToHistory() {
+            if (!this.enableZoom) {
+                this.enableZoom = true;
+                clearInterval(this.interval);
+                getHistoryLineChart(this.$route.meta.apiUrl).then(
+                    (response) => {
+                        switch (this.$route.name) {
+                            case "CPU-Info":
+                                this.series = setCPUSeries(response.data);
+                                break;
+                            case "RAM-Info":
+                                this.series = setRAMSeries(response.data);
+                                break;
+                        }
+                    }
+                );
+            }
+        },
+        switchToRealTime() {
+            // FIXME 有点脏，想个办法重构一下
+            if (this.enableZoom) {
+                this.enableZoom = false;
+                this.initSeries(this.$route.meta.apiUrl);
+                this.interval = setInterval(() => {
+                    this.updateSeries(this.$route.meta.apiUrl);
+                }, 1000);
+            }
+        },
     },
     created() {
-        this.initSeries(this.$route.path);
+        this.initSeries(this.$route.meta.apiUrl);
         this.interval = setInterval(() => {
-            this.updateSeries(this.$route.path);
+            this.updateSeries(this.$route.meta.apiUrl);
         }, 1000);
     },
     beforeRouteUpdate(to) {
         clearInterval(this.interval);
-        this.initSeries(to.path);
+        this.initSeries(to.meta.apiUrl);
         this.interval = setInterval(() => {
-            this.updateSeries(to.path);
+            this.updateSeries(to.meta.apiUrl);
         }, 1000);
+        this.enableZoom = false;
     },
 };
 </script>

@@ -3,7 +3,7 @@ import axios from "axios";
 axios.defaults.retry = 4;
 
 const serviceProd = axios.create({
-    timeout: 3000,
+    timeout: 10000,
 });
 
 const serviceDev = axios.create({
@@ -11,4 +11,6 @@ const serviceDev = axios.create({
     timeout: 3000,
 });
 
-export {serviceProd, serviceDev};
+const service = process.env.NODE_ENV === "development" ? serviceDev : serviceProd;
+
+export {service};

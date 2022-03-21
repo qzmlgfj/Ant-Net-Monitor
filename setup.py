@@ -14,7 +14,6 @@ setup(
         'flask_cors>=3.0.10',
         'click>=8.0.3',
         'psutil>=5.9.0',
-        'dataclasses>=0.6',
         'gunicorn>=20.1.0'
     ],
     long_description_content_type='text/markdown',
