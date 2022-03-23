@@ -62,7 +62,7 @@ class CPUStatus(db.Model):
             self.guest_nice_percent = format(round(random.uniform(0, 100), 2), ".2f")
             self.time_stamp = time_stamp
         else:
-            current_status = psutil.cpu_times_percent(interval=1)
+            current_status = psutil.cpu_times_percent()
             self.user_percent = current_status.user
             self.nice_percent = current_status.nice
             self.system_percent = current_status.system
@@ -88,7 +88,7 @@ class CPUStatus(db.Model):
 
     @staticmethod
     def get_last():
-        return CPUStatus.query.order_by(CPUStatus.time_stamp.desc()).first()
+        return CPUStatus()
 
     @staticmethod
     def get_batch():

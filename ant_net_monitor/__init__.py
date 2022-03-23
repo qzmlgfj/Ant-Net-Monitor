@@ -59,13 +59,13 @@ def create_app(test_config=None):
 
     CORS(app)
     register_extensions(app)
+    check_table_exist(app)
 
     app.register_blueprint(status_bp)
     app.register_blueprint(alarm_bp)
 
     add_command(app)
 
-    check_table_exist(app)
     init_alarm(app)
 
     set_all_threads(app)

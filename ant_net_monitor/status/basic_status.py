@@ -21,7 +21,7 @@ class BasicStatus(db.Model):
     disk = db.Column(db.Float)
 
     def __init__(self):
-        self.cpu_percent = psutil.cpu_percent(interval=1)
+        self.cpu_percent = psutil.cpu_percent()
         self.ram_percent = psutil.virtual_memory().percent
         self.swap_percent = psutil.swap_memory().percent
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
@@ -40,4 +40,5 @@ class BasicStatus(db.Model):
 
     @staticmethod
     def get_last():
-        return BasicStatus.query.order_by(BasicStatus.time_stamp.desc()).first()
+        # FIXME 你确定每次都得倒序查一遍吗？性能开销大不大？
+        return BasicStatus()

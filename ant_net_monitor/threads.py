@@ -17,6 +17,7 @@ def set_basic_status_thread(app):
             while True:
                 try:
                     BasicStatus.save()
+                    sleep(1)
                 except Exception as e:
                     db.session.rollback()
                     app.logger.error(e)
@@ -33,6 +34,7 @@ def set_cpu_status_thread(app):
             while True:
                 try:
                     CPUStatus.save()
+                    sleep(1)
                 except Exception as e:
                     db.session.rollback()
                     app.logger.error(e)

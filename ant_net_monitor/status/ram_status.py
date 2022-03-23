@@ -58,7 +58,7 @@ class RAMStatus(db.Model):
 
     @staticmethod
     def get_last():
-        return RAMStatus.query.order_by(RAMStatus.time_stamp.desc()).first()
+        return RAMStatus()
 
     @staticmethod
     def get_batch():
