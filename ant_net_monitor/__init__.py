@@ -8,7 +8,10 @@ from .threads import set_all_threads
 
 from .cli import init_db, init_db_command
 from .extensions import db
-from .status_blueprint import status_bp
+from .blueprint.status_blueprint import status_bp
+from .blueprint.alarm_blueprint import alarm_bp
+
+from .alarm import init_alarm
 
 
 def create_app(test_config=None):
@@ -54,14 +57,16 @@ def create_app(test_config=None):
     def catch_all(path):
         return render_template("index.html")
 
-    app.register_blueprint(status_bp)
-
     CORS(app)
-
     register_extensions(app)
+
+    app.register_blueprint(status_bp)
+    app.register_blueprint(alarm_bp)
+
     add_command(app)
 
     check_table_exist(app)
+    init_alarm(app)
 
     set_all_threads(app)
 
