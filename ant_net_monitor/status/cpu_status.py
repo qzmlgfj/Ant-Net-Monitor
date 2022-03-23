@@ -5,8 +5,6 @@ from dataclasses import dataclass
 import random
 from sqlalchemy import extract
 
-from . import date_range
-
 
 @dataclass
 class CPUStatus(db.Model):
@@ -88,7 +86,8 @@ class CPUStatus(db.Model):
 
     @staticmethod
     def get_last():
-        return CPUStatus()
+        start = datetime.utcnow() - timedelta(minutes=1)
+        return CPUStatus.query.filter(CPUStatus.time_stamp >= start).order_by(CPUStatus.time_stamp.desc()).first()
 
     @staticmethod
     def get_batch():

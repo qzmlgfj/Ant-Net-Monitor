@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 import psutil
 from ..extensions import db
 from dataclasses import dataclass
@@ -40,5 +40,5 @@ class BasicStatus(db.Model):
 
     @staticmethod
     def get_last():
-        # FIXME 你确定每次都得倒序查一遍吗？性能开销大不大？
-        return BasicStatus()
+        start = datetime.utcnow() - timedelta(minutes=1)
+        return BasicStatus.query.filter(BasicStatus.time_stamp > start).order_by(BasicStatus.time_stamp.desc()).first()
