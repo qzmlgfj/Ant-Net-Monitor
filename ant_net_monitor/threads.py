@@ -11,8 +11,6 @@ from .alarm.alarm_flag import AlarmFlag
 
 # TODO 整个函数变量进去，进一步封装
 
-# FIXME 或许应该合到一个线程里？
-
 def set_basic_status_thread(app):
     """Register basic status thread."""
 

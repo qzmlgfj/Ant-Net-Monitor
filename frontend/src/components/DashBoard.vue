@@ -1,17 +1,17 @@
 <template>
-        <n-card hoverable>
-            <div id="dashboard">
-                <gauge-chart id="swap-status" :argv="SwapStatus" />
-                <gauge-chart id="cpu-status" :argv="CPUStatus" />
-                <gauge-chart id="ram-status" :argv="RAMStatus" />
-            </div>
-        </n-card>
+    <n-card hoverable>
+        <div id="dashboard">
+            <gauge-chart id="swap-status" :argv="SwapStatus" />
+            <gauge-chart id="cpu-status" :argv="CPUStatus" />
+            <gauge-chart id="ram-status" :argv="RAMStatus" />
+        </div>
+    </n-card>
 </template>
 
 <script>
 import GaugeChart from "./charts/GaugeChart.vue";
-import { getBasicStatus } from "../utils/request";
-import { NCard } from "naive-ui";
+import { getBasicStatus, getAlarmFlag } from "../utils/request";
+import { NCard, useNotification } from "naive-ui";
 
 //TODO 建立完整仪表盘
 
@@ -19,6 +19,14 @@ export default {
     components: {
         NCard,
         GaugeChart,
+    },
+    setup() {
+        const notification = useNotification();
+        return {
+            notify(type, info) {
+                notification[type](info);
+            },
+        };
     },
     data() {
         return {
@@ -38,6 +46,7 @@ export default {
                 value: 0,
                 height: "35vh",
             },
+            alarmFlag: {},
         };
     },
     methods: {},
@@ -56,6 +65,41 @@ export default {
                 });
             }
         }, 1000);
+
+        setInterval(() => {
+            getAlarmFlag().then((response) => {
+                this.alarmFlag = response.data;
+            });
+        }, 5000);
+    },
+    watch: {
+        alarmFlag: {
+            handler: function (alarmFlag) {
+                if (alarmFlag.cpu_usage) {
+                    console.log("cpu_usage");
+                    this.notify("warning", {
+                        content: "CPU usage is too high",
+                        meta: Date.now(),
+                    });
+                }
+                if (alarmFlag.cpu_steal) {
+                    console.log("cpu_steal");
+                    this.notify("warning", {
+                        content: "CPU steal time is too high",
+                        meta: Date.now(),
+                    });
+                }
+                if (alarmFlag.cpu_iowait) {
+                    console.log("cpu_iowait");
+                    this.notify("warning", {
+                        content: "CPU iowait time is too high",
+                        meta: Date.now(),
+                    });
+                }
+            },
+            deep: true,
+            immediate: true,
+        },
     },
 };
 </script>

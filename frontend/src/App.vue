@@ -11,7 +11,9 @@
                     </n-layout-sider>
                     <n-layout-content>
                         <n-space vertical>
-                            <dash-board />
+                            <n-notification-provider>
+                                <dash-board />
+                            </n-notification-provider>
                             <router-view />
                         </n-space>
                     </n-layout-content>
@@ -23,7 +25,13 @@
 
 <script>
 import { ref, computed } from "vue";
-import { NLayout, NConfigProvider, NSpace, darkTheme } from "naive-ui";
+import {
+    NLayout,
+    NConfigProvider,
+    NSpace,
+    NNotificationProvider,
+    darkTheme,
+} from "naive-ui";
 import { THEME_KEY } from "vue-echarts";
 import { registerTheme } from "echarts/core";
 import DarkModeJson from "./assets/DarkMode.json";
@@ -40,6 +48,7 @@ export default {
         NConfigProvider,
         NLayout,
         NSpace,
+        NNotificationProvider,
         HeadBar,
         SideBar,
         DashBoard,
@@ -53,7 +62,7 @@ export default {
     },
     provide() {
         return {
-            [THEME_KEY]: computed(() => this.chartTheme)
+            [THEME_KEY]: computed(() => this.chartTheme),
         };
     },
     methods: {
