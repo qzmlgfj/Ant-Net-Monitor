@@ -11,7 +11,7 @@ from .extensions import db
 from .blueprint.status_blueprint import status_bp
 from .blueprint.alarm_blueprint import alarm_bp
 
-from .alarm import init_alarm
+from .alarm.alarm import Alarm
 
 
 def create_app(test_config=None):
@@ -66,7 +66,7 @@ def create_app(test_config=None):
 
     add_command(app)
 
-    init_alarm(app)
+    Alarm.init_alarm(app)
 
     set_all_threads(app)
 

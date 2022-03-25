@@ -7,7 +7,7 @@ from .status.basic_status import BasicStatus
 from .status.cpu_status import CPUStatus
 from .status.ram_status import RAMStatus
 
-from .alarm.alarm_flag import AlarmFlag
+from .alarm.alarm import Alarm
 
 # TODO 整个函数变量进去，进一步封装
 
@@ -26,7 +26,7 @@ def set_basic_status_thread(app):
                     RAMStatus.save(new_ram_status)
 
                     alarm_value = (new_basic_status.cpu_percent, new_cpu_status.iowait_percent, new_cpu_status.steal_percent)
-                    AlarmFlag.check_cpu_alarm(*alarm_value)
+                    Alarm.check_cpu_alarm(*alarm_value)
 
                     sleep(1)
                 except Exception as e:

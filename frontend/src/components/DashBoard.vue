@@ -74,6 +74,7 @@ export default {
     },
     watch: {
         alarmFlag: {
+            // FIXME 改改逻辑，重复弹窗
             handler: function (alarmFlag) {
                 if (alarmFlag.cpu_usage) {
                     console.log("cpu_usage");
