@@ -12,47 +12,22 @@
                         </template>
                         24小时历史
                     </n-button>
-                    <n-button type="default" @click="switchToRealTime">
+                    <n-button type="default" round @click="switchToRealTime">
                         <template #icon>
                             <n-icon><chart-line /></n-icon>
                         </template>
                         实时状态
                     </n-button>
-                    <n-button type="default" round @click="switchAlarmSetting">
-                        <template #icon>
-                            <n-icon><thermometer-half /></n-icon>
-                        </template>
-                        异常警报
-                    </n-button>
                 </n-button-group>
                 <line-chart :argv="series" :enableZoom="enableZoom" />
             </n-card>
         </n-space>
-        <n-modal v-model:show="alarmSettingVisible">
-            <n-card
-                style="width: 600px"
-                title="警报设置"
-                :bordered="false"
-                size="huge"
-                role="dialog"
-                aria-modal="true"
-                footer-style="display:flex;justify-content:flex-end;"
-                closable
-                @close="switchAlarmSetting"
-            >
-                设置点什么玩意儿
-                <template #footer>
-                    <n-button type="primary">保存</n-button>
-                    <n-button type="default">取消</n-button>
-                </template>
-            </n-card>
-        </n-modal>
     </div>
 </template>
 
 <script>
-import { NCard, NSpace, NButtonGroup, NButton, NIcon, NModal } from "naive-ui";
-import { History, ChartLine, ThermometerHalf } from "@vicons/fa";
+import { NCard, NSpace, NButtonGroup, NButton, NIcon} from "naive-ui";
+import { History, ChartLine } from "@vicons/fa";
 
 import LineChart from "@/components/charts/LineChart.vue";
 import {
@@ -71,10 +46,8 @@ export default {
         NButtonGroup,
         NButton,
         NIcon,
-        NModal,
         History,
         ChartLine,
-        ThermometerHalf,
         LineChart,
     },
     data() {
@@ -135,7 +108,7 @@ export default {
                 this.initSeries(this.$route.meta.apiUrl);
                 this.interval = setInterval(() => {
                     this.updateSeries(this.$route.meta.apiUrl);
-                }, 1000);
+                }, 1300);
             }
         },
         switchAlarmSetting() {
@@ -146,14 +119,14 @@ export default {
         this.initSeries(this.$route.meta.apiUrl);
         this.interval = setInterval(() => {
             this.updateSeries(this.$route.meta.apiUrl);
-        }, 1000);
+        }, 1300);
     },
     beforeRouteUpdate(to) {
         clearInterval(this.interval);
         this.initSeries(to.meta.apiUrl);
         this.interval = setInterval(() => {
             this.updateSeries(to.meta.apiUrl);
-        }, 1000);
+        }, 1300);
         this.enableZoom = false;
     },
 };

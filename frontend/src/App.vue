@@ -3,7 +3,7 @@
         <n-config-provider :theme="naiveTheme">
             <n-layout id="container">
                 <n-layout-header bordered>
-                    <head-bar @changeTheme="changeTheme" />
+                    <head-bar @changeTheme="changeTheme" @alarm="switchAlarm" />
                 </n-layout-header>
                 <n-layout has-sider>
                     <n-layout-sider>
@@ -19,6 +19,25 @@
                     </n-layout-content>
                 </n-layout>
             </n-layout>
+            <n-modal v-model:show="alarmSettingVisible">
+                <n-card
+                    style="width: 600px"
+                    title="警报设置"
+                    :bordered="false"
+                    size="huge"
+                    role="dialog"
+                    aria-modal="true"
+                    footer-style="display:flex;justify-content:flex-end;"
+                    closable
+                    @close="switchAlarm"
+                >
+                    设置点什么玩意儿
+                    <template #footer>
+                        <n-button type="primary">保存</n-button>
+                        <n-button type="default">取消</n-button>
+                    </template>
+                </n-card>
+            </n-modal>
         </n-config-provider>
     </div>
 </template>
@@ -32,6 +51,9 @@ import {
     NLayoutContent,
     NConfigProvider,
     NSpace,
+    NModal,
+    NCard,
+    NButton,
     NNotificationProvider,
     darkTheme,
 } from "naive-ui";
@@ -54,6 +76,9 @@ export default {
         NLayoutSider,
         NLayoutContent,
         NSpace,
+        NModal,
+        NCard,
+        NButton,
         NNotificationProvider,
         HeadBar,
         SideBar,
@@ -64,6 +89,7 @@ export default {
             darkTheme,
             naiveTheme: ref(null),
             chartTheme: ref("white"),
+            alarmSettingVisible: ref(false),
         };
     },
     provide() {
@@ -83,6 +109,9 @@ export default {
             }
 
             this.$store.commit("changeTheme");
+        },
+        switchAlarm() {
+            this.alarmSettingVisible = !this.alarmSettingVisible;
         },
     },
 };
