@@ -40,7 +40,7 @@ function getHistoryLineChart(url) {
 function getAlarmFlag() {
     return service({
         method: "get",
-        url: "api/alarm/alarm_item",
+        url: "/api/alarm/alarm_item",
     })
 }
 
