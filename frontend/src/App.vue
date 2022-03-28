@@ -2,7 +2,7 @@
     <div>
         <n-config-provider :theme="naiveTheme">
             <n-layout id="container">
-                <n-layout-header id="header">
+                <n-layout-header bordered>
                     <head-bar @changeTheme="changeTheme" />
                 </n-layout-header>
                 <n-layout has-sider>
@@ -27,6 +27,9 @@
 import { ref, computed } from "vue";
 import {
     NLayout,
+    NLayoutHeader,
+    NLayoutSider,
+    NLayoutContent,
     NConfigProvider,
     NSpace,
     NNotificationProvider,
@@ -47,6 +50,9 @@ export default {
     components: {
         NConfigProvider,
         NLayout,
+        NLayoutHeader,
+        NLayoutSider,
+        NLayoutContent,
         NSpace,
         NNotificationProvider,
         HeadBar,
@@ -89,10 +95,6 @@ body {
     font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
         "Segoe UI Symbol";
-}
-
-#header > * {
-    display: inline-block;
 }
 
 #container {
