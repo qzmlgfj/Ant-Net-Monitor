@@ -109,6 +109,6 @@ export default {
 <style scoped>
 .chart {
     height: 32vh;
-    width: 48vw;
+    width: 46vw;
 }
 </style>
