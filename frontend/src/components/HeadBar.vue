@@ -58,7 +58,7 @@ export default {
 }
 
 #header-end {
-    position: relative;
-    left: 75vw;
+    display: flex;
+    width: 85%;
 }
 </style>
