@@ -1,10 +1,10 @@
 <template>
     <div id="info">
-        <n-space>
+        <n-space wrap="false" size="large" justify="space-between">
             <n-card id="info-sider" hoverable>
                 <router-view />
             </n-card>
-            <n-card hoverable>
+            <n-card hoverable id="info-chart">
                 <n-button-group>
                     <n-button type="default" round @click="switchToHistory">
                         <template #icon>
@@ -56,6 +56,7 @@ export default {
             interval: null,
             enableZoom: false,
             alarmSettingVisible: false,
+            intervalTime: 1500
         };
     },
     methods: {
@@ -102,13 +103,12 @@ export default {
             }
         },
         switchToRealTime() {
-            // FIXME 有点脏，想个办法重构一下
             if (this.enableZoom) {
                 this.enableZoom = false;
                 this.initSeries(this.$route.meta.apiUrl);
                 this.interval = setInterval(() => {
                     this.updateSeries(this.$route.meta.apiUrl);
-                }, 1300);
+                }, this.intervalTime);
             }
         },
         switchAlarmSetting() {
@@ -119,14 +119,14 @@ export default {
         this.initSeries(this.$route.meta.apiUrl);
         this.interval = setInterval(() => {
             this.updateSeries(this.$route.meta.apiUrl);
-        }, 1300);
+        }, this.intervalTime);
     },
     beforeRouteUpdate(to) {
         clearInterval(this.interval);
         this.initSeries(to.meta.apiUrl);
         this.interval = setInterval(() => {
             this.updateSeries(to.meta.apiUrl);
-        }, 1300);
+        }, this.intervalTime);
         this.enableZoom = false;
     },
 };
@@ -134,13 +134,17 @@ export default {
 
 <style scoped>
 #info {
-    height: 44vh;
-    width: 88vw;
+    height: 45%;
 }
 
 #info-sider {
-    height: 42vh;
-    width: 35vw;
+    height: 39vh;
+    width: 30vw;
+}
+
+#info-chart{
+    height: 39vh;
+    width: 52.5vw;
 }
 
 .n-button {

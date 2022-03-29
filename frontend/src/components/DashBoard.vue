@@ -1,6 +1,6 @@
 <template>
-    <n-card hoverable>
-        <div id="dashboard">
+    <n-card id="dashboard" hoverable>
+        <div id="dashboard-container">
             <gauge-chart id="swap-status" :argv="SwapStatus" />
             <gauge-chart id="cpu-status" :argv="CPUStatus" />
             <gauge-chart id="ram-status" :argv="RAMStatus" />
@@ -106,9 +106,21 @@ export default {
 </script>
 
 <style>
+/*
 #dashboard {
     width: 79vw;
     height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+*/
+
+#dashboard {
+    height: 45%;
+}
+
+#dashboard-container {
     display: flex;
     align-items: center;
     justify-content: center;

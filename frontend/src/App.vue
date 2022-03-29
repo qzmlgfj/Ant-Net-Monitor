@@ -2,14 +2,14 @@
     <div>
         <n-config-provider :theme="naiveTheme">
             <n-layout id="container">
-                <n-layout-header bordered>
+                <n-layout-header id="head-bar" bordered>
                     <head-bar @changeTheme="changeTheme" @alarm="switchAlarm" />
                 </n-layout-header>
                 <n-layout has-sider>
-                    <n-layout-sider>
+                    <n-layout-sider id="side-bar">
                         <side-bar />
                     </n-layout-sider>
-                    <n-layout-content>
+                    <n-layout-content id="main-content">
                         <n-space vertical>
                             <n-notification-provider>
                                 <dash-board />
@@ -18,6 +18,9 @@
                         </n-space>
                     </n-layout-content>
                 </n-layout>
+                <n-layout-footer id="foot-bar" bordered>
+                    <foot-bar />
+                </n-layout-footer>
             </n-layout>
             <n-modal v-model:show="alarmSettingVisible">
                 <n-card
@@ -49,6 +52,7 @@ import {
     NLayoutHeader,
     NLayoutSider,
     NLayoutContent,
+    NLayoutFooter,
     NConfigProvider,
     NSpace,
     NModal,
@@ -63,6 +67,7 @@ import DarkModeJson from "./assets/DarkMode.json";
 
 import HeadBar from "./components/HeadBar.vue";
 import SideBar from "./components/SideBar.vue";
+import FootBar from "./components/FootBar.vue";
 import DashBoard from "./components/DashBoard.vue";
 
 registerTheme("dark-mode", DarkModeJson);
@@ -75,6 +80,7 @@ export default {
         NLayoutHeader,
         NLayoutSider,
         NLayoutContent,
+        NLayoutFooter,
         NSpace,
         NModal,
         NCard,
@@ -82,6 +88,7 @@ export default {
         NNotificationProvider,
         HeadBar,
         SideBar,
+        FootBar,
         DashBoard,
     },
     setup() {
@@ -128,6 +135,23 @@ body {
 
 #container {
     height: 100vh;
-    padding: 10px;
+    padding: 15px;
+    padding-bottom: 0%;
+}
+
+#side-bar {
+    width: 12vw;
+}
+
+#main-content {
+    width: 82vw;
+    height: 90vh;
+}
+
+#foot-bar {
+    height: 3vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
