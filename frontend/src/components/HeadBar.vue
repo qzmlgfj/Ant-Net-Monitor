@@ -1,6 +1,6 @@
 <template>
     <div id="header">
-        <n-h1>Ant Net Monitor</n-h1>
+        <n-h1 @click="goHome">Ant Net Monitor</n-h1>
         <n-space id="header-end">
             <n-button @click="changeTheme" id="change-theme" quaternary>
                 <template #icon>
@@ -39,6 +39,9 @@ export default {
         },
         switchAlarm() {
             this.$emit("alarm");
+        },
+        goHome() {
+            this.$router.push("/");
         },
     },
 };

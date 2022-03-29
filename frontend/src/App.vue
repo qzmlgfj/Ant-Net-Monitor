@@ -22,24 +22,9 @@
                     <foot-bar />
                 </n-layout-footer>
             </n-layout>
+
             <n-modal v-model:show="alarmSettingVisible">
-                <n-card
-                    style="width: 600px"
-                    title="警报设置"
-                    :bordered="false"
-                    size="huge"
-                    role="dialog"
-                    aria-modal="true"
-                    footer-style="display:flex;justify-content:flex-end;"
-                    closable
-                    @close="switchAlarm"
-                >
-                    设置点什么玩意儿
-                    <template #footer>
-                        <n-button type="primary">保存</n-button>
-                        <n-button type="default">取消</n-button>
-                    </template>
-                </n-card>
+                <alarm-card @switchAlarm="switchAlarm" />
             </n-modal>
         </n-config-provider>
     </div>
@@ -56,8 +41,6 @@ import {
     NConfigProvider,
     NSpace,
     NModal,
-    NCard,
-    NButton,
     NNotificationProvider,
     darkTheme,
 } from "naive-ui";
@@ -69,6 +52,7 @@ import HeadBar from "./components/HeadBar.vue";
 import SideBar from "./components/SideBar.vue";
 import FootBar from "./components/FootBar.vue";
 import DashBoard from "./components/DashBoard.vue";
+import AlarmCard from "./components/AlarmCard.vue";
 
 registerTheme("dark-mode", DarkModeJson);
 
@@ -83,20 +67,25 @@ export default {
         NLayoutFooter,
         NSpace,
         NModal,
-        NCard,
-        NButton,
         NNotificationProvider,
         HeadBar,
         SideBar,
         FootBar,
         DashBoard,
+        AlarmCard,
     },
     setup() {
+        const alarmSettingVisible = ref(false);
+        const switchAlarm = function () {
+            alarmSettingVisible.value = !alarmSettingVisible.value;
+        };
+
         return {
             darkTheme,
             naiveTheme: ref(null),
             chartTheme: ref("white"),
-            alarmSettingVisible: ref(false),
+            alarmSettingVisible,
+            switchAlarm,
         };
     },
     provide() {
@@ -117,9 +106,6 @@ export default {
 
             this.$store.commit("changeTheme");
         },
-        switchAlarm() {
-            this.alarmSettingVisible = !this.alarmSettingVisible;
-        },
     },
 };
 </script>
@@ -135,6 +121,7 @@ body {
 
 #container {
     height: 100vh;
+    /*BUG 深色模式下存在黑边，考虑挪到其它组件里 */
     padding: 15px;
     padding-bottom: 0%;
 }
