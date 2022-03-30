@@ -23,9 +23,11 @@
                 </n-layout-footer>
             </n-layout>
 
-            <n-modal v-model:show="alarmSettingVisible">
-                <alarm-card @switchAlarm="switchAlarm" />
-            </n-modal>
+            <n-message-provider>
+                <n-modal v-model:show="alarmSettingVisible">
+                    <alarm-card @switchAlarm="switchAlarm" />
+                </n-modal>
+            </n-message-provider>
         </n-config-provider>
     </div>
 </template>
@@ -42,6 +44,7 @@ import {
     NSpace,
     NModal,
     NNotificationProvider,
+    NMessageProvider,
     darkTheme,
 } from "naive-ui";
 import { THEME_KEY } from "vue-echarts";
@@ -68,6 +71,7 @@ export default {
         NSpace,
         NModal,
         NNotificationProvider,
+        NMessageProvider,
         HeadBar,
         SideBar,
         FootBar,

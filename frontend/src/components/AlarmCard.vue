@@ -12,12 +12,13 @@
     >
         <n-data-table
             remote
-            striped 
+            striped
             ref="table"
             :columns="columns"
             :data="data"
             :loading="loadingFlag"
             :row-key="rowKey"
+            :row-props="rowProps"
         />
 
         <!--
@@ -31,7 +32,7 @@
 
 <script>
 import { ref, h } from "vue";
-import { NCard, NDataTable, NText, NTag } from "naive-ui";
+import { NCard, NDataTable, NText, NTag, useMessage } from "naive-ui";
 import { getAlarmFlag } from "../utils/request";
 
 const createColumns = () => {
@@ -82,6 +83,7 @@ export default {
         const columns = createColumns();
         const data = ref([]);
         const loadingFlag = ref(true);
+        const message = useMessage();
 
         const initData = function () {
             getAlarmFlag().then((response) => {
@@ -92,6 +94,15 @@ export default {
 
         const rowKey = (rowData) => rowData.name;
 
+        const rowProps = (row) => {
+            return {
+                style: "cursor: pointer;",
+                onClick: () => {
+                    message.info(row.name);
+                },
+            };
+        };
+
         initData();
 
         return {
@@ -100,6 +111,7 @@ export default {
             loadingFlag,
             initData,
             rowKey,
+            rowProps,
         };
     },
     methods: {

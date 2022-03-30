@@ -60,5 +60,6 @@ export default {
 #header-end {
     display: flex;
     width: 85%;
+    justify-content: flex-end;
 }
 </style>
