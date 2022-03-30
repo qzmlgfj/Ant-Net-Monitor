@@ -9,10 +9,8 @@ def return_alarm_flag():
 
 @alarm_bp.route("alarm_item", methods=["POST"])
 def update_alarm_flag():
-    alarm = request.get_json()
-    print(alarm)
     try:
-        Alarm.update_alarm(alarm)
+        Alarm.update_alarm(request.get_json())
     except Exception as e:
         return jsonify({"status": "fail"})
     return jsonify({"status": "success"})

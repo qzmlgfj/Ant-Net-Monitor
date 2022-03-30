@@ -53,6 +53,8 @@ export default {
 #header {
     display: flex;
     align-items: center;
+    padding: 5px;
+    padding-left: 20px;
 }
 
 .n-h1 {

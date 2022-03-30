@@ -125,9 +125,6 @@ body {
 
 #container {
     height: 100vh;
-    /*BUG 深色模式下存在黑边，考虑挪到其它组件里 */
-    padding: 15px;
-    padding-bottom: 0%;
 }
 
 #side-bar {
@@ -137,6 +134,7 @@ body {
 #main-content {
     width: 82vw;
     height: 90vh;
+    padding-right: 10px;
 }
 
 #foot-bar {
