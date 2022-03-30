@@ -1,22 +1,24 @@
 <template>
     <div id="header">
         <n-h1 @click="goHome">Ant Net Monitor</n-h1>
-        <n-space id="header-end">
-            <n-button @click="changeTheme" id="change-theme" quaternary>
-                <template #icon>
-                    <n-icon>
-                        <switch-horizontal />
-                    </n-icon>
-                </template>
-                切换主题
-            </n-button>
-            <n-button @click="switchAlarm" quaternary>
-                <template #icon>
-                    <n-icon><thermometer-half /></n-icon>
-                </template>
-                异常警报
-            </n-button>
-        </n-space>
+        <div id="header-end">
+            <n-space>
+                <n-button @click="changeTheme" id="change-theme" quaternary>
+                    <template #icon>
+                        <n-icon>
+                            <switch-horizontal />
+                        </n-icon>
+                    </template>
+                    切换主题
+                </n-button>
+                <n-button @click="switchAlarm" quaternary>
+                    <template #icon>
+                        <n-icon><thermometer-half /></n-icon>
+                    </template>
+                    异常警报
+                </n-button>
+            </n-space>
+        </div>
     </div>
 </template>
 

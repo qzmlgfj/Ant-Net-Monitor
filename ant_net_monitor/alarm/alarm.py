@@ -9,18 +9,21 @@ class Alarm(db.Model):
     alarm_value: float
     counter: int
     flag: bool
+    activated:bool
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(64))
     alarm_value = db.Column(db.Float)
     counter = db.Column(db.Integer)
     flag = db.Column(db.Boolean)
+    activated = db.Column(db.Boolean)
 
     def __init__(self, name, alarm_value):
         self.name = name
         self.alarm_value = alarm_value
         self.counter = 0
         self.flag = False
+        self.activated = True
 
     @classmethod
     def create_cpu_alarm(cls):
@@ -54,6 +57,13 @@ class Alarm(db.Model):
             if len(cls.get_all_alarm_items()) == 0:
                 cls.create_cpu_alarm()
                 cls.create_ram_alarm()
+
+    @classmethod
+    def update_alarm(cls, alarm):
+        target = cls.query.filter_by(name=alarm["name"]).first()
+        target.alarm_value = alarm["alarmValue"]
+        target.activated = alarm["activated"]
+        db.session.commit()
 
     @classmethod
     def check_cpu_alarm(cls, cpu_usage, cpu_iowait, cpu_steal):
