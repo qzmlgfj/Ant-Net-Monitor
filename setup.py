@@ -1,9 +1,8 @@
-from gettext import install
 from setuptools import setup, find_packages
 
 setup(
     name='ant_net_monitor',
-    version='0.1.1dev2',
+    version='0.1.1dev3',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,

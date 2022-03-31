@@ -12,7 +12,7 @@
 import GaugeChart from "./charts/GaugeChart.vue";
 import { getBasicStatus, getAlarmFlag } from "../utils/request";
 import { NCard, useNotification, NTime, useMessage } from "naive-ui";
-import {h} from "vue";
+import { h } from "vue";
 
 //TODO 建立完整仪表盘
 
@@ -28,7 +28,7 @@ export default {
             notify(type, info) {
                 notification[type](info);
             },
-            message
+            message,
         };
     },
     data() {
@@ -83,15 +83,13 @@ export default {
                         this.notify("warning", {
                             title: item.name,
                             content: `${item.name}超出警告阈值`,
-                            meta: () => h(
-                                NTime,
-                                {
+                            meta: () =>
+                                h(NTime, {
                                     time: Date.now(),
-                                }
-                            ),
+                                }),
                             onClose: () => {
-                                this.handleNotificationClose(item.name)
-                            }
+                                this.handleNotificationClose(item.name);
+                            },
                         });
                         item.visible = true;
                         item.lastTime = Date.now();
@@ -99,7 +97,7 @@ export default {
                 }
             });
         },
-        handleNotificationClose(name){
+        handleNotificationClose(name) {
             this.alarmFlag.forEach((item) => {
                 if (item.name === name) {
                     item.visible = false;
@@ -107,7 +105,7 @@ export default {
                     this.message.success(`${item.intervalTime}秒内不再提示`);
                 }
             });
-        }
+        },
     },
     beforeMount() {
         setInterval(() => {
