@@ -9,7 +9,8 @@ class Alarm(db.Model):
     alarm_value: float
     counter: int
     flag: bool
-    activated:bool
+    activated: bool
+    interval_time: int
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(64))
@@ -17,6 +18,7 @@ class Alarm(db.Model):
     counter = db.Column(db.Integer)
     flag = db.Column(db.Boolean)
     activated = db.Column(db.Boolean)
+    interval_time = db.Column(db.Integer)
 
     def __init__(self, name, alarm_value):
         self.name = name
@@ -24,6 +26,7 @@ class Alarm(db.Model):
         self.counter = 0
         self.flag = False
         self.activated = True
+        self.interval_time = 300
 
     @classmethod
     def create_cpu_alarm(cls):
@@ -63,6 +66,7 @@ class Alarm(db.Model):
         target = cls.query.filter_by(name=alarm["name"]).first()
         target.alarm_value = alarm["alarmValue"]
         target.activated = alarm["activated"]
+        target.interval_time = alarm["intervalTime"]
         db.session.commit()
 
     @classmethod

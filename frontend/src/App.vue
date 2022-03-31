@@ -11,9 +11,11 @@
                     </n-layout-sider>
                     <n-layout-content id="main-content">
                         <n-space vertical>
-                            <n-notification-provider>
-                                <dash-board />
-                            </n-notification-provider>
+                            <n-message-provider>
+                                <n-notification-provider>
+                                    <dash-board />
+                                </n-notification-provider>
+                            </n-message-provider>
                             <router-view />
                         </n-space>
                     </n-layout-content>

@@ -11,6 +11,7 @@ from .alarm.alarm import Alarm
 
 # TODO 整个函数变量进去，进一步封装
 
+
 def set_basic_status_thread(app):
     """Register basic status thread."""
 
@@ -25,7 +26,11 @@ def set_basic_status_thread(app):
                     CPUStatus.save(new_cpu_status)
                     RAMStatus.save(new_ram_status)
 
-                    alarm_value = (new_basic_status.cpu_percent, new_cpu_status.iowait_percent, new_cpu_status.steal_percent)
+                    alarm_value = (
+                        new_basic_status.cpu_percent,
+                        new_cpu_status.iowait_percent,
+                        new_cpu_status.steal_percent,
+                    )
                     Alarm.check_cpu_alarm(*alarm_value)
 
                     sleep(1)
@@ -33,49 +38,16 @@ def set_basic_status_thread(app):
                     db.session.rollback()
                     sleep(random.random())
                     app.logger.error(e)
+                
+                try:
+                    if app.config["FINISH_TESTING"]:
+                        break
+                except KeyError:
+                    pass
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
 
 
-#def set_cpu_status_thread(app):
-#    """Register cpu status thread."""
-#
-#    def save_status_loop(app):
-#        with app.app_context():
-#            while True:
-#                try:
-#                    new_cpu_status = CPUStatus()
-#                    CPUStatus.save(new_cpu_status)
-#                    sleep(1)
-#                except Exception as e:
-#                    db.session.rollback()
-#                    sleep(random.random())
-#                    app.logger.error(e)
-#
-#    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
-#    save_status_thread.start()
-
-
-#def set_ram_status_thread(app):
-#    """Register ram status thread."""
-#
-#    def save_status_loop(app):
-#        with app.app_context():
-#            while True:
-#                try:
-#                    RAMStatus.save()
-#                    sleep(1)
-#                except Exception as e:
-#                    db.session.rollback()
-#                    sleep(random.random())
-#                    app.logger.error(e)
-#
-#    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
-#    save_status_thread.start()
-
-
 def set_all_threads(app):
     set_basic_status_thread(app)
-#    set_cpu_status_thread(app)
-#    set_ram_status_thread(app)

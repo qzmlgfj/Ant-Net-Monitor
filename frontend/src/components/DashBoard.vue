@@ -11,7 +11,8 @@
 <script>
 import GaugeChart from "./charts/GaugeChart.vue";
 import { getBasicStatus, getAlarmFlag } from "../utils/request";
-import { NCard, useNotification } from "naive-ui";
+import { NCard, useNotification, NTime, useMessage } from "naive-ui";
+import {h} from "vue";
 
 //TODO 建立完整仪表盘
 
@@ -22,10 +23,12 @@ export default {
     },
     setup() {
         const notification = useNotification();
+        const message = useMessage();
         return {
             notify(type, info) {
                 notification[type](info);
             },
+            message
         };
     },
     data() {
@@ -46,10 +49,66 @@ export default {
                 value: 0,
                 height: "35vh",
             },
-            alarmFlag: {},
+            alarmFlag: [],
         };
     },
-    methods: {},
+    methods: {
+        initAlarmFlag(data) {
+            data.forEach((item) => {
+                this.alarmFlag.push({
+                    name: item.name,
+                    flag: item.flag,
+                    activated: item.activated,
+                    //TODO 考虑在接口区分激活的Alarm和所有Alarm
+                    intervalTime: item.interval_time,
+                    visible: false,
+                    lastTime: 0,
+                });
+            });
+        },
+        updateAlarmFlag(data) {
+            for (let i = 0; i < data.length; i++) {
+                this.alarmFlag[i].flag = data[i].flag;
+                this.alarmFlag[i].activated = data[i].activated;
+                this.alarmFlag[i].intervalTime = data[i].interval_time;
+            }
+        },
+        checkAlarm() {
+            this.alarmFlag.forEach((item) => {
+                if (item.flag && !item.visible) {
+                    if (
+                        item.lastTime === 0 ||
+                        item.lastTime + item.intervalTime * 1000 < Date.now()
+                    ) {
+                        this.notify("warning", {
+                            title: item.name,
+                            content: `${item.name}超出警告阈值`,
+                            meta: () => h(
+                                NTime,
+                                {
+                                    time: Date.now(),
+                                }
+                            ),
+                            onClose: () => {
+                                this.handleNotificationClose(item.name)
+                            }
+                        });
+                        item.visible = true;
+                        item.lastTime = Date.now();
+                    }
+                }
+            });
+        },
+        handleNotificationClose(name){
+            this.alarmFlag.forEach((item) => {
+                if (item.name === name) {
+                    item.visible = false;
+                    item.lastTime = Date.now();
+                    this.message.success(`${item.intervalTime}秒内不再提示`);
+                }
+            });
+        }
+    },
     beforeMount() {
         setInterval(() => {
             if (process.env.NODE_ENV === "development") {
@@ -68,35 +127,18 @@ export default {
 
         setInterval(() => {
             getAlarmFlag().then((response) => {
-                this.alarmFlag = response.data;
+                if (this.alarmFlag.length == 0) {
+                    this.initAlarmFlag(response.data);
+                } else {
+                    this.updateAlarmFlag(response.data);
+                }
             });
         }, 5000);
     },
     watch: {
         alarmFlag: {
-            // FIXME 改改逻辑，重复弹窗
-            handler: function (alarmFlag) {
-                if (alarmFlag.cpu_usage) {
-                    console.log("cpu_usage");
-                    this.notify("warning", {
-                        content: "CPU usage is too high",
-                        meta: Date.now(),
-                    });
-                }
-                if (alarmFlag.cpu_steal) {
-                    console.log("cpu_steal");
-                    this.notify("warning", {
-                        content: "CPU steal time is too high",
-                        meta: Date.now(),
-                    });
-                }
-                if (alarmFlag.cpu_iowait) {
-                    console.log("cpu_iowait");
-                    this.notify("warning", {
-                        content: "CPU iowait time is too high",
-                        meta: Date.now(),
-                    });
-                }
+            handler: function () {
+                this.checkAlarm();
             },
             deep: true,
             immediate: true,
