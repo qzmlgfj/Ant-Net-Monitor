@@ -5,8 +5,6 @@ from ..extensions import db
 from dataclasses import dataclass
 from sqlalchemy import extract
 
-from . import date_range
-
 
 @dataclass
 class RAMStatus(db.Model):
@@ -58,7 +56,8 @@ class RAMStatus(db.Model):
 
     @staticmethod
     def get_last():
-        return RAMStatus.query.order_by(RAMStatus.time_stamp.desc()).first()
+        start = datetime.utcnow() - timedelta(minutes=1)
+        return RAMStatus.query.filter(RAMStatus.time_stamp > start).order_by(RAMStatus.time_stamp.desc()).first()
 
     @staticmethod
     def get_batch():

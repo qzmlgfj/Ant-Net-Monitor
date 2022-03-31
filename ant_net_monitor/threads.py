@@ -1,10 +1,13 @@
 import threading
 from time import sleep
+import random
 
 from .extensions import db
 from .status.basic_status import BasicStatus
 from .status.cpu_status import CPUStatus
 from .status.ram_status import RAMStatus
+
+from .alarm.alarm import Alarm
 
 # TODO 整个函数变量进去，进一步封装
 
@@ -16,43 +19,31 @@ def set_basic_status_thread(app):
         with app.app_context():
             while True:
                 try:
-                    BasicStatus.save()
-                except Exception as e:
-                    db.session.rollback()
-                    app.logger.error(e)
+                    new_basic_status = BasicStatus()
+                    new_cpu_status = CPUStatus()
+                    new_ram_status = RAMStatus()
+                    BasicStatus.save(new_basic_status)
+                    CPUStatus.save(new_cpu_status)
+                    RAMStatus.save(new_ram_status)
 
-    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
-    save_status_thread.start()
+                    alarm_value = (
+                        new_basic_status.cpu_percent,
+                        new_cpu_status.iowait_percent,
+                        new_cpu_status.steal_percent,
+                    )
+                    Alarm.check_cpu_alarm(*alarm_value)
 
-
-def set_cpu_status_thread(app):
-    """Register cpu status thread."""
-
-    def save_status_loop(app):
-        with app.app_context():
-            while True:
-                try:
-                    CPUStatus.save()
-                except Exception as e:
-                    db.session.rollback()
-                    app.logger.error(e)
-
-    save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
-    save_status_thread.start()
-
-
-def set_ram_status_thread(app):
-    """Register ram status thread."""
-
-    def save_status_loop(app):
-        with app.app_context():
-            while True:
-                try:
-                    RAMStatus.save()
                     sleep(1)
                 except Exception as e:
                     db.session.rollback()
+                    sleep(random.random())
                     app.logger.error(e)
+                
+                try:
+                    if app.config["FINISH_TESTING"]:
+                        break
+                except KeyError:
+                    pass
 
     save_status_thread = threading.Thread(target=save_status_loop, args=(app,))
     save_status_thread.start()
@@ -60,5 +51,3 @@ def set_ram_status_thread(app):
 
 def set_all_threads(app):
     set_basic_status_thread(app)
-    set_cpu_status_thread(app)
-    set_ram_status_thread(app)

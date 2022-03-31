@@ -5,8 +5,6 @@ from dataclasses import dataclass
 import random
 from sqlalchemy import extract
 
-from . import date_range
-
 
 @dataclass
 class CPUStatus(db.Model):
@@ -62,7 +60,7 @@ class CPUStatus(db.Model):
             self.guest_nice_percent = format(round(random.uniform(0, 100), 2), ".2f")
             self.time_stamp = time_stamp
         else:
-            current_status = psutil.cpu_times_percent(interval=1)
+            current_status = psutil.cpu_times_percent()
             self.user_percent = current_status.user
             self.nice_percent = current_status.nice
             self.system_percent = current_status.system
@@ -88,7 +86,8 @@ class CPUStatus(db.Model):
 
     @staticmethod
     def get_last():
-        return CPUStatus.query.order_by(CPUStatus.time_stamp.desc()).first()
+        start = datetime.utcnow() - timedelta(minutes=1)
+        return CPUStatus.query.filter(CPUStatus.time_stamp >= start).order_by(CPUStatus.time_stamp.desc()).first()
 
     @staticmethod
     def get_batch():

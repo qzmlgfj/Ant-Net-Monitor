@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 import psutil
 from ..extensions import db
 from dataclasses import dataclass
@@ -21,7 +21,7 @@ class BasicStatus(db.Model):
     disk = db.Column(db.Float)
 
     def __init__(self):
-        self.cpu_percent = psutil.cpu_percent(interval=1)
+        self.cpu_percent = psutil.cpu_percent()
         self.ram_percent = psutil.virtual_memory().percent
         self.swap_percent = psutil.swap_memory().percent
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
@@ -34,10 +34,14 @@ class BasicStatus(db.Model):
         return f"cpu:{self.cpu_percent}%, memory:{round(self.ram_percent/(1024**3),2)}G, disk:{round(self.disk/(1024**3),2)}G"
 
     @staticmethod
-    def save():
-        db.session.add(BasicStatus())
+    def save(status=None):
+        if not status:
+            db.session.add(BasicStatus())
+        else:
+            db.session.add(status)
         db.session.commit()
 
     @staticmethod
     def get_last():
-        return BasicStatus.query.order_by(BasicStatus.time_stamp.desc()).first()
+        start = datetime.utcnow() - timedelta(minutes=1)
+        return BasicStatus.query.filter(BasicStatus.time_stamp > start).order_by(BasicStatus.time_stamp.desc()).first()

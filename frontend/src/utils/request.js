@@ -37,4 +37,19 @@ function getHistoryLineChart(url) {
     })
 }
 
-export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart };
+function getAlarmFlag() {
+    return service({
+        method: "get",
+        url: "/api/alarm/alarm_item",
+    })
+}
+
+function updateAlarmFlag(data) {
+    return service({
+        method: "post",
+        url: "/api/alarm/alarm_item",
+        data: data
+    })
+}
+
+export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag };
