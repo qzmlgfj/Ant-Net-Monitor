@@ -75,6 +75,7 @@ class Alarm(db.Model):
         cpu_iowait_alarm = cls.query.filter_by(name="cpu_iowait").first()
         cpu_steal_alarm = cls.query.filter_by(name="cpu_steal").first()
 
+        #TODO 可以参考前端的检测逻辑
         if cpu_usage > cpu_usage_alarm.alarm_value:
             cpu_usage_alarm.counter = cpu_usage_alarm.counter + 1
         else:
