@@ -24,6 +24,15 @@ const routes = [
                 },
                 component: () => import("@/components/info/RAM.vue"),
             },
+            {
+                path: "disk_status",
+                name: "Disk-Info",
+                meta: {
+                    title: "Disk-Info",
+                    apiUrl: "/api/status/disk_status"
+                },
+                component: () => import("@/components/info/Disk.vue"),
+            },
         ]
     },
 

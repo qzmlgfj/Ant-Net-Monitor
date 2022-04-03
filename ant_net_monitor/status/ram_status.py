@@ -57,7 +57,11 @@ class RAMStatus(db.Model):
     @staticmethod
     def get_last():
         start = datetime.utcnow() - timedelta(minutes=1)
-        return RAMStatus.query.filter(RAMStatus.time_stamp > start).order_by(RAMStatus.time_stamp.desc()).first()
+        return (
+            RAMStatus.query.filter(RAMStatus.time_stamp > start)
+            .order_by(RAMStatus.time_stamp.desc())
+            .first()
+        )
 
     @staticmethod
     def get_batch():

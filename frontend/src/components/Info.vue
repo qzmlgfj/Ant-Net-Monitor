@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { NCard, NSpace, NButtonGroup, NButton, NIcon} from "naive-ui";
+import { NCard, NSpace, NButtonGroup, NButton, NIcon } from "naive-ui";
 import { History, ChartLine } from "@vicons/fa";
 
 import LineChart from "@/components/charts/LineChart.vue";
@@ -37,6 +37,7 @@ import {
 } from "@/utils/request";
 import { setCPUSeries, updateCPUSeries } from "@/utils/series/cpu-series";
 import { setRAMSeries, updateRAMSeries } from "@/utils/series/ram-series";
+import { setDiskSeries, updateDiskSeries } from "@/utils/series/disk-series";
 
 export default {
     name: "Info",
@@ -56,7 +57,7 @@ export default {
             interval: null,
             enableZoom: false,
             alarmSettingVisible: false,
-            intervalTime: 1500
+            intervalTime: 1500,
         };
     },
     methods: {
@@ -69,6 +70,9 @@ export default {
                     case "RAM-Info":
                         updateRAMSeries(response.data);
                         break;
+                    case "Disk-Info":
+                        updateDiskSeries(response.data);
+                        break;
                 }
             });
         },
@@ -80,6 +84,9 @@ export default {
                         break;
                     case "RAM-Info":
                         this.series = setRAMSeries(response.data);
+                        break;
+                    case "Disk-Info":
+                        this.series = setDiskSeries(response.data);
                         break;
                 }
             });
@@ -96,6 +103,9 @@ export default {
                                 break;
                             case "RAM-Info":
                                 this.series = setRAMSeries(response.data);
+                                break;
+                            case "Disk-Info":
+                                this.series = setDiskSeries(response.data);
                                 break;
                         }
                     }
@@ -142,7 +152,7 @@ export default {
     width: 30vw;
 }
 
-#info-chart{
+#info-chart {
     height: 39vh;
     width: 52.5vw;
 }

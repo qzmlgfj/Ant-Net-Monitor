@@ -6,6 +6,7 @@ from .extensions import db
 from .status.basic_status import BasicStatus
 from .status.cpu_status import CPUStatus
 from .status.ram_status import RAMStatus
+from .status.disk_status import DiskStatus
 
 from .alarm.alarm import Alarm
 
@@ -17,14 +18,18 @@ def set_basic_status_thread(app):
 
     def save_status_loop(app):
         with app.app_context():
+            DiskStatus.init_counter()
             while True:
                 try:
                     new_basic_status = BasicStatus()
                     new_cpu_status = CPUStatus()
                     new_ram_status = RAMStatus()
+                    new_disk_status = DiskStatus()
+                    
                     BasicStatus.save(new_basic_status)
                     CPUStatus.save(new_cpu_status)
                     RAMStatus.save(new_ram_status)
+                    DiskStatus.save(new_disk_status)
 
                     alarm_value = (
                         new_basic_status.cpu_percent,

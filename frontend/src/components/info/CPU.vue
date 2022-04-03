@@ -1,7 +1,7 @@
 <template>
     <div>
         <n-h1>CPU</n-h1>
-        <n-p>当前系统范围的CPU占用率</n-p>
+        <n-p>当前系统范围的CPU占用率（%）</n-p>
 
         <n-ul>
             <n-li><n-text code> user </n-text> 用户级进程的CPU占用率</n-li>
