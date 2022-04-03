@@ -5,20 +5,10 @@
                 <router-view />
             </n-card>
             <n-card hoverable id="info-chart">
-                <n-button-group>
-                    <n-button type="default" round @click="switchToHistory">
-                        <template #icon>
-                            <n-icon><history /></n-icon>
-                        </template>
-                        24小时历史
-                    </n-button>
-                    <n-button type="default" round @click="switchToRealTime">
-                        <template #icon>
-                            <n-icon><chart-line /></n-icon>
-                        </template>
-                        实时状态
-                    </n-button>
-                </n-button-group>
+                <n-switch v-model:value="historyMode">
+                    <template #checked> 24小时历史 </template>
+                    <template #unchecked> 实时状态 </template>
+                </n-switch>
                 <line-chart :argv="series" :enableZoom="enableZoom" />
             </n-card>
         </n-space>
@@ -26,8 +16,7 @@
 </template>
 
 <script>
-import { NCard, NSpace, NButtonGroup, NButton, NIcon } from "naive-ui";
-import { History, ChartLine } from "@vicons/fa";
+import { NCard, NSpace, NSwitch } from "naive-ui";
 
 import LineChart from "@/components/charts/LineChart.vue";
 import {
@@ -44,11 +33,7 @@ export default {
     components: {
         NCard,
         NSpace,
-        NButtonGroup,
-        NButton,
-        NIcon,
-        History,
-        ChartLine,
+        NSwitch,
         LineChart,
     },
     data() {
@@ -58,6 +43,7 @@ export default {
             enableZoom: false,
             alarmSettingVisible: false,
             intervalTime: 1500,
+            historyMode: false,
         };
     },
     methods: {
@@ -138,6 +124,18 @@ export default {
             this.updateSeries(to.meta.apiUrl);
         }, this.intervalTime);
         this.enableZoom = false;
+        this.historyMode = false;
+    },
+    watch: {
+        historyMode: {
+            handler: function (historyMode) {
+                if (historyMode) {
+                    this.switchToHistory();
+                } else {
+                    this.switchToRealTime();
+                }
+            },
+        },
     },
 };
 </script>
