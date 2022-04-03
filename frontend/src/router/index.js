@@ -33,9 +33,17 @@ const routes = [
                 },
                 component: () => import("@/components/info/Disk.vue"),
             },
+            {
+                path: "network_status",
+                name: "Network-Info",
+                meta: {
+                    title: "Network-Info",
+                    apiUrl: "/api/status/network_status"
+                },
+                component: () => import("@/components/info/Network.vue"),
+            },
         ]
     },
-
 ]
 
 const router = createRouter({

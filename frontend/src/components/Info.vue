@@ -27,6 +27,7 @@ import {
 import { setCPUSeries, updateCPUSeries } from "@/utils/series/cpu-series";
 import { setRAMSeries, updateRAMSeries } from "@/utils/series/ram-series";
 import { setDiskSeries, updateDiskSeries } from "@/utils/series/disk-series";
+import { setNetworkSeries, updateNetworkSeries } from "@/utils/series/network-series";
 
 export default {
     name: "Info",
@@ -59,6 +60,9 @@ export default {
                     case "Disk-Info":
                         updateDiskSeries(response.data);
                         break;
+                    case "Network-Info":
+                        updateNetworkSeries(response.data);
+                        break;
                 }
             });
         },
@@ -73,6 +77,9 @@ export default {
                         break;
                     case "Disk-Info":
                         this.series = setDiskSeries(response.data);
+                        break;
+                    case "Network-Info":
+                        this.series = setNetworkSeries(response.data);
                         break;
                 }
             });
@@ -92,6 +99,9 @@ export default {
                                 break;
                             case "Disk-Info":
                                 this.series = setDiskSeries(response.data);
+                                break;
+                            case "Network-Info":
+                                this.series = setNetworkSeries(response.data);
                                 break;
                         }
                     }

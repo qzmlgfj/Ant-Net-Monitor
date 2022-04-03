@@ -10,6 +10,7 @@ from ant_net_monitor.status.cpu_status import CPUStatus
 from ant_net_monitor.status.disk_status import DiskStatus
 from ant_net_monitor.status.ram_status import RAMStatus
 from ant_net_monitor.status.basic_status import BasicStatus
+from ant_net_monitor.status.network_status import NetworkStatus
 
 logger = logging.getLogger()
 logger.level = logging.DEBUG
@@ -97,8 +98,27 @@ class TestClientMethods(unittest.TestCase):
     def test_get_batch_disk_status(self):
         with self.app_context:
             DiskStatus.init_counter()
+            sleep(1)
             for i in range(10):
                 DiskStatus.save()
                 sleep(1)
         ret = self.app.test_client().get("/api/status/disk_status?type=init")
+        logging.info(ret.get_json())
+
+    def test_get_last_network_status(self):
+        with self.app_context:
+            NetworkStatus.init_counter()
+            sleep(1)
+            NetworkStatus.save()
+        ret = self.app.test_client().get("/api/status/network_status?type=update")
+        logging.info(ret.get_json())
+
+    def test_get_batch_network_status(self):
+        with self.app_context:
+            NetworkStatus.init_counter()
+            sleep(1)
+            for i in range(10):
+                NetworkStatus.save()
+                sleep(1)
+        ret = self.app.test_client().get("/api/status/network_status?type=init")
         logging.info(ret.get_json())

@@ -4,6 +4,7 @@ from ..status.basic_status import BasicStatus
 from ..status.ram_status import RAMStatus
 from ..status.cpu_status import CPUStatus
 from ..status.disk_status import DiskStatus
+from ..status.network_status import NetworkStatus
 
 
 status_bp = Blueprint("/api/status", __name__, url_prefix="/api/status")
@@ -42,3 +43,13 @@ def return_disk_status():
         return jsonify(DiskStatus.get_last())
     elif request.args.get("type") == "day":
         return jsonify(DiskStatus.get_in_one_day())
+
+
+@status_bp.route("network_status", methods=["GET"])
+def return_network_status():
+    if request.args.get("type") == "init":
+        return jsonify(NetworkStatus.get_batch())
+    elif request.args.get("type") == "update":
+        return jsonify(NetworkStatus.get_last())
+    elif request.args.get("type") == "day":
+        return jsonify(NetworkStatus.get_in_one_day())
