@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import random
 import psutil
-from ..extensions import db
+from ...extensions import db
 from dataclasses import dataclass
 from sqlalchemy import extract
 

@@ -1,6 +1,6 @@
 from datetime import datetime,timedelta
 import psutil
-from ..extensions import db
+from ...extensions import db
 from dataclasses import dataclass
 
 

@@ -6,11 +6,11 @@ from datetime import datetime, timedelta
 
 from ant_net_monitor import create_app
 from ant_net_monitor.extensions import db
-from ant_net_monitor.status.cpu_status import CPUStatus
-from ant_net_monitor.status.disk_status import DiskStatus
-from ant_net_monitor.status.ram_status import RAMStatus
-from ant_net_monitor.status.basic_status import BasicStatus
-from ant_net_monitor.status.network_status import NetworkStatus
+from ant_net_monitor.status.psutil_status.cpu_status import CPUStatus
+from ant_net_monitor.status.psutil_status.disk_status import DiskStatus
+from ant_net_monitor.status.psutil_status.ram_status import RAMStatus
+from ant_net_monitor.status.psutil_status.basic_status import BasicStatus
+from ant_net_monitor.status.psutil_status.network_status import NetworkStatus
 
 logger = logging.getLogger()
 logger.level = logging.DEBUG
