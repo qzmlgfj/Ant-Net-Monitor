@@ -1,4 +1,3 @@
-from cgitb import enable
 import importlib
 
 
@@ -21,25 +20,33 @@ class Status:
             status_module = importlib.import_module(
                 "ant_net_monitor.status.snmp_status"
             )
+            cls.SnmpAgent = status_module.SnmpAgent
             cls.BasicStatus = status_module.BasicStatus
+            cls.CPUStatus = status_module.CPUStatus
+
 
     @classmethod
     def save_all_status(cls):
         if not cls.enable_snmp:
-            new_basic_status = Status.BasicStatus()
-            new_cpu_status = Status.CPUStatus()
-            new_ram_status = Status.RAMStatus()
-            new_disk_status = Status.DiskStatus()
-            new_network_status = Status.NetworkStatus()
+            new_basic_status = cls.BasicStatus()
+            new_cpu_status = cls.CPUStatus()
+            new_ram_status = cls.RAMStatus()
+            new_disk_status = cls.DiskStatus()
+            new_network_status = cls.NetworkStatus()
 
-            Status.BasicStatus.save(new_basic_status)
-            Status.CPUStatus.save(new_cpu_status)
-            Status.RAMStatus.save(new_ram_status)
-            Status.DiskStatus.save(new_disk_status)
-            Status.NetworkStatus.save(new_network_status)
+            cls.BasicStatus.save(new_basic_status)
+            cls.CPUStatus.save(new_cpu_status)
+            cls.RAMStatus.save(new_ram_status)
+            cls.DiskStatus.save(new_disk_status)
+            cls.NetworkStatus.save(new_network_status)
         else:
-            cls.save_basic_status()
+            for agent in cls.SnmpAgent.get_all():
+                new_cpu_status = cls.CPUStatus(agent)
 
-    def __init__(self, host=None, community=None):
-        self.host = host
-        self.community = community
+                cls.CPUStatus.save(new_cpu_status)
+
+    @classmethod
+    def init_status(cls):
+        if not cls.enable_snmp:
+            cls.DiskStatus.init_counter()
+            cls.NetworkStatus.init_counter()

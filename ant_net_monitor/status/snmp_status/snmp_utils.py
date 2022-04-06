@@ -1,7 +1,9 @@
+from time import sleep
+
 from pysnmp.hlapi import *
 
 
-def get_snmp_value(host, community, mib_module, mib_object):
+def snmp_get_value(host, community, mib_module, mib_object):
     """Using `pysnmp.getCmd()` like `SNMPGET` to get the value of a SNMP object.
 
     Args:
@@ -11,7 +13,7 @@ def get_snmp_value(host, community, mib_module, mib_object):
         mib_object (str): name of the mib object
 
     Returns:
-        value: snmp value
+        int: snmp value
     """
     iterator = getCmd(
         SnmpEngine(),
@@ -35,4 +37,47 @@ def get_snmp_value(host, community, mib_module, mib_object):
         )
     else:
         for varBind in varBinds:
-            return varBind[1]
+            return int(varBind[1])
+
+
+def snmp_walk(host, community, mib_module, mib_object):
+    """Using `pysnmp.nextCmd()` like `SNMPWALK`
+
+    Args:
+        host (str): snmp host address
+        community (str): snmp community
+        mib_module (str): snmp mib module
+        mib_object (str): name of the mib object
+
+    Yields:
+        int: value of snmp object
+    """
+    for (errorIndication, errorStatus, errorIndex, varBinds) in nextCmd(
+        SnmpEngine(),
+        CommunityData(community, mpModel=1),
+        UdpTransportTarget((host, 161)),
+        ContextData(),
+        ObjectType(ObjectIdentity(mib_module, mib_object)),
+        lexicographicMode=False
+    ):
+        if errorIndication:
+            print(errorIndication)
+            break
+        elif errorStatus:
+            print(
+                "%s at %s"
+                % (
+                    errorStatus.prettyPrint(),
+                    errorIndex and varBinds[int(errorIndex) - 1][0] or "?",
+                )
+            )
+            break
+        else:
+            for varBind in varBinds:
+                yield int(varBind[1])
+
+if __name__ == "__main__":
+    while True:
+        print(100 - snmp_get_value("localhost","antrol","UCD-SNMP-MIB", "ssCpuIdle"))
+        sleep(1)
+

@@ -67,6 +67,9 @@ def create_app(*, ENABLE_SNMP=False):
 
     CORS(app)
     register_extensions(app)
+
+    Status.init_app(app)
+
     check_table_exist(app)
 
     app.register_blueprint(status_bp)
@@ -76,6 +79,10 @@ def create_app(*, ENABLE_SNMP=False):
 
     Alarm.init_alarm(app)
 
+    if app.config["ENABLE_SNMP"]:
+        # TODO 仅作测试
+        Status.SnmpAgent.init_agent(app, "localhost", "antrol")
+
     set_all_threads(app)
 
     return app
@@ -84,7 +91,6 @@ def create_app(*, ENABLE_SNMP=False):
 def register_extensions(app):
     """Register Flask extensions."""
     db.init_app(app)
-    Status.init_app(app)
 
 
 def add_command(app):

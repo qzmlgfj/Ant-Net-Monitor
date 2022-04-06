@@ -15,8 +15,7 @@ def set_basic_status_thread(app):
 
     def save_status_loop(app):
         with app.app_context():
-            Status.DiskStatus.init_counter()
-            Status.NetworkStatus.init_counter()
+            Status.init_status()
             while True:
                 try:
                     # alarm_value = (
