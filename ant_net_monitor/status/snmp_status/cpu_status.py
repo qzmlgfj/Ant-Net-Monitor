@@ -4,11 +4,57 @@ from datetime import datetime, timedelta
 from sqlalchemy import extract
 
 from ...extensions import db
-from .snmp_utils import snmp_get_value, snmp_walk
+from .snmp_utils import snmp_get_value
+
+
+class CPUStatus():
+    def __init__(self, agent):
+        self.agent = agent
+
+    def save(self):
+        user_percent = snmp_get_value(
+            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "ssCpuUser"
+        )
+        system_percent = snmp_get_value(
+            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "ssCpuSystem"
+        )
+        used_percent = 100 - snmp_get_value(
+            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "ssCpuIdle"
+        )
+
+        db.session.add(CPUStatusInfo(user_percent, system_percent, used_percent))
+        db.session.commit()
+
+    def get_last(self):
+        start = datetime.utcnow() - timedelta(minutes=1)
+        return (
+            CPUStatusInfo.query.filter(CPUStatusInfo.time_stamp >= start)
+            .order_by(CPUStatusInfo.time_stamp.desc())
+            .first()
+        )
+
+    def get_batch(self):
+        count = CPUStatusInfo.query.count()
+        if count > 100:
+            count = 100
+        return (
+            CPUStatusInfo.query.order_by(CPUStatusInfo.time_stamp.desc())
+            .limit(count)
+            .all()[::-1]
+        )
+
+    def get_in_one_day(self):
+        start = datetime.utcnow() - timedelta(days=1)
+        return (
+            CPUStatusInfo.query.filter(CPUStatusInfo.time_stamp >= start)
+            .filter(extract("minute", CPUStatusInfo.time_stamp) % 5 == 0)
+            .filter(extract("second", CPUStatusInfo.time_stamp) == 0)
+            .all()
+        )
 
 
 @dataclass
-class CPUStatus(db.Model):
+class CPUStatusInfo(db.Model):
     id: int
     user_percent: int
     system_percent: int
@@ -21,55 +67,8 @@ class CPUStatus(db.Model):
     system_percent = db.Column(db.Integer)
     used_percent = db.Column(db.Integer)
 
-    def __init__(self, agent):
-        self.user_percent = snmp_get_value(
-            agent.host, agent.community, "UCD-SNMP-MIB", "ssCpuUser"
-        )
-        self.system_percent = snmp_get_value(
-            agent.host, agent.community, "UCD-SNMP-MIB", "ssCpuSystem"
-        )
-        self.used_percent = 100 - snmp_get_value(
-            agent.host, agent.community, "UCD-SNMP-MIB", "ssCpuIdle"
-        )
+    def __init__(self, user_percent, system_percent, used_percent):
+        self.user_percent = user_percent
+        self.system_percent = system_percent
+        self.used_percent = used_percent
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
-
-    def __str__(self):
-        return f"{self.user_percent}% {self.system_percent}%"
-
-    @staticmethod
-    def save(status=None):
-        if not status:
-            db.session.add(CPUStatus())
-        else:
-            db.session.add(status)
-        db.session.commit()
-
-    @staticmethod
-    def get_last():
-        start = datetime.utcnow() - timedelta(minutes=1)
-        return (
-            CPUStatus.query.filter(CPUStatus.time_stamp >= start)
-            .order_by(CPUStatus.time_stamp.desc())
-            .first()
-        )
-
-    @staticmethod
-    def get_batch():
-        count = CPUStatus.query.count()
-        if count > 100:
-            count = 100
-        return (
-            CPUStatus.query.order_by(CPUStatus.time_stamp.desc())
-            .limit(count)
-            .all()[::-1]
-        )
-
-    @staticmethod
-    def get_in_one_day():
-        start = datetime.utcnow() - timedelta(days=1)
-        return (
-            CPUStatus.query.filter(CPUStatus.time_stamp >= start)
-            .filter(extract("minute", CPUStatus.time_stamp) % 5 == 0)
-            .filter(extract("second", CPUStatus.time_stamp) == 0)
-            .all()
-        )

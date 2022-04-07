@@ -1,7 +1,6 @@
 import importlib
 
 
-# TODO 再解耦一下
 class Status:
     @classmethod
     def init_app(cls, app):
@@ -20,10 +19,8 @@ class Status:
             status_module = importlib.import_module(
                 "ant_net_monitor.status.snmp_status"
             )
-            cls.SnmpAgent = status_module.SnmpAgent
-            cls.BasicStatus = status_module.BasicStatus
-            cls.CPUStatus = status_module.CPUStatus
 
+            cls.utils = status_module.SnmpStatus
 
     @classmethod
     def save_all_status(cls):
@@ -40,13 +37,25 @@ class Status:
             cls.DiskStatus.save(new_disk_status)
             cls.NetworkStatus.save(new_network_status)
         else:
-            for agent in cls.SnmpAgent.get_all():
-                new_cpu_status = cls.CPUStatus(agent)
-
-                cls.CPUStatus.save(new_cpu_status)
+            for status in cls.snmp_agents_status:
+                status.save_all()
 
     @classmethod
     def init_status(cls):
         if not cls.enable_snmp:
             cls.DiskStatus.init_counter()
             cls.NetworkStatus.init_counter()
+        #else:
+        #    for status in cls.snmp_agents_status:
+        #        status.DiskStatus.init_counter(status.agent)
+
+    @classmethod
+    def init_agent_list(cls, app):
+        cls.snmp_agents_status = cls.utils.get_agent_list(app)
+
+    @classmethod
+    def init_agent(cls, app, host, community):
+        cls.utils.init_agent(app, host, community)
+
+    def __init__(self, agent=None):
+        self.agent = agent

@@ -59,9 +59,9 @@ def create_app(*, ENABLE_SNMP=False):
         return render_template("index.html")
 
     if app.config["ENV"] == "development":
-        app.config["ENABLE_SNMP"] = False
+        app.config["ENABLE_SNMP"] = True
     else:
-        app.config["ENABLE_SNMP"] = ENABLE_SNMP
+        app.config["ENABLE_SNMP"] = False
 
     app.logger.info("SNMP MODE:" + str(app.config["ENABLE_SNMP"]))
 
@@ -81,7 +81,8 @@ def create_app(*, ENABLE_SNMP=False):
 
     if app.config["ENABLE_SNMP"]:
         # TODO 仅作测试
-        Status.SnmpAgent.init_agent(app, "localhost", "antrol")
+        Status.init_agent(app, "localhost", "antrol")
+        Status.init_agent_list(app)
 
     set_all_threads(app)
 

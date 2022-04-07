@@ -58,7 +58,7 @@ def snmp_walk(host, community, mib_module, mib_object):
         UdpTransportTarget((host, 161)),
         ContextData(),
         ObjectType(ObjectIdentity(mib_module, mib_object)),
-        lexicographicMode=False
+        lexicographicMode=False,
     ):
         if errorIndication:
             print(errorIndication)
@@ -76,8 +76,28 @@ def snmp_walk(host, community, mib_module, mib_object):
             for varBind in varBinds:
                 yield int(varBind[1])
 
-if __name__ == "__main__":
-    while True:
-        print(100 - snmp_get_value("localhost","antrol","UCD-SNMP-MIB", "ssCpuIdle"))
-        sleep(1)
 
+if __name__ == "__main__":
+    #while True:
+    #    print(
+    #        snmp_get_value("localhost", "antrol", "UCD-SNMP-MIB", "memCached")
+    #        / 1024**2
+    #    )
+    #    sleep(1)
+
+    #a = snmp_get_value("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead") / 1024**2
+    #sleep(1)
+    #while True:
+    #    b = snmp_get_value("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead") / 1024**2
+    #    print(b - a)
+    #    a = b
+    #    sleep(1)
+
+
+    a = sum([value for value in snmp_walk("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead")]) / 1024**2
+    sleep(1)
+    while True:
+        b = sum([value for value in snmp_walk("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead")]) / 1024**2
+        print(b - a)
+        a = b
+        sleep(1)
