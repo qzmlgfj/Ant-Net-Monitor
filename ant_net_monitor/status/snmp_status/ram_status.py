@@ -41,7 +41,9 @@ class RAMStatus:
         )
         swap_percent = format(swap_free / swap_total * 100, ".2f")
 
-        db.session.add(RAMStatusInfo(available, cached, buffers, swap_percent))
+        db.session.add(
+            RAMStatusInfo(available, cached, buffers, swap_percent, self.agent)
+        )
         db.session.commit()
 
     def get_last(self):
@@ -88,9 +90,15 @@ class RAMStatusInfo(db.Model):
     buffers = db.Column(db.Float)
     swap_percent = db.Column(db.Float)
 
-    def __init__(self, available, cached, buffers, swap_percent):
+    agent_id = db.Column(db.Integer, db.ForeignKey("snmp_agent.id"))
+    agent = db.relationship(
+        "SnmpAgent", backref=db.backref("ram_status_info", lazy="dynamic")
+    )
+
+    def __init__(self, available, cached, buffers, swap_percent, agent):
         self.available = available
         self.cached = cached
         self.buffers = buffers
         self.swap_percent = swap_percent
+        self.agent = agent
         self.time_stamp = datetime.utcnow().replace(microsecond=0)

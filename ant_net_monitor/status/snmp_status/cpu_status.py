@@ -7,7 +7,7 @@ from ...extensions import db
 from .snmp_utils import snmp_get_value
 
 
-class CPUStatus():
+class CPUStatus:
     def __init__(self, agent):
         self.agent = agent
 
@@ -22,7 +22,9 @@ class CPUStatus():
             self.agent.host, self.agent.community, "UCD-SNMP-MIB", "ssCpuIdle"
         )
 
-        db.session.add(CPUStatusInfo(user_percent, system_percent, used_percent))
+        db.session.add(
+            CPUStatusInfo(user_percent, system_percent, used_percent, self.agent)
+        )
         db.session.commit()
 
     def get_last(self):
@@ -67,8 +69,14 @@ class CPUStatusInfo(db.Model):
     system_percent = db.Column(db.Integer)
     used_percent = db.Column(db.Integer)
 
-    def __init__(self, user_percent, system_percent, used_percent):
+    agent_id = db.Column(db.Integer, db.ForeignKey("snmp_agent.id"))
+    agent = db.relationship(
+        "SnmpAgent", backref=db.backref("cpu_status_info", lazy="dynamic")
+    )
+
+    def __init__(self, user_percent, system_percent, used_percent, agent):
         self.user_percent = user_percent
         self.system_percent = system_percent
         self.used_percent = used_percent
+        self.agent = agent
         self.time_stamp = datetime.utcnow().replace(microsecond=0)

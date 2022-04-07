@@ -54,13 +54,19 @@ class DiskStatus:
         timer = datetime.utcnow().replace(microsecond=0)
         time_delta = timer - self.timer
 
-        read_speed = format((read_bytes - self.read_bytes) / time_delta.total_seconds() / 1024**2, ".2f")
-        write_speed = format((write_bytes - self.write_bytes) / time_delta.total_seconds() / 1024**2, ".2f")
+        read_speed = format(
+            (read_bytes - self.read_bytes) / time_delta.total_seconds() / 1024**2,
+            ".2f",
+        )
+        write_speed = format(
+            (write_bytes - self.write_bytes) / time_delta.total_seconds() / 1024**2,
+            ".2f",
+        )
 
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
         self.set_counter(read_bytes, write_bytes, timer)
 
-        db.session.add(DiskStatusInfo(read_speed, write_speed))
+        db.session.add(DiskStatusInfo(read_speed, write_speed, self.agent))
         db.session.commit()
 
     def set_counter(self, read_bytes, write_bytes, timer):
@@ -108,7 +114,13 @@ class DiskStatusInfo(db.Model):
     write_speed = db.Column(db.Float)
     time_stamp = db.Column(db.DateTime)
 
-    def __init__(self, read_speed, write_speed):
+    agent_id = db.Column(db.Integer, db.ForeignKey("snmp_agent.id"))
+    agent = db.relationship(
+        "SnmpAgent", backref=db.backref("disk_status_info", lazy="dynamic")
+    )
+
+    def __init__(self, read_speed, write_speed, agent):
         self.read_speed = read_speed
         self.write_speed = write_speed
+        self.agent = agent
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
