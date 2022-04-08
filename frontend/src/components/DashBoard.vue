@@ -130,18 +130,10 @@ export default {
                 } else {
                     this.updateAlarmFlag(response.data);
                 }
+                this.checkAlarm();
             });
         }, 5000);
-    },
-    watch: {
-        alarmFlag: {
-            handler: function () {
-                this.checkAlarm();
-            },
-            deep: true,
-            immediate: true,
-        },
-    },
+    }
 };
 </script>
 

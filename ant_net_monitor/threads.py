@@ -18,13 +18,6 @@ def set_basic_status_thread(app):
             Status.init_status()
             while True:
                 try:
-                    # alarm_value = (
-                    #    new_basic_status.cpu_percent,
-                    #    new_cpu_status.iowait_percent,
-                    #    new_cpu_status.steal_percent,
-                    # )
-                    # Alarm.check_cpu_alarm(*alarm_value)
-
                     Status.save_all_status()
 
                     sleep(1)

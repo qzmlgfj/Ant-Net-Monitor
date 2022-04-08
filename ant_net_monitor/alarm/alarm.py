@@ -111,7 +111,22 @@ class Alarm(db.Model):
 
         if cpu_usage_alarm.activated:
             cpu_usage_alarm.check_alarm(cpu_usage)
+        else:
+            cpu_usage_alarm.set_alarm_flag(False)
         if cpu_iowait_alarm.activated:
             cpu_iowait_alarm.check_alarm(cpu_iowait)
+        else:
+            cpu_iowait_alarm.set_alarm_flag(False)
         if cpu_steal_alarm.activated:
             cpu_steal_alarm.check_alarm(cpu_steal)
+        else:
+            cpu_steal_alarm.set_alarm_flag(False)
+
+    @classmethod
+    def check_ram_alarm(cls, ram_usage):
+        ram_usage_alarm = cls.query.filter_by(name="ram_usage").first()
+
+        if ram_usage_alarm.activated:
+            ram_usage_alarm.check_alarm(ram_usage)
+        else:
+            ram_usage_alarm.set_alarm_flag(False)

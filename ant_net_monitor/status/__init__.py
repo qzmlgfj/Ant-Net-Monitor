@@ -36,8 +36,13 @@ class Status:
             cls.utils.DiskStatus.save(new_disk_status)
             cls.utils.NetworkStatus.save(new_network_status)
 
-            alarm_value = (new_basic_status.cpu_percent, new_cpu_status.iowait_percent, new_cpu_status.steal_percent)
+            alarm_value = (
+                new_basic_status.cpu_percent,
+                new_cpu_status.iowait_percent,
+                new_cpu_status.steal_percent,
+            )
             cls.Alarm.check_cpu_alarm(*alarm_value)
+            cls.Alarm.check_ram_alarm(new_basic_status.ram_percent)
         else:
             for status in cls.snmp_agents_status:
                 status.save_all()
