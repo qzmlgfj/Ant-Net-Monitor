@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from tracemalloc import start
 
 from sqlalchemy import extract
 
@@ -7,13 +8,13 @@ from ...extensions import db
 from .snmp_utils import snmp_walk
 
 
-class DiskStatus:
+class NetworkStatus:
     def __init__(self, agent):
         self.read_bytes = sum(
             [
                 value
                 for value in snmp_walk(
-                    agent.host, agent.community, "UCD-DISKIO-MIB", "diskIONRead"
+                    agent.host, agent.community, "IF-MIB", "ifOutOctets"
                 )
             ]
         )
@@ -21,7 +22,7 @@ class DiskStatus:
             [
                 value
                 for value in snmp_walk(
-                    agent.host, agent.community, "UCD-DISKIO-MIB", "diskIONWritten"
+                    agent.host, agent.community, "IF-MIB", "ifInOctets"
                 )
             ]
         )
@@ -33,10 +34,7 @@ class DiskStatus:
             [
                 value
                 for value in snmp_walk(
-                    self.agent.host,
-                    self.agent.community,
-                    "UCD-DISKIO-MIB",
-                    "diskIONRead",
+                    self.agent.host, self.agent.community, "IF-MIB", "ifOutOctets"
                 )
             ]
         )
@@ -44,10 +42,7 @@ class DiskStatus:
             [
                 value
                 for value in snmp_walk(
-                    self.agent.host,
-                    self.agent.community,
-                    "UCD-DISKIO-MIB",
-                    "diskIONWritten",
+                    self.agent.host, self.agent.community, "IF-MIB", "ifInOctets"
                 )
             ]
         )
@@ -65,8 +60,7 @@ class DiskStatus:
 
         self.set_counter(read_bytes, write_bytes, timer)
 
-        db.session.add(DiskStatusInfo(read_speed, write_speed, self.agent))
-        db.session.commit()
+        db.session.add(NetworkStatusInfo(read_speed, write_speed, self.agent))
 
     def set_counter(self, read_bytes, write_bytes, timer):
         self.read_bytes = read_bytes
@@ -75,7 +69,7 @@ class DiskStatus:
 
 
 @dataclass
-class DiskStatusInfo(db.Model):
+class NetworkStatusInfo(db.Model):
     id: int
     read_speed: float
     write_speed: float
@@ -88,7 +82,7 @@ class DiskStatusInfo(db.Model):
 
     agent_id = db.Column(db.Integer, db.ForeignKey("snmp_agent.id"))
     agent = db.relationship(
-        "SnmpAgent", backref=db.backref("disk_status_info", lazy="dynamic")
+        "SnmpAgent", backref=db.backref("network_status_info", lazy="dynamic")
     )
 
     def __init__(self, read_speed, write_speed, agent):
@@ -109,7 +103,7 @@ class DiskStatusInfo(db.Model):
 
     @classmethod
     def get_batch(cls, agent):
-        count = cls.query.count()
+        count = cls.query.filter(cls.agent == agent).count()
         if count > 100:
             count = 100
         return (

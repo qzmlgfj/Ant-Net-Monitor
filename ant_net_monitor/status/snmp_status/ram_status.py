@@ -46,33 +46,6 @@ class RAMStatus:
         )
         db.session.commit()
 
-    def get_last(self):
-        start = datetime.utcnow() - timedelta(minutes=1)
-        return (
-            RAMStatusInfo.query.filter(RAMStatusInfo.time_stamp >= start)
-            .order_by(RAMStatusInfo.time_stamp.desc())
-            .first()
-        )
-
-    def get_batch(self):
-        count = RAMStatusInfo.query.count()
-        if count > 100:
-            count = 100
-        return (
-            RAMStatusInfo.query.order_by(RAMStatusInfo.time_stamp.desc())
-            .limit(count)
-            .all()[::-1]
-        )
-
-    def get_in_one_day(self):
-        start = datetime.utcnow() - timedelta(days=1)
-        return (
-            RAMStatusInfo.query.filter(RAMStatusInfo.time_stamp >= start)
-            .filter(extract("minute", RAMStatusInfo.time_stamp) % 5 == 0)
-            .filter(extract("second", RAMStatusInfo.time_stamp) == 0)
-            .all()
-        )
-
 
 @dataclass
 class RAMStatusInfo(db.Model):
@@ -102,3 +75,36 @@ class RAMStatusInfo(db.Model):
         self.swap_percent = swap_percent
         self.agent = agent
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
+
+    @classmethod
+    def get_last(cls, agent):
+        start = datetime.utcnow() - timedelta(minutes=1)
+        return (
+            cls.query.filter(cls.time_stamp >= start)
+            .filter(cls.agent == agent)
+            .order_by(cls.time_stamp.desc())
+            .first()
+        )
+
+    @classmethod
+    def get_batch(cls, agent):
+        count = cls.query.count()
+        if count > 100:
+            count = 100
+        return (
+            cls.query.filter(cls.agent == agent)
+            .order_by(cls.time_stamp.desc())
+            .limit(count)
+            .all()[::-1]
+        )
+
+    @classmethod
+    def get_in_one_day(cls, agent):
+        start = datetime.utcnow() - timedelta(days=1)
+        return (
+            cls.query.filter(cls.time_stamp >= start)
+            .filter(cls.agent == agent)
+            .filter(extract("minute", cls.time_stamp) % 5 == 0)
+            .filter(extract("second", cls.time_stamp) == 0)
+            .all()
+        )

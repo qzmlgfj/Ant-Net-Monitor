@@ -1,11 +1,4 @@
-from . import basic_status, cpu_status, snmp_agent, ram_status, disk_status
-
-SnmpAgent = snmp_agent.SnmpAgent
-
-# BasicStatus = basic_status.BasicStatus
-CPUStatus = cpu_status.CPUStatus
-RAMStatus = ram_status.RAMStatus
-DiskStatus = disk_status.DiskStatus
+from . import basic_status, cpu_status, snmp_agent, ram_status, disk_status, network_status
 
 
 class SnmpStatus:
@@ -14,11 +7,14 @@ class SnmpStatus:
         self.CPUStatus = cpu_status.CPUStatus(agent)
         self.RAMStatus = ram_status.RAMStatus(agent)
         self.DiskStatus = disk_status.DiskStatus(agent)
+        self.NetworkStatus = network_status.NetworkStatus(agent)
+
 
     def save_all(self):
         self.CPUStatus.save()
         self.RAMStatus.save()
         self.DiskStatus.save()
+        self.NetworkStatus.save()
 
     @classmethod
     def init_agent(cls, app, host, community):
