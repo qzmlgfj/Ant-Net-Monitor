@@ -15,6 +15,9 @@ class Status:
             cls.RAMStatus = status_module.RAMStatus
             cls.DiskStatus = status_module.DiskStatus
             cls.NetworkStatus = status_module.NetworkStatus
+
+            alarm_module = importlib.import_module("ant_net_monitor.alarm")
+            cls.Alarm = alarm_module.Alarm
         else:
             status_module = importlib.import_module(
                 "ant_net_monitor.status.snmp_status"
@@ -36,6 +39,9 @@ class Status:
             cls.RAMStatus.save(new_ram_status)
             cls.DiskStatus.save(new_disk_status)
             cls.NetworkStatus.save(new_network_status)
+
+            alarm_value = (new_basic_status.cpu_percent, new_cpu_status.iowait_percent, new_cpu_status.steal_percent)
+            cls.Alarm.check_cpu_alarm(*alarm_value)
         else:
             for status in cls.snmp_agents_status:
                 status.save_all()
