@@ -10,11 +10,7 @@ class Status:
             status_module = importlib.import_module(
                 "ant_net_monitor.status.psutil_status"
             )
-            cls.BasicStatus = status_module.BasicStatus
-            cls.CPUStatus = status_module.CPUStatus
-            cls.RAMStatus = status_module.RAMStatus
-            cls.DiskStatus = status_module.DiskStatus
-            cls.NetworkStatus = status_module.NetworkStatus
+            cls.utils = status_module.PsutilStatus
 
             alarm_module = importlib.import_module("ant_net_monitor.alarm")
             cls.Alarm = alarm_module.Alarm
@@ -28,17 +24,17 @@ class Status:
     @classmethod
     def save_all_status(cls):
         if not cls.enable_snmp:
-            new_basic_status = cls.BasicStatus()
-            new_cpu_status = cls.CPUStatus()
-            new_ram_status = cls.RAMStatus()
-            new_disk_status = cls.DiskStatus()
-            new_network_status = cls.NetworkStatus()
+            new_basic_status = cls.utils.BasicStatus()
+            new_cpu_status = cls.utils.CPUStatus()
+            new_ram_status = cls.utils.RAMStatus()
+            new_disk_status = cls.utils.DiskStatus()
+            new_network_status = cls.utils.NetworkStatus()
 
-            cls.BasicStatus.save(new_basic_status)
-            cls.CPUStatus.save(new_cpu_status)
-            cls.RAMStatus.save(new_ram_status)
-            cls.DiskStatus.save(new_disk_status)
-            cls.NetworkStatus.save(new_network_status)
+            cls.utils.BasicStatus.save(new_basic_status)
+            cls.utils.CPUStatus.save(new_cpu_status)
+            cls.utils.RAMStatus.save(new_ram_status)
+            cls.utils.DiskStatus.save(new_disk_status)
+            cls.utils.NetworkStatus.save(new_network_status)
 
             alarm_value = (new_basic_status.cpu_percent, new_cpu_status.iowait_percent, new_cpu_status.steal_percent)
             cls.Alarm.check_cpu_alarm(*alarm_value)
@@ -49,11 +45,8 @@ class Status:
     @classmethod
     def init_status(cls):
         if not cls.enable_snmp:
-            cls.DiskStatus.init_counter()
-            cls.NetworkStatus.init_counter()
-        #else:
-        #    for status in cls.snmp_agents_status:
-        #        status.DiskStatus.init_counter(status.agent)
+            cls.utils.DiskStatus.init_counter()
+            cls.utils.NetworkStatus.init_counter()
 
     @classmethod
     def init_agent_list(cls, app):

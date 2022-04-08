@@ -59,7 +59,7 @@ def create_app(*, ENABLE_SNMP=False):
         return render_template("index.html")
 
     if app.config["ENV"] == "development":
-        app.config["ENABLE_SNMP"] = True
+        app.config["ENABLE_SNMP"] = False
     else:
         app.config["ENABLE_SNMP"] = False
 

@@ -43,33 +43,33 @@ class TestClientMethods(unittest.TestCase):
 
     def test_get_status(self):
         with self.app_context:
-            Status.BasicStatus.save()
+            Status.utils.BasicStatus.save()
         ret = self.app.test_client().get("/api/status/basic_status")
         logging.info(ret.data)
 
     def test_get_last_cpu_status(self):
         with self.app_context:
-            Status.CPUStatus.save()
+            Status.utils.CPUStatus.save()
         ret = self.app.test_client().get("/api/status/cpu_status?type=update")
         logging.info(ret.data)
 
     def test_get_batch_cpu_status(self):
         with self.app_context:
             for i in range(10):
-                Status.CPUStatus.save()
+                Status.utils.CPUStatus.save()
         ret = self.app.test_client().get("/api/status/cpu_status?type=init")
         logging.info(ret.data)
 
     def test_get_last_ram_status(self):
         with self.app_context:
-            Status.RAMStatus.save()
+            Status.utils.RAMStatus.save()
         ret = self.app.test_client().get("/api/status/ram_status?type=update")
         logging.info(ret.data)
 
     def test_get_batch_ram_status(self):
         with self.app_context:
             for i in range(10):
-                Status.RAMStatus.save()
+                Status.utils.RAMStatus.save()
                 sleep(1)
         ret = self.app.test_client().get("/api/status/ram_status?type=init")
         logging.info(ret.get_json())
@@ -80,42 +80,42 @@ class TestClientMethods(unittest.TestCase):
             end = datetime.utcnow()
             delta = timedelta(minutes=1)
             for time_stamp in self.date_range(start, end, delta):
-                Status.RAMStatus.save(Status.RAMStatus(is_random=True, time_stamp=time_stamp))
+                Status.utils.RAMStatus.save(Status.utils.RAMStatus(is_random=True, time_stamp=time_stamp))
         ret = self.app.test_client().get("/api/status/ram_status?type=day")
         logging.info(ret.get_json())
 
     def test_get_last_disk_status(self):
         with self.app_context:
-            Status.DiskStatus.init_counter()
+            Status.utils.DiskStatus.init_counter()
             sleep(1)
-            Status.DiskStatus.save()
+            Status.utils.DiskStatus.save()
         ret = self.app.test_client().get("/api/status/disk_status?type=update")
         logging.info(ret.get_json())
 
     def test_get_batch_disk_status(self):
         with self.app_context:
-            Status.DiskStatus.init_counter()
+            Status.utils.DiskStatus.init_counter()
             sleep(1)
             for i in range(10):
-                Status.DiskStatus.save()
+                Status.utils.DiskStatus.save()
                 sleep(1)
         ret = self.app.test_client().get("/api/status/disk_status?type=init")
         logging.info(ret.get_json())
 
     def test_get_last_network_status(self):
         with self.app_context:
-            Status.NetworkStatus.init_counter()
+            Status.utils.NetworkStatus.init_counter()
             sleep(1)
-            Status.NetworkStatus.save()
+            Status.utils.NetworkStatus.save()
         ret = self.app.test_client().get("/api/status/network_status?type=update")
         logging.info(ret.get_json())
 
     def test_get_batch_network_status(self):
         with self.app_context:
-            Status.NetworkStatus.init_counter()
+            Status.utils.NetworkStatus.init_counter()
             sleep(1)
             for i in range(10):
-                Status.NetworkStatus.save()
+                Status.utils.NetworkStatus.save()
                 sleep(1)
         ret = self.app.test_client().get("/api/status/network_status?type=init")
         logging.info(ret.get_json())
