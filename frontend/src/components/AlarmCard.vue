@@ -62,7 +62,7 @@
                             </n-input-number>
                         </n-form-item>
                         <n-form-item
-                            label="持续时长"
+                            label="触发时长"
                             path="alarmItem.durationTime"
                         >
                             <n-input-number
@@ -141,7 +141,7 @@ const createColumns = () => {
             key: "interval_time",
         },
         {
-            title: "持续时长",
+            title: "触发时长",
             key: "duration_time",
         },
         {
