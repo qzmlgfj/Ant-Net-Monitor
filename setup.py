@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ant_net_monitor',
-    version='0.1.1dev3',
+    version='0.1.1dev4',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
@@ -13,7 +13,8 @@ setup(
         'flask_cors>=3.0.10',
         'click>=8.0.3',
         'psutil>=5.9.0',
-        'gunicorn>=20.1.0'
+        'gunicorn>=20.1.0',
+        'pysnmp>=4.4.12',
     ],
     long_description_content_type='text/markdown',
     long_description=open('README.md').read(),

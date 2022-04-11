@@ -1,7 +1,7 @@
 <template>
     <div>
         <n-h1>RAM</n-h1>
-        <n-p>当前系统范围内的内存占用量,以<n-text coded>GB</n-text>为单位</n-p>
+        <n-p>当前系统范围内的内存占用量，以<n-text code>GB</n-text>为单位</n-p>
 
         <n-ul>
             <n-li><n-text code> availiable </n-text> 可用内存量</n-li>

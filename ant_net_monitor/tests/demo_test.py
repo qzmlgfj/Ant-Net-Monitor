@@ -6,9 +6,8 @@ from datetime import datetime, timedelta
 
 from ant_net_monitor import create_app
 from ant_net_monitor.extensions import db
-from ant_net_monitor.status.cpu_status import CPUStatus
-from ant_net_monitor.status.ram_status import RAMStatus
-from ant_net_monitor.status.basic_status import BasicStatus
+
+from ant_net_monitor.status import Status
 
 logger = logging.getLogger()
 logger.level = logging.DEBUG
@@ -44,35 +43,35 @@ class TestClientMethods(unittest.TestCase):
 
     def test_get_status(self):
         with self.app_context:
-            BasicStatus.save()
-        ret = self.app.test_client().get("/status/basic_status")
+            Status.utils.BasicStatus.save()
+        ret = self.app.test_client().get("/api/status/basic_status")
         logging.info(ret.data)
 
     def test_get_last_cpu_status(self):
         with self.app_context:
-            CPUStatus.save()
-        ret = self.app.test_client().get("/status/cpu_status?type=update")
+            Status.utils.CPUStatus.save()
+        ret = self.app.test_client().get("/api/status/cpu_status?type=update")
         logging.info(ret.data)
 
     def test_get_batch_cpu_status(self):
         with self.app_context:
             for i in range(10):
-                CPUStatus.save()
-        ret = self.app.test_client().get("/status/cpu_status?type=init")
+                Status.utils.CPUStatus.save()
+        ret = self.app.test_client().get("/api/status/cpu_status?type=init")
         logging.info(ret.data)
 
     def test_get_last_ram_status(self):
         with self.app_context:
-            RAMStatus.save()
-        ret = self.app.test_client().get("/status/ram_status?type=update")
+            Status.utils.RAMStatus.save()
+        ret = self.app.test_client().get("/api/status/ram_status?type=update")
         logging.info(ret.data)
 
     def test_get_batch_ram_status(self):
         with self.app_context:
             for i in range(10):
-                RAMStatus.save()
+                Status.utils.RAMStatus.save()
                 sleep(1)
-        ret = self.app.test_client().get("/status/ram_status?type=init")
+        ret = self.app.test_client().get("/api/status/ram_status?type=init")
         logging.info(ret.get_json())
 
     def test_get_ram_status_in_one_day(self):
@@ -81,6 +80,42 @@ class TestClientMethods(unittest.TestCase):
             end = datetime.utcnow()
             delta = timedelta(minutes=1)
             for time_stamp in self.date_range(start, end, delta):
-                RAMStatus.save(RAMStatus(is_random=True, time_stamp=time_stamp))
-        ret = self.app.test_client().get("/status/ram_status?type=day")
+                Status.utils.RAMStatus.save(Status.utils.RAMStatus(is_random=True, time_stamp=time_stamp))
+        ret = self.app.test_client().get("/api/status/ram_status?type=day")
+        logging.info(ret.get_json())
+
+    def test_get_last_disk_status(self):
+        with self.app_context:
+            Status.utils.DiskStatus.init_counter()
+            sleep(1)
+            Status.utils.DiskStatus.save()
+        ret = self.app.test_client().get("/api/status/disk_status?type=update")
+        logging.info(ret.get_json())
+
+    def test_get_batch_disk_status(self):
+        with self.app_context:
+            Status.utils.DiskStatus.init_counter()
+            sleep(1)
+            for i in range(10):
+                Status.utils.DiskStatus.save()
+                sleep(1)
+        ret = self.app.test_client().get("/api/status/disk_status?type=init")
+        logging.info(ret.get_json())
+
+    def test_get_last_network_status(self):
+        with self.app_context:
+            Status.utils.NetworkStatus.init_counter()
+            sleep(1)
+            Status.utils.NetworkStatus.save()
+        ret = self.app.test_client().get("/api/status/network_status?type=update")
+        logging.info(ret.get_json())
+
+    def test_get_batch_network_status(self):
+        with self.app_context:
+            Status.utils.NetworkStatus.init_counter()
+            sleep(1)
+            for i in range(10):
+                Status.utils.NetworkStatus.save()
+                sleep(1)
+        ret = self.app.test_client().get("/api/status/network_status?type=init")
         logging.info(ret.get_json())

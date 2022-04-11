@@ -6,8 +6,9 @@
 import { h } from "vue";
 import { NMenu, NIcon } from "naive-ui";
 import { RouterLink } from "vue-router";
-import {Cpu} from "@vicons/tabler";
-import {Memory} from "@vicons/fa"
+import { Cpu } from "@vicons/tabler";
+import { Memory } from "@vicons/fa";
+import { VmdkDisk, NetworkPublic } from "@vicons/carbon";
 
 const menuOptions = [
     {
@@ -42,17 +43,49 @@ const menuOptions = [
         key: "RAM",
         icon: renderIcon(Memory),
     },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Disk-Info",
+                    },
+                },
+                {
+                    default: () => "Disk",
+                }
+            ),
+        key: "Disk",
+        icon: renderIcon(VmdkDisk),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Network-Info",
+                    },
+                },
+                {
+                    default: () => "NetWork",
+                }
+            ),
+        key: "NetWork",
+        icon: renderIcon(NetworkPublic),
+    },
 ];
 
 function renderIcon(icon) {
-  return () => h(NIcon, null, { default: () => h(icon) });
+    return () => h(NIcon, null, { default: () => h(icon) });
 }
 
 export default {
     components: {
         NMenu,
     },
-    data(){
+    data() {
         return {
             menuOptions,
         };

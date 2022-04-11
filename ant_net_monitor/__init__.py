@@ -8,13 +8,14 @@ from .threads import set_all_threads
 
 from .cli import init_db, init_db_command
 from .extensions import db
+from .status import Status
 from .blueprint.status_blueprint import status_bp
 from .blueprint.alarm_blueprint import alarm_bp
 
 from .alarm.alarm import Alarm
 
 
-def create_app(test_config=None):
+def create_app(*, ENABLE_SNMP=False):
     """create and configure the app"""
     app = Flask(
         __name__,
@@ -57,8 +58,18 @@ def create_app(test_config=None):
     def catch_all(path):
         return render_template("index.html")
 
+    if app.config["ENV"] == "development":
+        app.config["ENABLE_SNMP"] = False
+    else:
+        app.config["ENABLE_SNMP"] = False
+
+    app.logger.info("SNMP MODE:" + str(app.config["ENABLE_SNMP"]))
+
     CORS(app)
     register_extensions(app)
+
+    Status.init_app(app)
+
     check_table_exist(app)
 
     app.register_blueprint(status_bp)
@@ -66,7 +77,12 @@ def create_app(test_config=None):
 
     add_command(app)
 
-    Alarm.init_alarm(app)
+    if app.config["ENABLE_SNMP"]:
+        # TODO 仅作测试
+        Status.init_agent(app, "localhost", "antrol")
+        Status.init_agent_list(app)
+    else:
+        Alarm.init_alarm(app) # 仅在psutil模式下使用
 
     set_all_threads(app)
 

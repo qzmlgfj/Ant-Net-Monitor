@@ -1,1 +1,1 @@
-
+from .alarm import Alarm

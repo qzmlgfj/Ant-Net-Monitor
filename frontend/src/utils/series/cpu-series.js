@@ -27,15 +27,6 @@ const system = {
     data: ref([]),
 }
 
-const idle = {
-    name: "idle",
-    type: "line",
-    smooth: false,
-    symbol: "none",
-    areaStyle: {},
-    data: ref([]),
-}
-
 const iowait = {
     name: "iowait",
     type: "line",
@@ -58,7 +49,6 @@ const CPUSeries = [
     user,
     nice,
     system,
-    idle,
     iowait,
     steal,
 ];
@@ -75,7 +65,6 @@ const setCPUSeries = (data) => {
         user.data.value.push([new Date(item.time_stamp), item.user_percent]);
         nice.data.value.push([new Date(item.time_stamp), item.nice_percent]);
         system.data.value.push([new Date(item.time_stamp), item.system_percent]);
-        idle.data.value.push([new Date(item.time_stamp), item.idle_percent]);
         iowait.data.value.push([new Date(item.time_stamp), item.iowait_percent]);
         steal.data.value.push([new Date(item.time_stamp), item.steal_percent]);
     });
@@ -91,9 +80,6 @@ const updateCPUSeries = (data) => {
 
     system.data.value.shift();
     system.data.value.push([new Date(data.time_stamp), data.system_percent]);
-
-    idle.data.value.shift();
-    idle.data.value.push([new Date(data.time_stamp), data.idle_percent]);
 
     iowait.data.value.shift();
     iowait.data.value.push([new Date(data.time_stamp), data.iowait_percent]);

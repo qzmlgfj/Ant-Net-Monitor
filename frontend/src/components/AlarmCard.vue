@@ -62,6 +62,17 @@
                             </n-input-number>
                         </n-form-item>
                         <n-form-item
+                            label="触发时长"
+                            path="alarmItem.durationTime"
+                        >
+                            <n-input-number
+                                v-model:value="formValue.alarmItem.durationTime"
+                                :show-button="false"
+                            >
+                                <template #suffix> 秒 </template>
+                            </n-input-number>
+                        </n-form-item>
+                        <n-form-item
                             label="是否启用"
                             path="alarmItem.activated"
                         >
@@ -128,6 +139,10 @@ const createColumns = () => {
         {
             title: "警告间隔",
             key: "interval_time",
+        },
+        {
+            title: "触发时长",
+            key: "duration_time",
         },
         {
             title: "状态",
@@ -203,6 +218,7 @@ export default {
                     formValue.value.alarmItem.alarmValue = row.alarm_value;
                     formValue.value.alarmItem.activated = row.activated;
                     formValue.value.alarmItem.intervalTime = row.interval_time;
+                    formValue.value.alarmItem.durationTime = row.duration_time;
                     alarmItemVisiable.value = true;
                 },
             };
