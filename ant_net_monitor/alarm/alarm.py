@@ -50,10 +50,10 @@ class Alarm(db.Model):
                     ).seconds >= self.duration_time:
                         self.set_alarm_flag(True)
             else:
-                pass
+                self.last_warning_time = datetime.utcnow().replace(microsecond=0)
         else:
             if self.flag == False:
-                pass
+                self.last_recover_time = datetime.utcnow().replace(microsecond=0)
             else:
                 if self.last_recover_time <= self.last_warning_time:
                     self.last_recover_time = datetime.utcnow().replace(microsecond=0)
