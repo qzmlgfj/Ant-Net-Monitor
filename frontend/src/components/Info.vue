@@ -24,10 +24,7 @@ import {
     updateLineChart,
     getHistoryLineChart,
 } from "@/utils/request";
-import { setCPUSeries, updateCPUSeries } from "@/utils/series/cpu-series";
-import { setRAMSeries, updateRAMSeries } from "@/utils/series/ram-series";
-import { setDiskSeries, updateDiskSeries } from "@/utils/series/disk-series";
-import { setNetworkSeries, updateNetworkSeries } from "@/utils/series/network-series";
+import { initSeries, setSeries, updateSeries } from "@/utils/series";
 
 export default {
     name: "Info",
@@ -48,40 +45,15 @@ export default {
         };
     },
     methods: {
-        updateSeries(url) {
+        updateChart(url) {
             updateLineChart(url).then((response) => {
-                switch (this.$route.name) {
-                    case "CPU-Info":
-                        updateCPUSeries(response.data);
-                        break;
-                    case "RAM-Info":
-                        updateRAMSeries(response.data);
-                        break;
-                    case "Disk-Info":
-                        updateDiskSeries(response.data);
-                        break;
-                    case "Network-Info":
-                        updateNetworkSeries(response.data);
-                        break;
-                }
+                updateSeries(response.data);
             });
         },
-        initSeries(url) {
+        initChart(url) {
             initLineChart(url).then((response) => {
-                switch (this.$route.name) {
-                    case "CPU-Info":
-                        this.series = setCPUSeries(response.data);
-                        break;
-                    case "RAM-Info":
-                        this.series = setRAMSeries(response.data);
-                        break;
-                    case "Disk-Info":
-                        this.series = setDiskSeries(response.data);
-                        break;
-                    case "Network-Info":
-                        this.series = setNetworkSeries(response.data);
-                        break;
-                }
+                initSeries(response.data[0]);
+                this.series = setSeries(response.data);
             });
         },
         switchToHistory() {
@@ -90,20 +62,7 @@ export default {
                 clearInterval(this.interval);
                 getHistoryLineChart(this.$route.meta.apiUrl).then(
                     (response) => {
-                        switch (this.$route.name) {
-                            case "CPU-Info":
-                                this.series = setCPUSeries(response.data);
-                                break;
-                            case "RAM-Info":
-                                this.series = setRAMSeries(response.data);
-                                break;
-                            case "Disk-Info":
-                                this.series = setDiskSeries(response.data);
-                                break;
-                            case "Network-Info":
-                                this.series = setNetworkSeries(response.data);
-                                break;
-                        }
+                        this.series = setSeries(response.data);
                     }
                 );
             }
@@ -111,9 +70,9 @@ export default {
         switchToRealTime() {
             if (this.enableZoom) {
                 this.enableZoom = false;
-                this.initSeries(this.$route.meta.apiUrl);
+                this.initChart(this.$route.meta.apiUrl);
                 this.interval = setInterval(() => {
-                    this.updateSeries(this.$route.meta.apiUrl);
+                    this.updateChart(this.$route.meta.apiUrl);
                 }, this.intervalTime);
             }
         },
@@ -122,16 +81,16 @@ export default {
         },
     },
     created() {
-        this.initSeries(this.$route.meta.apiUrl);
+        this.initChart(this.$route.meta.apiUrl);
         this.interval = setInterval(() => {
-            this.updateSeries(this.$route.meta.apiUrl);
+            this.updateChart(this.$route.meta.apiUrl);
         }, this.intervalTime);
     },
     beforeRouteUpdate(to) {
         clearInterval(this.interval);
-        this.initSeries(to.meta.apiUrl);
+        this.initChart(to.meta.apiUrl);
         this.interval = setInterval(() => {
-            this.updateSeries(to.meta.apiUrl);
+            this.updateChart(to.meta.apiUrl);
         }, this.intervalTime);
         this.enableZoom = false;
         this.historyMode = false;
