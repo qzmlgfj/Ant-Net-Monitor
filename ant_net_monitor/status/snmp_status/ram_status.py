@@ -39,7 +39,7 @@ class RAMStatus:
         swap_free = snmp_get_value(
             self.agent.host, self.agent.community, "UCD-SNMP-MIB", "memAvailSwap"
         )
-        swap_percent = format(swap_free / swap_total * 100, ".2f")
+        swap_percent = format(100 - swap_free / swap_total * 100, ".2f")
 
         db.session.add(
             RAMStatusInfo(available, cached, buffers, swap_percent, self.agent)

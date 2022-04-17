@@ -78,8 +78,16 @@ function updateSeries(data) {
         if (name === "time_stamp" || name === "id") {
             continue;
         }
-        seriesDict[name].data.value.shift();
-        seriesDict[name].data.value.push([new Date(data["time_stamp"]), data[name]]);
+
+        /**
+         * 防止重复渲染同一时间戳的数据
+         */
+        let datetimeA = seriesDict[name].data.value[seriesDict[name].data.value.length - 1][0].getTime();
+        let datetimeB = new Date(data["time_stamp"]).getTime();
+        if (datetimeA !== datetimeB) {
+            seriesDict[name].data.value.shift();
+            seriesDict[name].data.value.push([new Date(data["time_stamp"]), data[name]]);
+        }
     }
 }
 
