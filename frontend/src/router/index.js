@@ -49,7 +49,7 @@ const routes = [
                     title: "Load-Info",
                     apiUrl: "/api/status/load_status"
                 },
-                component: () => import("@/components/info/Network.vue"),
+                component: () => import("@/components/info/Load.vue"),
             },
         ]
     },
