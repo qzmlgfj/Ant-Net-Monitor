@@ -5,7 +5,7 @@ from tracemalloc import start
 from sqlalchemy import extract
 
 from ...extensions import db
-from .snmp_utils import snmp_walk
+from .snmp_utils import snmp_walk_int
 
 
 class NetworkStatus:
@@ -13,7 +13,7 @@ class NetworkStatus:
         self.read_bytes = sum(
             [
                 value
-                for value in snmp_walk(
+                for value in snmp_walk_int(
                     agent.host, agent.community, "IF-MIB", "ifOutOctets"
                 )
             ]
@@ -21,7 +21,7 @@ class NetworkStatus:
         self.write_bytes = sum(
             [
                 value
-                for value in snmp_walk(
+                for value in snmp_walk_int(
                     agent.host, agent.community, "IF-MIB", "ifInOctets"
                 )
             ]
@@ -33,7 +33,7 @@ class NetworkStatus:
         read_bytes = sum(
             [
                 value
-                for value in snmp_walk(
+                for value in snmp_walk_int(
                     self.agent.host, self.agent.community, "IF-MIB", "ifOutOctets"
                 )
             ]
@@ -41,7 +41,7 @@ class NetworkStatus:
         write_bytes = sum(
             [
                 value
-                for value in snmp_walk(
+                for value in snmp_walk_int(
                     self.agent.host, self.agent.community, "IF-MIB", "ifInOctets"
                 )
             ]

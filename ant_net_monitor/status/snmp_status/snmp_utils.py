@@ -40,7 +40,7 @@ def snmp_get_value(host, community, mib_module, mib_object):
             return int(varBind[1])
 
 
-def snmp_walk(host, community, mib_module, mib_object):
+def snmp_walk_int(host, community, mib_module, mib_object):
     """Using `pysnmp.nextCmd()` like `SNMPWALK`
 
     Args:
@@ -77,27 +77,72 @@ def snmp_walk(host, community, mib_module, mib_object):
                 yield int(varBind[1])
 
 
+def snmp_walk_float(host, community, mib_module, mib_object):
+    """Using `pysnmp.nextCmd()` like `SNMPWALK`
+
+    Args:
+        host (str): snmp host address
+        community (str): snmp community
+        mib_module (str): snmp mib module
+        mib_object (str): name of the mib object
+
+    Yields:
+        int: value of snmp object
+    """
+    for (errorIndication, errorStatus, errorIndex, varBinds) in nextCmd(
+        SnmpEngine(),
+        CommunityData(community, mpModel=1),
+        UdpTransportTarget((host, 161)),
+        ContextData(),
+        ObjectType(ObjectIdentity(mib_module, mib_object)),
+        lexicographicMode=False,
+    ):
+        if errorIndication:
+            print(errorIndication)
+            break
+        elif errorStatus:
+            print(
+                "%s at %s"
+                % (
+                    errorStatus.prettyPrint(),
+                    errorIndex and varBinds[int(errorIndex) - 1][0] or "?",
+                )
+            )
+            break
+        else:
+            for varBind in varBinds:
+                yield float(varBind[1])
+
+
 if __name__ == "__main__":
-    #while True:
+    # while True:
     #    print(
     #        snmp_get_value("localhost", "antrol", "UCD-SNMP-MIB", "memCached")
     #        / 1024**2
     #    )
     #    sleep(1)
 
-    #a = snmp_get_value("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead") / 1024**2
-    #sleep(1)
-    #while True:
+    # a = snmp_get_value("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead") / 1024**2
+    # sleep(1)
+    # while True:
     #    b = snmp_get_value("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead") / 1024**2
     #    print(b - a)
     #    a = b
     #    sleep(1)
 
+    # a = sum([value for value in snmp_walk_int("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead")]) / 1024**2
+    # sleep(1)
+    # while True:
+    #    b = sum([value for value in snmp_walk_int("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead")]) / 1024**2
+    #    print(b - a)
+    #    a = b
+    #    sleep(1)
 
-    a = sum([value for value in snmp_walk("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead")]) / 1024**2
-    sleep(1)
-    while True:
-        b = sum([value for value in snmp_walk("localhost", "antrol", "UCD-DISKIO-MIB", "diskIONRead")]) / 1024**2
-        print(b - a)
-        a = b
-        sleep(1)
+    load = [
+        (value / 100)
+        for value in snmp_walk_int(
+            "localhost", "antrol", "UCD-SNMP-MIB", "laLoadInt"
+        )
+    ]
+
+    print(load)
