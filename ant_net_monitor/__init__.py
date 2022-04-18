@@ -61,7 +61,7 @@ def create_app(*, ENABLE_SNMP=False):
     if app.config["ENV"] == "development":
         app.config["ENABLE_SNMP"] = False
     else:
-        app.config["ENABLE_SNMP"] = True
+        app.config["ENABLE_SNMP"] = False
 
     app.logger.info("SNMP MODE:" + str(app.config["ENABLE_SNMP"]))
 

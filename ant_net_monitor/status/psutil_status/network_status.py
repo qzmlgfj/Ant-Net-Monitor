@@ -1,8 +1,10 @@
-from datetime import datetime, timedelta
-import psutil
-from ...extensions import db
 from dataclasses import dataclass
+from datetime import datetime, timedelta
+
+import psutil
 from sqlalchemy import extract
+
+from ...extensions import db
 
 
 @dataclass
@@ -23,8 +25,8 @@ class NetworkStatus(db.Model):
     def __init__(self):
         send_bytes = psutil.net_io_counters().bytes_sent
         recv_bytes = psutil.net_io_counters().bytes_recv
-        self.send_speed = format((send_bytes - self.send_bytes) / 1024 ** 2, ".2f")
-        self.recv_speed = format((recv_bytes - self.recv_bytes) / 1024 ** 2, ".2f")
+        self.send_speed = format((send_bytes - self.send_bytes) / 1024**2, ".2f")
+        self.recv_speed = format((recv_bytes - self.recv_bytes) / 1024**2, ".2f")
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
         NetworkStatus.set_counter(send_bytes, recv_bytes)
 

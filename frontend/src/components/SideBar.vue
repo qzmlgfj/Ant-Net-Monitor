@@ -7,7 +7,7 @@ import { h } from "vue";
 import { NMenu, NIcon } from "naive-ui";
 import { RouterLink } from "vue-router";
 import { Cpu } from "@vicons/tabler";
-import { Memory } from "@vicons/fa";
+import { Memory, AngleDoubleUp } from "@vicons/fa";
 import { VmdkDisk, NetworkPublic } from "@vicons/carbon";
 
 const menuOptions = [
@@ -74,6 +74,22 @@ const menuOptions = [
             ),
         key: "NetWork",
         icon: renderIcon(NetworkPublic),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Load-Info",
+                    },
+                },
+                {
+                    default: () => "Load",
+                }
+            ),
+        key: "Load",
+        icon: renderIcon(AngleDoubleUp),
     },
 ];
 

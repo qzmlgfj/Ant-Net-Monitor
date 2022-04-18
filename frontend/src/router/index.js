@@ -42,6 +42,15 @@ const routes = [
                 },
                 component: () => import("@/components/info/Network.vue"),
             },
+            {
+                path: "load_status",
+                name: "Load-Info",
+                meta: {
+                    title: "Load-Info",
+                    apiUrl: "/api/status/load_status"
+                },
+                component: () => import("@/components/info/Network.vue"),
+            },
         ]
     },
 ]

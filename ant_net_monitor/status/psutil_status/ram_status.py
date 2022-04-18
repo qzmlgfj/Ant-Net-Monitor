@@ -1,9 +1,11 @@
-from datetime import datetime, timedelta
 import random
-import psutil
-from ...extensions import db
 from dataclasses import dataclass
+from datetime import datetime, timedelta
+
+import psutil
 from sqlalchemy import extract
+
+from ...extensions import db
 
 
 @dataclass
@@ -37,10 +39,10 @@ class RAMStatus(db.Model):
             self.time_stamp = time_stamp
         else:
             current_status = psutil.virtual_memory()
-            self.available = format(current_status.free / (1024 ** 3), ".2f")
-            self.used = format(current_status.used / (1024 ** 3), ".2f")
-            self.cached = format(current_status.cached / (1024 ** 3), ".2f")
-            self.buffers = format(current_status.buffers / (1024 ** 3), ".2f")
+            self.available = format(current_status.free / (1024**3), ".2f")
+            self.used = format(current_status.used / (1024**3), ".2f")
+            self.cached = format(current_status.cached / (1024**3), ".2f")
+            self.buffers = format(current_status.buffers / (1024**3), ".2f")
             self.time_stamp = datetime.utcnow().replace(microsecond=0)
 
     def __str__(self):

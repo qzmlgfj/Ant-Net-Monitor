@@ -1,9 +1,11 @@
-from datetime import datetime, timedelta
-import psutil
-from ...extensions import db
-from dataclasses import dataclass
 import random
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+
+import psutil
 from sqlalchemy import extract
+
+from ...extensions import db
 
 
 @dataclass
@@ -87,7 +89,11 @@ class CPUStatus(db.Model):
     @staticmethod
     def get_last():
         start = datetime.utcnow() - timedelta(minutes=1)
-        return CPUStatus.query.filter(CPUStatus.time_stamp >= start).order_by(CPUStatus.time_stamp.desc()).first()
+        return (
+            CPUStatus.query.filter(CPUStatus.time_stamp >= start)
+            .order_by(CPUStatus.time_stamp.desc())
+            .first()
+        )
 
     @staticmethod
     def get_batch():

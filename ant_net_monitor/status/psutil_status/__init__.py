@@ -1,4 +1,11 @@
-from . import basic_status, cpu_status, ram_status, disk_status, network_status
+from . import (
+    basic_status,
+    cpu_status,
+    ram_status,
+    disk_status,
+    network_status,
+    load_status,
+)
 
 
 class PsutilStatus:
@@ -7,6 +14,7 @@ class PsutilStatus:
     RAMStatus = ram_status.RAMStatus
     DiskStatus = disk_status.DiskStatus
     NetworkStatus = network_status.NetworkStatus
+    LoadStatus = load_status.LoadStatus
 
     @classmethod
     def get_basic_status(cls):
@@ -47,3 +55,12 @@ class PsutilStatus:
             return cls.NetworkStatus.get_last()
         elif type == "day":
             return cls.NetworkStatus.get_in_one_day()
+
+    @classmethod
+    def get_load_status(cls, type):
+        if type == "init":
+            return cls.LoadStatus.get_batch()
+        elif type == "update":
+            return cls.LoadStatus.get_last()
+        elif type == "day":
+            return cls.LoadStatus.get_in_one_day()

@@ -29,12 +29,14 @@ class Status:
             new_ram_status = cls.utils.RAMStatus()
             new_disk_status = cls.utils.DiskStatus()
             new_network_status = cls.utils.NetworkStatus()
+            new_load_status = cls.utils.LoadStatus()
 
             cls.utils.BasicStatus.save(new_basic_status)
             cls.utils.CPUStatus.save(new_cpu_status)
             cls.utils.RAMStatus.save(new_ram_status)
             cls.utils.DiskStatus.save(new_disk_status)
             cls.utils.NetworkStatus.save(new_network_status)
+            cls.utils.LoadStatus.save(new_load_status)
 
             alarm_value = (
                 new_basic_status.cpu_percent,

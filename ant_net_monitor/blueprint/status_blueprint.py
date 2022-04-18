@@ -29,3 +29,7 @@ def return_disk_status():
 @status_bp.route("network_status", methods=["GET"])
 def return_network_status():
     return jsonify(Status.utils.get_network_status(request.args.get("type")))
+
+@status_bp.route("load_status", methods=["GET"])
+def return_load_status():
+    return jsonify(Status.utils.get_load_status(request.args.get("type")))
