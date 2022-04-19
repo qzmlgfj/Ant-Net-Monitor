@@ -5,6 +5,7 @@ from . import (
     disk_status,
     network_status,
     load_status,
+    swap_status,
 )
 
 
@@ -15,6 +16,7 @@ class PsutilStatus:
     DiskStatus = disk_status.DiskStatus
     NetworkStatus = network_status.NetworkStatus
     LoadStatus = load_status.LoadStatus
+    SwapStatus = swap_status.SwapStatus
 
     @classmethod
     def get_basic_status(cls):
@@ -64,3 +66,12 @@ class PsutilStatus:
             return cls.LoadStatus.get_last()
         elif type == "day":
             return cls.LoadStatus.get_in_one_day()
+
+    @classmethod
+    def get_swap_status(cls, type):
+        if type == "init":
+            return cls.SwapStatus.get_batch()
+        elif type == "update":
+            return cls.SwapStatus.get_last()
+        elif type == "day":
+            return cls.SwapStatus.get_in_one_day()

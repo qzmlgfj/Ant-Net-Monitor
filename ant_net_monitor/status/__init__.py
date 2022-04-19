@@ -30,6 +30,7 @@ class Status:
             new_disk_status = cls.utils.DiskStatus()
             new_network_status = cls.utils.NetworkStatus()
             new_load_status = cls.utils.LoadStatus()
+            new_swap_status = cls.utils.SwapStatus()
 
             cls.utils.BasicStatus.save(new_basic_status)
             cls.utils.CPUStatus.save(new_cpu_status)
@@ -37,6 +38,7 @@ class Status:
             cls.utils.DiskStatus.save(new_disk_status)
             cls.utils.NetworkStatus.save(new_network_status)
             cls.utils.LoadStatus.save(new_load_status)
+            cls.utils.SwapStatus.save(new_swap_status)
 
             alarm_value = (
                 new_basic_status.cpu_percent,

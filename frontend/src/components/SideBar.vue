@@ -7,7 +7,7 @@ import { h } from "vue";
 import { NMenu, NIcon } from "naive-ui";
 import { RouterLink } from "vue-router";
 import { Cpu } from "@vicons/tabler";
-import { Memory, AngleDoubleUp } from "@vicons/fa";
+import { Memory, AngleDoubleUp, ExchangeAlt } from "@vicons/fa";
 import { VmdkDisk, NetworkPublic } from "@vicons/carbon";
 
 const menuOptions = [
@@ -90,6 +90,22 @@ const menuOptions = [
             ),
         key: "Load",
         icon: renderIcon(AngleDoubleUp),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Swap-Info",
+                    },
+                },
+                {
+                    default: () => "Swap",
+                }
+            ),
+        key: "Swap",
+        icon: renderIcon(ExchangeAlt),
     },
 ];
 

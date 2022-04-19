@@ -51,6 +51,15 @@ const routes = [
                 },
                 component: () => import("@/components/info/Load.vue"),
             },
+            {
+                path: "swap_status",
+                name: "Swap-Info",
+                meta: {
+                    title: "Swap-Info",
+                    apiUrl: "/api/status/swap_status"
+                },
+                component: () => import("@/components/info/Swap.vue"),
+            },
         ]
     },
 ]
