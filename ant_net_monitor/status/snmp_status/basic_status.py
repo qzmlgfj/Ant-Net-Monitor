@@ -1,8 +1,7 @@
-from datetime import datetime, timedelta
-from ...extensions import db
+from datetime import datetime
 from dataclasses import dataclass
 
-from . import cpu_status, ram_status, disk_status, network_status
+from . import cpu_status, ram_status, disk_status, network_status, swap_status
 
 
 @dataclass
@@ -25,5 +24,5 @@ class BasicStatus:
     def get_last(cls, agent):
         cpu_percent = cpu_status.CPUStatusInfo.get_last(agent).used_percent
         ram_percent = ram_status.RAMStatusInfo.get_last(agent).available
-        swap_percent = ram_status.RAMStatusInfo.get_last(agent).swap_percent
+        swap_percent = swap_status.SwapStatusInfo.get_last(agent).percent
         return cls(cpu_percent, ram_percent, swap_percent)

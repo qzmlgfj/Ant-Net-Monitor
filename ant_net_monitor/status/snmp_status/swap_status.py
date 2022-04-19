@@ -7,64 +7,46 @@ from ...extensions import db
 from .snmp_utils import snmp_get_value
 
 
-class RAMStatus:
+class SwapStatus:
     def __init__(self, agent):
         self.agent = agent
 
     def save(self):
-        available = format(
-            snmp_get_value(
-                self.agent.host, self.agent.community, "UCD-SNMP-MIB", "memAvailReal"
-            )
-            / 1024**2,
-            ".2f",
+        swap_total = snmp_get_value(
+            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "memTotalSwap"
         )
-        cached = format(
-            snmp_get_value(
-                self.agent.host, self.agent.community, "UCD-SNMP-MIB", "memCached"
-            )
-            / 1024**2,
-            ".2f",
+        swap_free = snmp_get_value(
+            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "memAvailSwap"
         )
-        buffers = format(
-            snmp_get_value(
-                self.agent.host, self.agent.community, "UCD-SNMP-MIB", "memBuffer"
-            )
-            / 1024**2,
-            ".2f",
-        )
+        swap_percent = format(100 - swap_free / swap_total * 100, ".2f")
+        swap_used = format((swap_total - swap_free) / 1024**2, ".2f")
 
-        db.session.add(
-            RAMStatusInfo(available, cached, buffers, self.agent)
-        )
+        db.session.add(SwapStatusInfo(swap_percent, swap_used, self.agent))
         db.session.commit()
 
 
 @dataclass
-class RAMStatusInfo(db.Model):
+class SwapStatusInfo(db.Model):
     id: int
-    available: float
-    cached: float
-    buffers: float
+    # percent: float
+    used: float
     time_stamp: datetime
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time_stamp = db.Column(db.DateTime)
-    available = db.Column(db.Float)
-    cached = db.Column(db.Float)
-    buffers = db.Column(db.Float)
+    percent = db.Column(db.Float)
+    used = db.Column(db.Float)
 
     agent_id = db.Column(db.Integer, db.ForeignKey("snmp_agent.id"))
     agent = db.relationship(
-        "SnmpAgent", backref=db.backref("ram_status_info", lazy="dynamic")
+        "SnmpAgent", backref=db.backref("swap_status_info", lazy="dynamic")
     )
 
-    def __init__(self, available, cached, buffers, agent):
-        self.available = available
-        self.cached = cached
-        self.buffers = buffers
-        self.agent = agent
+    def __init__(self, percent, used, agent):
+        self.percent = percent
+        self.used = used
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
+        self.agent = agent
 
     @classmethod
     def get_last(cls, agent):
