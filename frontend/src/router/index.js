@@ -60,6 +60,15 @@ const routes = [
                 },
                 component: () => import("@/components/info/Swap.vue"),
             },
+            {
+                path: "Interrupt_status",
+                name: "Interrupt-Info",
+                meta: {
+                    title: "Interrupt-Info",
+                    apiUrl: "/api/status/interrupt_status"
+                },
+                component: () => import("@/components/info/Interrupt.vue"),
+            },
         ]
     },
 ]

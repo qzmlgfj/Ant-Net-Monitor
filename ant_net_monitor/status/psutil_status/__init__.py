@@ -6,6 +6,7 @@ from . import (
     network_status,
     load_status,
     swap_status,
+    interrupt_status,
 )
 
 
@@ -17,6 +18,7 @@ class PsutilStatus:
     NetworkStatus = network_status.NetworkStatus
     LoadStatus = load_status.LoadStatus
     SwapStatus = swap_status.SwapStatus
+    InterruptStatus = interrupt_status.InterruptStatus
 
     @classmethod
     def get_basic_status(cls):
@@ -75,3 +77,12 @@ class PsutilStatus:
             return cls.SwapStatus.get_last()
         elif type == "day":
             return cls.SwapStatus.get_in_one_day()
+
+    @classmethod
+    def get_interrupt_status(cls, type):
+        if type == "init":
+            return cls.InterruptStatus.get_batch()
+        elif type == "update":
+            return cls.InterruptStatus.get_last()
+        elif type == "day":
+            return cls.InterruptStatus.get_in_one_day()

@@ -7,7 +7,7 @@ import { h } from "vue";
 import { NMenu, NIcon } from "naive-ui";
 import { RouterLink } from "vue-router";
 import { Cpu } from "@vicons/tabler";
-import { Memory, AngleDoubleUp, ExchangeAlt } from "@vicons/fa";
+import { Memory, AngleDoubleUp, ExchangeAlt, ExpandAlt } from "@vicons/fa";
 import { VmdkDisk, NetworkPublic } from "@vicons/carbon";
 
 const menuOptions = [
@@ -106,6 +106,22 @@ const menuOptions = [
             ),
         key: "Swap",
         icon: renderIcon(ExchangeAlt),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Interrupt-Info",
+                    },
+                },
+                {
+                    default: () => "Interrupt",
+                }
+            ),
+        key: "Interrupt",
+        icon: renderIcon(ExpandAlt),
     },
 ];
 

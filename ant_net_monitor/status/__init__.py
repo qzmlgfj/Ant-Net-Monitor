@@ -31,6 +31,7 @@ class Status:
             new_network_status = cls.utils.NetworkStatus()
             new_load_status = cls.utils.LoadStatus()
             new_swap_status = cls.utils.SwapStatus()
+            new_interrupt_status = cls.utils.InterruptStatus()
 
             cls.utils.BasicStatus.save(new_basic_status)
             cls.utils.CPUStatus.save(new_cpu_status)
@@ -39,6 +40,7 @@ class Status:
             cls.utils.NetworkStatus.save(new_network_status)
             cls.utils.LoadStatus.save(new_load_status)
             cls.utils.SwapStatus.save(new_swap_status)
+            cls.utils.InterruptStatus.save(new_interrupt_status)
 
             alarm_value = (
                 new_basic_status.cpu_percent,
@@ -56,6 +58,7 @@ class Status:
         if not cls.enable_snmp:
             cls.utils.DiskStatus.init_counter()
             cls.utils.NetworkStatus.init_counter()
+            cls.utils.InterruptStatus.init_counter()
 
     @classmethod
     def init_agent_list(cls, app):
