@@ -6,7 +6,8 @@ from . import (
     disk_status,
     network_status,
     load_status,
-    swap_status
+    swap_status,
+    interrupt_status,
 )
 
 
@@ -19,6 +20,7 @@ class SnmpStatus:
         self.NetworkStatus = network_status.NetworkStatus(agent)
         self.LoadStatus = load_status.LoadStatus(agent)
         self.SwapStatus = swap_status.SwapStatus(agent)
+        self.InterruptStatus = interrupt_status.InterruptStatus(agent)
 
     def save_all(self):
         self.CPUStatus.save()
@@ -27,6 +29,7 @@ class SnmpStatus:
         self.NetworkStatus.save()
         self.LoadStatus.save()
         self.SwapStatus.save()
+        self.InterruptStatus.save()
 
     @classmethod
     def init_agent(cls, app, host, community):
@@ -101,3 +104,13 @@ class SnmpStatus:
             return swap_status.SwapStatusInfo.get_last(agent)
         elif type == "day":
             return swap_status.SwapStatusInfo.get_in_one_day(agent)
+
+    @classmethod
+    def get_interrupt_status(cls, type):
+        agent = snmp_agent.SnmpAgent.query.first()
+        if type == "init":
+            return interrupt_status.InterruptStatusInfo.get_batch(agent)
+        elif type == "update":
+            return interrupt_status.InterruptStatusInfo.get_last(agent)
+        elif type == "day":
+            return interrupt_status.InterruptStatusInfo.get_in_one_day(agent)

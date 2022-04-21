@@ -138,11 +138,19 @@ if __name__ == "__main__":
     #    a = b
     #    sleep(1)
 
-    load = [
-        (value / 100)
-        for value in snmp_walk_int(
-            "localhost", "antrol", "UCD-SNMP-MIB", "laLoadInt"
-        )
-    ]
+    #load = [
+    #    (value / 100)
+    #    for value in snmp_walk_int(
+    #        "localhost", "antrol", "UCD-SNMP-MIB", "laLoadInt"
+    #    )
+    #]
 
-    print(load)
+    #print(load)
+
+    interrupt = snmp_get_value("localhost", "antrol", "UCD-SNMP-MIB", "ssRawInterrupts")
+    sleep(1)
+    while True:
+        interrupt_new = snmp_get_value("localhost", "antrol", "UCD-SNMP-MIB", "ssRawInterrupts")
+        print(interrupt_new - interrupt)
+        interrupt = interrupt_new
+        sleep(1)
