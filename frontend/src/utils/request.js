@@ -37,6 +37,13 @@ function getHistoryLineChart(url) {
     })
 }
 
+function getSystemInfo() {
+    return service({
+        method: "get",
+        url: "/api/status/system_info"
+    })
+}
+
 function getAlarmFlag() {
     return service({
         method: "get",
@@ -59,4 +66,4 @@ function getAlarmLog() {
     })
 }
 
-export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag, getAlarmLog };
+export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag, getAlarmLog, getSystemInfo };

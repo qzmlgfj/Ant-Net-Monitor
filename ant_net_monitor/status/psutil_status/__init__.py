@@ -7,6 +7,7 @@ from . import (
     load_status,
     swap_status,
     interrupt_status,
+    system_info,
 )
 
 
@@ -19,6 +20,7 @@ class PsutilStatus:
     LoadStatus = load_status.LoadStatus
     SwapStatus = swap_status.SwapStatus
     InterruptStatus = interrupt_status.InterruptStatus
+    SystemInfo = system_info.SystemInfo
 
     @classmethod
     def get_basic_status(cls):
@@ -86,3 +88,7 @@ class PsutilStatus:
             return cls.InterruptStatus.get_last()
         elif type == "day":
             return cls.InterruptStatus.get_in_one_day()
+
+    @classmethod
+    def get_system_info(cls):
+        return cls.SystemInfo()

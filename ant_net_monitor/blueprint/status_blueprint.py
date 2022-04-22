@@ -42,3 +42,7 @@ def return_swap_status():
 @status_bp.route("interrupt_status", methods=["GET"])
 def return_interrupt_status():
     return jsonify(Status.utils.get_interrupt_status(request.args.get("type")))
+
+@status_bp.route("system_info", methods=["GET"])
+def return_system_info():
+    return jsonify(Status.utils.get_system_info())
