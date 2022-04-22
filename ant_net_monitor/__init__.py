@@ -14,6 +14,8 @@ from .blueprint.alarm_blueprint import alarm_bp
 
 from .alarm.alarm import Alarm
 
+__version__ = "0.1.1dev4"
+
 
 def create_app(*, ENABLE_SNMP=False):
     """create and configure the app"""
@@ -58,6 +60,10 @@ def create_app(*, ENABLE_SNMP=False):
     def catch_all(path):
         return render_template("index.html")
 
+    @app.route("/api/version")
+    def return_version():
+        return __version__
+
     if app.config["ENV"] == "development":
         app.config["ENABLE_SNMP"] = False
     else:
@@ -82,7 +88,7 @@ def create_app(*, ENABLE_SNMP=False):
         Status.init_agent(app, "localhost", "antrol")
         Status.init_agent_list(app)
     else:
-        Alarm.init_alarm(app) # 仅在psutil模式下使用
+        Alarm.init_alarm(app)  # 仅在psutil模式下使用
 
     set_all_threads(app)
 

@@ -1,5 +1,12 @@
 import { service } from "./service";
 
+function getVersion() {
+    return service({
+        method: "get",
+        url: "/api/version",
+    })
+}
+
 function getBasicStatus() {
     return service({
         method: "get",
@@ -66,4 +73,4 @@ function getAlarmLog() {
     })
 }
 
-export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag, getAlarmLog, getSystemInfo };
+export { getVersion, getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag, getAlarmLog, getSystemInfo };
