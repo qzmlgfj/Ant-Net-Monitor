@@ -8,9 +8,25 @@ import { NMenu, NIcon } from "naive-ui";
 import { RouterLink } from "vue-router";
 import { Cpu } from "@vicons/tabler";
 import { Memory, AngleDoubleUp, ExchangeAlt, ExpandAlt } from "@vicons/fa";
-import { VmdkDisk, NetworkPublic } from "@vicons/carbon";
+import { VmdkDisk, NetworkPublic, DataViewAlt } from "@vicons/carbon";
 
 const menuOptions = [
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Overview",
+                    },
+                },
+                {
+                    default: () => "系统总览",
+                }
+            ),
+        key: "Overview",
+        icon: renderIcon(DataViewAlt),
+    },
     {
         label: () =>
             h(

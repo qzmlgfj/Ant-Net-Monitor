@@ -12,7 +12,7 @@
                     <n-layout-content id="main-content">
                         <n-space vertical>
                             <n-message-provider>
-                                <n-notification-provider>
+                                <n-notification-provider placement="bottom-right">
                                     <dash-board />
                                 </n-notification-provider>
                             </n-message-provider>

@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
     {
-        path: "/",
-        name: "overview",
+        path: "/overview",
+        name: "Overview",
         component: () => import("@/components/Overview.vue"),
     },
     {
@@ -81,6 +81,14 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.path === "/") {
+        next({ path: "/overview" });
+    } else {
+        next();
+    }
 });
 
 export { routes };
