@@ -2,9 +2,7 @@
     <div id="overview">
         <n-space wrap="false" size="large" justify="space-between">
             <n-card hoverable>
-                <n-scrollbar
-                    style="height: 35vh"
-                >
+                <n-scrollbar style="height: 35vh">
                     <alarm-time-line />
                 </n-scrollbar>
             </n-card>
@@ -14,6 +12,7 @@
 
 <script>
 import { NCard, NScrollbar } from "naive-ui";
+
 import AlarmTimeLine from "@/components/overview/AlarmTimeLine.vue";
 
 export default {

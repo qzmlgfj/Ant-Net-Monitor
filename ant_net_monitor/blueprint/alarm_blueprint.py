@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..alarm.alarm import Alarm
+from ..alarm.alarm_log import AlarmLog
 
 alarm_bp = Blueprint("/api/alarm", __name__, url_prefix="/api/alarm")
 
@@ -14,3 +15,7 @@ def update_alarm_flag():
     except Exception as e:
         return jsonify({"status": "fail"})
     return jsonify({"status": "success"})
+
+@alarm_bp.route("alarm_log", methods=["GET"])
+def return_alarm_log():
+    return jsonify(AlarmLog.get_in_one_day())

@@ -52,4 +52,11 @@ function updateAlarmFlag(data) {
     })
 }
 
-export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag };
+function getAlarmLog() {
+    return service({
+        method: "get",
+        url: "/api/alarm/alarm_log"
+    })
+}
+
+export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag, getAlarmLog };

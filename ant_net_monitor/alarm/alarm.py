@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 
 from ..extensions import db
+from .alarm_log import AlarmLog
 
 
 @dataclass
@@ -37,6 +38,8 @@ class Alarm(db.Model):
 
     def set_alarm_flag(self, flag):
         self.flag = flag
+        status = 'warning' if flag else 'recover'
+        AlarmLog.save(self.name, status)
 
     def check_alarm(self, value):
         if self.alarm_value < value:

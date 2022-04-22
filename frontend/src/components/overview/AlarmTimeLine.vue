@@ -1,44 +1,8 @@
 <script>
-import { NTimeline, NTimelineItem, NText } from "naive-ui";
+import { NTimeline, NTimelineItem, NText, NTime } from "naive-ui";
 import { h } from "vue";
 
-const AlarmLog = [
-    {
-        name: "cpu_status",
-        status: "warning",
-        time: "2020-05-01 12:00:00",
-    },
-    {
-        name: "cpu_status",
-        status: "recover",
-        time: "2020-05-01 12:05:00",
-    },
-    {
-        name: "ram_status",
-        status: "warning",
-        time: "2020-05-01 12:15:00",
-    },
-    {
-        name: "ram_status",
-        status: "warning",
-        time: "2020-05-01 12:15:00",
-    },
-    {
-        name: "ram_status",
-        status: "warning",
-        time: "2020-05-01 12:15:00",
-    },
-    {
-        name: "ram_status",
-        status: "warning",
-        time: "2020-05-01 12:15:00",
-    },
-    {
-        name: "ram_status",
-        status: "warning",
-        time: "2020-05-01 12:15:00",
-    },
-];
+import { getAlarmLog } from "@/utils/request";
 
 export default {
     render() {
@@ -47,7 +11,7 @@ export default {
             {
                 size: "large",
             },
-            AlarmLog.map((item) => {
+            this.alarmLog.map((item) => {
                 return h(NTimelineItem, {
                     title: h(
                         NText,
@@ -57,10 +21,28 @@ export default {
                         }
                     ),
                     type: item.status === "warning" ? "warning" : "success",
-                    time: item.time,
+                    time: h(NTime, {
+                        type: "datetime",
+                        time: new Date(item.time_stamp),
+                    }),
                 });
             })
         );
+    },
+    data() {
+        return {
+            alarmLog: [],
+        };
+    },
+    methods: {
+        //! 好刺激的异步处理
+        async getAlarmLog() {
+            const res = await getAlarmLog();
+            this.alarmLog = res.data;
+        },
+    },
+    mounted() {
+        this.getAlarmLog();
     },
 };
 </script>
