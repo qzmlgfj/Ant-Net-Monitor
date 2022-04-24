@@ -67,11 +67,16 @@ export default {
             });
         },
         updateAlarmFlag(data) {
+            let count = 0;
             for (let i = 0; i < data.length; i++) {
                 this.alarmFlag[i].flag = data[i].flag;
                 this.alarmFlag[i].activated = data[i].activated;
                 this.alarmFlag[i].intervalTime = data[i].interval_time;
+                if (this.alarmFlag[i].flag) {
+                    count++;
+                }
             }
+            this.$store.commit("updateAlarmCount", count);
         },
         checkAlarm() {
             this.alarmFlag.forEach((item) => {
