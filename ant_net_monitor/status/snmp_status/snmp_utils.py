@@ -1,3 +1,4 @@
+from itertools import islice
 from time import sleep
 
 from pysnmp.hlapi import *
@@ -87,7 +88,7 @@ def snmp_walk_float(host, community, mib_module, mib_object):
         mib_object (str): name of the mib object
 
     Yields:
-        int: value of snmp object
+        float: value of snmp object
     """
     for (errorIndication, errorStatus, errorIndex, varBinds) in nextCmd(
         SnmpEngine(),
@@ -112,6 +113,42 @@ def snmp_walk_float(host, community, mib_module, mib_object):
         else:
             for varBind in varBinds:
                 yield float(varBind[1])
+
+def snmp_walk_str(host, community, mib_module, mib_object):
+    """Using `pysnmp.nextCmd()` like `SNMPWALK`
+
+    Args:
+        host (str): snmp host address
+        community (str): snmp community
+        mib_module (str): snmp mib module
+        mib_object (str): name of the mib object
+
+    Yields:
+        int: value of snmp object
+    """
+    for (errorIndication, errorStatus, errorIndex, varBinds) in nextCmd(
+        SnmpEngine(),
+        CommunityData(community, mpModel=1),
+        UdpTransportTarget((host, 161)),
+        ContextData(),
+        ObjectType(ObjectIdentity(mib_module, mib_object)),
+        lexicographicMode=False,
+    ):
+        if errorIndication:
+            print(errorIndication)
+            break
+        elif errorStatus:
+            print(
+                "%s at %s"
+                % (
+                    errorStatus.prettyPrint(),
+                    errorIndex and varBinds[int(errorIndex) - 1][0] or "?",
+                )
+            )
+            break
+        else:
+            for varBind in varBinds:
+                yield str(varBind[1])
 
 
 if __name__ == "__main__":
@@ -138,19 +175,25 @@ if __name__ == "__main__":
     #    a = b
     #    sleep(1)
 
-    #load = [
+    # load = [
     #    (value / 100)
     #    for value in snmp_walk_int(
     #        "localhost", "antrol", "UCD-SNMP-MIB", "laLoadInt"
     #    )
-    #]
+    # ]
 
-    #print(load)
+    # print(load)
 
-    interrupt = snmp_get_value("localhost", "antrol", "UCD-SNMP-MIB", "ssRawInterrupts")
-    sleep(1)
-    while True:
-        interrupt_new = snmp_get_value("localhost", "antrol", "UCD-SNMP-MIB", "ssRawInterrupts")
-        print(interrupt_new - interrupt)
-        interrupt = interrupt_new
-        sleep(1)
+    # interrupt = snmp_get_value("localhost", "antrol", "UCD-SNMP-MIB", "ssRawInterrupts")
+    # sleep(1)
+    # while True:
+    #    interrupt_new = snmp_get_value("localhost", "antrol", "UCD-SNMP-MIB", "ssRawInterrupts")
+    #    print(interrupt_new - interrupt)
+    #    interrupt = interrupt_new
+    #    sleep(1)
+
+    #disk = [value for value in snmp_walk_int("localhost", "antrol", "HOST-RESOURCES-MIB", "hrStorageAllocationUnits")]
+    #print(disk)
+
+    disk = next(islice(snmp_walk_str("localhost", "antrol", "HOST-RESOURCES-MIB", "hrStorageDescr"), 7, None))
+    print(disk)

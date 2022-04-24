@@ -59,6 +59,11 @@ class Status:
             cls.utils.DiskStatus.init_counter()
             cls.utils.NetworkStatus.init_counter()
             cls.utils.InterruptStatus.init_counter()
+        else:
+            # XXX 先放这吧
+            for status in cls.snmp_agents_status:
+                status.init_system_status()
+
 
     @classmethod
     def init_agent_list(cls, app):
