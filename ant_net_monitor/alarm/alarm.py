@@ -133,3 +133,40 @@ class Alarm(db.Model):
             ram_usage_alarm.check_alarm(ram_usage)
         else:
             ram_usage_alarm.set_alarm_flag(False)
+
+
+    #XXX:以下为SNMP方式下的相关方法
+    @classmethod
+    def create_snmp_cpu_alarm(cls):
+        db.session.add(cls(name="cpu_usage", alarm_value=80))
+        db.session.commit()
+
+    @classmethod
+    def create_snmp_ram_alarm(cls):
+        db.session.add(cls(name="ram_usage", alarm_value=80))
+        db.session.commit()
+
+    @classmethod
+    def init_snmp_alarm(cls, app):
+        with app.app_context():
+            if len(cls.get_all_alarm_items()) == 0:
+                cls.create_snmp_cpu_alarm()
+                cls.create_snmp_ram_alarm()
+
+    @classmethod
+    def check_snmp_cpu_alarm(cls, cpu_usage):
+        cpu_usage_alarm = cls.query.filter_by(name="cpu_usage").first()
+
+        if cpu_usage_alarm.activated:
+            cpu_usage_alarm.check_alarm(cpu_usage)
+        else:
+            cpu_usage_alarm.set_alarm_flag(False)
+
+    @classmethod
+    def check_snmp_ram_alarm(cls, ram_usage):
+        ram_usage_alarm = cls.query.filter_by(name="ram_usage").first()
+
+        if ram_usage_alarm.activated:
+            ram_usage_alarm.check_alarm(ram_usage)
+        else:
+            ram_usage_alarm.set_alarm_flag(False)

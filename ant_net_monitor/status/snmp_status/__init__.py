@@ -1,16 +1,19 @@
+import importlib
+
 from . import (
     basic_status,
     cpu_status,
-    snmp_agent,
-    ram_status,
     disk_status,
-    network_status,
-    load_status,
-    swap_status,
     interrupt_status,
+    load_status,
+    network_status,
+    ram_status,
+    snmp_agent,
+    swap_status,
     system_info,
 )
 
+Alarm = importlib.import_module("ant_net_monitor.alarm").Alarm
 
 class SnmpStatus:
     def __init__(self, agent):
@@ -33,6 +36,15 @@ class SnmpStatus:
         self.SwapStatus.save()
         self.InterruptStatus.save()
         #! 不需要在线程循环里保存系统信息
+
+        self.check_alarm()
+
+    def check_alarm(self):
+        cpu_status_info = cpu_status.CPUStatusInfo.get_last(self.agent)
+        ram_status_info = ram_status.RAMStatusInfo.get_last(self.agent)
+
+        Alarm.check_snmp_cpu_alarm(cpu_status_info.used_percent)
+        Alarm.check_snmp_ram_alarm(ram_status_info.used_percent)
 
     def init_system_status(self):
         self.System.save()

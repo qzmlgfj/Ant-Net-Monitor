@@ -87,8 +87,9 @@ def create_app(*, ENABLE_SNMP=False):
         # TODO 仅作测试
         Status.init_agent(app, "localhost", "antrol")
         Status.init_agent_list(app)
+        Alarm.init_snmp_alarm(app)
     else:
-        Alarm.init_alarm(app)  # 仅在psutil模式下使用
+        Alarm.init_alarm(app)
 
     set_all_threads(app)
 

@@ -23,6 +23,6 @@ class BasicStatus:
     @classmethod
     def get_last(cls, agent):
         cpu_percent = cpu_status.CPUStatusInfo.get_last(agent).used_percent
-        ram_percent = ram_status.RAMStatusInfo.get_last(agent).available
+        ram_percent = ram_status.RAMStatusInfo.get_last(agent).used_percent
         swap_percent = swap_status.SwapStatusInfo.get_last(agent).percent
         return cls(cpu_percent, ram_percent, swap_percent)
