@@ -8,25 +8,25 @@
         </n-gi>
         <n-gi>
             <n-statistic label="内存容量" tabular-nums>
-                <n-number-animation :from="0" :to="totalRAM" />
+                <n-number-animation :from="0" :to="totalRAM" :precision="2" />
                 <template #suffix> GiB </template>
             </n-statistic>
         </n-gi>
         <n-gi>
             <n-statistic label="交换内存容量" tabular-nums>
-                <n-number-animation :from="0" :to="totalSwap" />
+                <n-number-animation :from="0" :to="totalSwap" :precision="2" />
                 <template #suffix> GiB </template>
             </n-statistic>
         </n-gi>
         <n-gi>
             <n-statistic label="磁盘容量" tabular-nums>
-                <n-number-animation :from="0" :to="totalDisk" />
+                <n-number-animation :from="0" :to="totalDisk" :precision="2" />
                 <template #suffix> GiB </template>
             </n-statistic>
         </n-gi>
         <n-gi>
             <n-statistic label="磁盘占用率" tabular-nums>
-                <n-number-animation :from="0" :to="diskPercent" />
+                <n-number-animation :from="0" :to="diskPercent" :precision="2" />
                 <template #suffix> % </template>
             </n-statistic>
         </n-gi>
