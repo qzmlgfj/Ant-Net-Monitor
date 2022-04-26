@@ -50,6 +50,8 @@ def create_app(*, ENABLE_SNMP=False):
         "sqlite:///" + app.instance_path + "/backend.sqlite"
     )
 
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"connect_args": {"timeout": 15}}
+
     @app.route("/favicon.png")
     def fav():
         return send_from_directory(os.path.join(app.root_path, "dist"), "favicon.png")
