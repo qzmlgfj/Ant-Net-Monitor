@@ -1,5 +1,5 @@
 <template>
-    <n-menu :options="menuOptions" />
+    <n-menu :options="menuOptions" v-model:value="$route.name"/>
 </template>
 
 <script>
@@ -40,8 +40,24 @@ const menuOptions = [
                     default: () => "CPU",
                 }
             ),
-        key: "CPU",
+        key: "CPU-Info",
         icon: renderIcon(Cpu),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Load-Info",
+                    },
+                },
+                {
+                    default: () => "Load",
+                }
+            ),
+        key: "Load-Info",
+        icon: renderIcon(AngleDoubleUp),
     },
     {
         label: () =>
@@ -56,8 +72,24 @@ const menuOptions = [
                     default: () => "RAM",
                 }
             ),
-        key: "RAM",
+        key: "RAM-Info",
         icon: renderIcon(Memory),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Swap-Info",
+                    },
+                },
+                {
+                    default: () => "Swap",
+                }
+            ),
+        key: "Swap-Info",
+        icon: renderIcon(ExchangeAlt),
     },
     {
         label: () =>
@@ -72,7 +104,7 @@ const menuOptions = [
                     default: () => "Disk",
                 }
             ),
-        key: "Disk",
+        key: "Disk-Info",
         icon: renderIcon(VmdkDisk),
     },
     {
@@ -88,40 +120,8 @@ const menuOptions = [
                     default: () => "NetWork",
                 }
             ),
-        key: "NetWork",
+        key: "NetWork-Info",
         icon: renderIcon(NetworkPublic),
-    },
-    {
-        label: () =>
-            h(
-                RouterLink,
-                {
-                    to: {
-                        name: "Load-Info",
-                    },
-                },
-                {
-                    default: () => "Load",
-                }
-            ),
-        key: "Load",
-        icon: renderIcon(AngleDoubleUp),
-    },
-    {
-        label: () =>
-            h(
-                RouterLink,
-                {
-                    to: {
-                        name: "Swap-Info",
-                    },
-                },
-                {
-                    default: () => "Swap",
-                }
-            ),
-        key: "Swap",
-        icon: renderIcon(ExchangeAlt),
     },
     {
         label: () =>
@@ -136,7 +136,7 @@ const menuOptions = [
                     default: () => "Interrupt",
                 }
             ),
-        key: "Interrupt",
+        key: "Interrupt-Info",
         icon: renderIcon(ExpandAlt),
     },
 ];
