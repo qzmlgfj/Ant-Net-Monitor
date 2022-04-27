@@ -30,6 +30,7 @@ def create_app(*, ENABLE_SNMP=False):
     try:
         gunicorn_error_logger = logging.getLogger("gunicorn.error")
         app.logger.handlers.extend(gunicorn_error_logger.handlers)
+        app.logger.setLevel(logging.INFO)
     except Exception as e:
         print(e)
 
