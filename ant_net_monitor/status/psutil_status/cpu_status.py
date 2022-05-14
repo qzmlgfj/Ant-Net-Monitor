@@ -14,13 +14,8 @@ class CPUStatus(db.Model):
     user_percent: float
     nice_percent: float
     system_percent: float
-    idle_percent: float
     iowait_percent: float
-    irq_percent: float
-    softirq_percent: float
     steal_percent: float
-    guest_percent: float
-    guest_nice_percent: float
     time_stamp: datetime  # 需要UTC标准时间，避免Javascript解析时暴毙
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
