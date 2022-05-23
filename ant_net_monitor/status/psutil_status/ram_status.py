@@ -11,7 +11,7 @@ from ...extensions import db
 @dataclass
 class RAMStatus(db.Model):
     id: int
-    available: float  # using GB
+    free: float  # using GB
     used: float  # using GB
     cached: float  # using GB
     buffers: float  # using GB
@@ -19,34 +19,34 @@ class RAMStatus(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time_stamp = db.Column(db.DateTime)
-    available = db.Column(db.Float)
+    free = db.Column(db.Float)
     used = db.Column(db.Float)
     cached = db.Column(db.Float)
     buffers = db.Column(db.Float)
 
     def __init__(self, *, blank=False, time_stamp=None, is_random=False):
         if blank:
-            self.available = 0
+            self.free = 0
             self.used = 0
             self.cached = 0
             self.buffers = 0
             self.time_stamp = time_stamp
         elif is_random:
-            self.available = format(round(random.uniform(0, 100), 2), ".2f")
+            self.free = format(round(random.uniform(0, 100), 2), ".2f")
             self.used = format(round(random.uniform(0, 100), 2), ".2f")
             self.cached = format(round(random.uniform(0, 100), 2), ".2f")
             self.buffers = format(round(random.uniform(0, 100), 2), ".2f")
             self.time_stamp = time_stamp
         else:
             current_status = psutil.virtual_memory()
-            self.available = format(current_status.free / (1024**3), ".2f")
+            self.free = format(current_status.free / (1024**3), ".2f")
             self.used = format(current_status.used / (1024**3), ".2f")
             self.cached = format(current_status.cached / (1024**3), ".2f")
             self.buffers = format(current_status.buffers / (1024**3), ".2f")
             self.time_stamp = datetime.utcnow().replace(microsecond=0)
 
     def __str__(self):
-        return f"free:{self.available}, used:{self.used}, cached:{self.cached}, buffers:{self.buffers}"
+        return f"free:{self.free}, used:{self.used}, cached:{self.cached}, buffers:{self.buffers}"
 
     @staticmethod
     def save(status=None):

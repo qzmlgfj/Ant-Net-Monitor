@@ -20,7 +20,7 @@ class SwapStatus(db.Model):
     percent = db.Column(db.Float)
 
     def __init__(self):
-        self.used = psutil.swap_memory().used / 1024**3
+        self.used = format(psutil.swap_memory().used / 1024**3, '.2f')
         self.percent = psutil.swap_memory().percent
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
 

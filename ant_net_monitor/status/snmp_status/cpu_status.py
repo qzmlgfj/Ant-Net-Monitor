@@ -33,7 +33,7 @@ class CPUStatusInfo(db.Model):
     id: int
     user_percent: int
     system_percent: int
-    used_percent: int
+    #used_percent: int
     time_stamp: datetime
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
