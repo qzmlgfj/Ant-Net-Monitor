@@ -84,6 +84,12 @@ class Alarm(db.Model):
         db.session.commit()
 
     @classmethod
+    def create_swap_alarm(cls):
+        db.session.add(cls(name="swap_usage", alarm_value=80))
+
+        db.session.commit()
+
+    @classmethod
     def get_all_alarm_items(cls):
         try:
             return cls.query.all()
@@ -96,6 +102,7 @@ class Alarm(db.Model):
             if len(cls.get_all_alarm_items()) == 0:
                 cls.create_cpu_alarm()
                 cls.create_ram_alarm()
+                cls.create_swap_alarm()
 
     @classmethod
     def update_alarm(cls, alarm):
@@ -134,6 +141,15 @@ class Alarm(db.Model):
         else:
             ram_usage_alarm.set_alarm_flag(False)
 
+    @classmethod
+    def check_swap_alarm(cls, swap_usage):
+        swap_usage_alarm = cls.query.filter_by(name="swap_usage").first()
+
+        if swap_usage_alarm.activated:
+            swap_usage_alarm.check_alarm(swap_usage)
+        else:
+            swap_usage_alarm.set_alarm_flag(False)
+
 
     #XXX:以下为SNMP方式下的相关方法
     @classmethod
@@ -147,11 +163,17 @@ class Alarm(db.Model):
         db.session.commit()
 
     @classmethod
+    def create_snmp_swap_alarm(cls):
+        db.session.add(cls(name="swap_usage", alarm_value=80))
+        db.session.commit()
+
+    @classmethod
     def init_snmp_alarm(cls, app):
         with app.app_context():
             if len(cls.get_all_alarm_items()) == 0:
                 cls.create_snmp_cpu_alarm()
                 cls.create_snmp_ram_alarm()
+                cls.create_snmp_swap_alarm()
 
     @classmethod
     def check_snmp_cpu_alarm(cls, cpu_usage):
@@ -170,3 +192,12 @@ class Alarm(db.Model):
             ram_usage_alarm.check_alarm(ram_usage)
         else:
             ram_usage_alarm.set_alarm_flag(False)
+
+    @classmethod
+    def check_snmp_swap_alarm(cls, swap_usage):
+        swap_usage_alarm = cls.query.filter_by(name="swap_usage").first()
+
+        if swap_usage_alarm.activated:
+            swap_usage_alarm.check_alarm(swap_usage)
+        else:
+            swap_usage_alarm.set_alarm_flag(False)

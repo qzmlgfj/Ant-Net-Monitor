@@ -42,9 +42,11 @@ class SnmpStatus:
     def check_alarm(self):
         cpu_status_info = cpu_status.CPUStatusInfo.get_last(self.agent)
         ram_status_info = ram_status.RAMStatusInfo.get_last(self.agent)
+        swap_status_info = swap_status.SwapStatusInfo.get_last(self.agent)
 
         Alarm.check_snmp_cpu_alarm(cpu_status_info.used_percent)
         Alarm.check_snmp_ram_alarm(ram_status_info.used_percent)
+        Alarm.check_snmp_swap_alarm(swap_status_info.used_percent)
 
     def init_system_status(self):
         self.System.save()

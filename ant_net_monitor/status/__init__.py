@@ -49,6 +49,7 @@ class Status:
             )
             cls.Alarm.check_cpu_alarm(*alarm_value)
             cls.Alarm.check_ram_alarm(new_basic_status.ram_percent)
+            cls.Alarm.check_swap_alarm(new_basic_status.swap_percent)
         else:
             for status in cls.snmp_agents_status:
                 status.save_all()
