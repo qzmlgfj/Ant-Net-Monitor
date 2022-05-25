@@ -77,6 +77,6 @@ class DiskStatus(db.Model):
         return (
             DiskStatus.query.filter(DiskStatus.time_stamp >= start)
             .filter(extract("minute", DiskStatus.time_stamp) % 5 == 0)
-            .filter(extract("second", DiskStatus.time_stamp) == 0)
+            .group_by(extract("minute", DiskStatus.time_stamp))
             .all()
         )

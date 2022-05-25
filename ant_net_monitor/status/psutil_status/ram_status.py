@@ -82,6 +82,6 @@ class RAMStatus(db.Model):
         return (
             RAMStatus.query.filter(RAMStatus.time_stamp >= start)
             .filter(extract("minute", RAMStatus.time_stamp) % 5 == 0)
-            .filter(extract("second", RAMStatus.time_stamp) == 0)
+            .group_by(extract("minute", RAMStatus.time_stamp))
             .all()
         )
