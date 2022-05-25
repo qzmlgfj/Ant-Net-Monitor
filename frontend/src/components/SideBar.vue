@@ -1,5 +1,5 @@
 <template>
-    <n-menu :options="menuOptions" />
+    <n-menu :options="menuOptions" v-model:value="$route.name"/>
 </template>
 
 <script>
@@ -7,10 +7,26 @@ import { h } from "vue";
 import { NMenu, NIcon } from "naive-ui";
 import { RouterLink } from "vue-router";
 import { Cpu } from "@vicons/tabler";
-import { Memory } from "@vicons/fa";
-import { VmdkDisk, NetworkPublic } from "@vicons/carbon";
+import { Memory, AngleDoubleUp, ExchangeAlt, ExpandAlt } from "@vicons/fa";
+import { VmdkDisk, NetworkPublic, DataViewAlt } from "@vicons/carbon";
 
 const menuOptions = [
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Overview",
+                    },
+                },
+                {
+                    default: () => "系统总览",
+                }
+            ),
+        key: "Overview",
+        icon: renderIcon(DataViewAlt),
+    },
     {
         label: () =>
             h(
@@ -24,8 +40,24 @@ const menuOptions = [
                     default: () => "CPU",
                 }
             ),
-        key: "CPU",
+        key: "CPU-Info",
         icon: renderIcon(Cpu),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Load-Info",
+                    },
+                },
+                {
+                    default: () => "Load",
+                }
+            ),
+        key: "Load-Info",
+        icon: renderIcon(AngleDoubleUp),
     },
     {
         label: () =>
@@ -40,8 +72,24 @@ const menuOptions = [
                     default: () => "RAM",
                 }
             ),
-        key: "RAM",
+        key: "RAM-Info",
         icon: renderIcon(Memory),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Swap-Info",
+                    },
+                },
+                {
+                    default: () => "Swap",
+                }
+            ),
+        key: "Swap-Info",
+        icon: renderIcon(ExchangeAlt),
     },
     {
         label: () =>
@@ -56,7 +104,7 @@ const menuOptions = [
                     default: () => "Disk",
                 }
             ),
-        key: "Disk",
+        key: "Disk-Info",
         icon: renderIcon(VmdkDisk),
     },
     {
@@ -72,8 +120,24 @@ const menuOptions = [
                     default: () => "NetWork",
                 }
             ),
-        key: "NetWork",
+        key: "Network-Info",
         icon: renderIcon(NetworkPublic),
+    },
+    {
+        label: () =>
+            h(
+                RouterLink,
+                {
+                    to: {
+                        name: "Interrupt-Info",
+                    },
+                },
+                {
+                    default: () => "Interrupt",
+                }
+            ),
+        key: "Interrupt-Info",
+        icon: renderIcon(ExpandAlt),
     },
 ];
 

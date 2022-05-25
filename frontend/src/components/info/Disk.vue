@@ -1,7 +1,7 @@
 <template>
     <div>
         <n-h1>Disk</n-h1>
-        <n-p>当前磁盘的读写量，以<n-text code>MB/s</n-text>为单位</n-p>
+        <n-p>当前磁盘的读写量，以<n-text code>MiB/s</n-text>为单位.</n-p>
 
         <n-ul>
             <n-li><n-text code> read </n-text> 磁盘读取量</n-li>

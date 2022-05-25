@@ -1,5 +1,12 @@
 import { service } from "./service";
 
+function getVersion() {
+    return service({
+        method: "get",
+        url: "/api/version",
+    })
+}
+
 function getBasicStatus() {
     return service({
         method: "get",
@@ -37,6 +44,13 @@ function getHistoryLineChart(url) {
     })
 }
 
+function getSystemInfo() {
+    return service({
+        method: "get",
+        url: "/api/status/system_info"
+    })
+}
+
 function getAlarmFlag() {
     return service({
         method: "get",
@@ -52,4 +66,11 @@ function updateAlarmFlag(data) {
     })
 }
 
-export { getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag };
+function getAlarmLog() {
+    return service({
+        method: "get",
+        url: "/api/alarm/alarm_log"
+    })
+}
+
+export { getVersion, getBasicStatus, initLineChart, updateLineChart, getHistoryLineChart, getAlarmFlag, updateAlarmFlag, getAlarmLog, getSystemInfo };

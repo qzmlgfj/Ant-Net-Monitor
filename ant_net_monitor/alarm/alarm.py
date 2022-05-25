@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 
 from ..extensions import db
+from .alarm_log import AlarmLog
 
 
 @dataclass
@@ -37,6 +38,8 @@ class Alarm(db.Model):
 
     def set_alarm_flag(self, flag):
         self.flag = flag
+        status = 'warning' if flag else 'recover'
+        AlarmLog.save(self.name, status)
 
     def check_alarm(self, value):
         if self.alarm_value < value:
@@ -50,10 +53,10 @@ class Alarm(db.Model):
                     ).seconds >= self.duration_time:
                         self.set_alarm_flag(True)
             else:
-                pass
+                self.last_warning_time = datetime.utcnow().replace(microsecond=0)
         else:
             if self.flag == False:
-                pass
+                self.last_recover_time = datetime.utcnow().replace(microsecond=0)
             else:
                 if self.last_recover_time <= self.last_warning_time:
                     self.last_recover_time = datetime.utcnow().replace(microsecond=0)
@@ -81,6 +84,12 @@ class Alarm(db.Model):
         db.session.commit()
 
     @classmethod
+    def create_swap_alarm(cls):
+        db.session.add(cls(name="swap_usage", alarm_value=80))
+
+        db.session.commit()
+
+    @classmethod
     def get_all_alarm_items(cls):
         try:
             return cls.query.all()
@@ -93,6 +102,7 @@ class Alarm(db.Model):
             if len(cls.get_all_alarm_items()) == 0:
                 cls.create_cpu_alarm()
                 cls.create_ram_alarm()
+                cls.create_swap_alarm()
 
     @classmethod
     def update_alarm(cls, alarm):
@@ -130,3 +140,64 @@ class Alarm(db.Model):
             ram_usage_alarm.check_alarm(ram_usage)
         else:
             ram_usage_alarm.set_alarm_flag(False)
+
+    @classmethod
+    def check_swap_alarm(cls, swap_usage):
+        swap_usage_alarm = cls.query.filter_by(name="swap_usage").first()
+
+        if swap_usage_alarm.activated:
+            swap_usage_alarm.check_alarm(swap_usage)
+        else:
+            swap_usage_alarm.set_alarm_flag(False)
+
+
+    #XXX:以下为SNMP方式下的相关方法
+    @classmethod
+    def create_snmp_cpu_alarm(cls):
+        db.session.add(cls(name="cpu_usage", alarm_value=80))
+        db.session.commit()
+
+    @classmethod
+    def create_snmp_ram_alarm(cls):
+        db.session.add(cls(name="ram_usage", alarm_value=80))
+        db.session.commit()
+
+    @classmethod
+    def create_snmp_swap_alarm(cls):
+        db.session.add(cls(name="swap_usage", alarm_value=80))
+        db.session.commit()
+
+    @classmethod
+    def init_snmp_alarm(cls, app):
+        with app.app_context():
+            if len(cls.get_all_alarm_items()) == 0:
+                cls.create_snmp_cpu_alarm()
+                cls.create_snmp_ram_alarm()
+                cls.create_snmp_swap_alarm()
+
+    @classmethod
+    def check_snmp_cpu_alarm(cls, cpu_usage):
+        cpu_usage_alarm = cls.query.filter_by(name="cpu_usage").first()
+
+        if cpu_usage_alarm.activated:
+            cpu_usage_alarm.check_alarm(cpu_usage)
+        else:
+            cpu_usage_alarm.set_alarm_flag(False)
+
+    @classmethod
+    def check_snmp_ram_alarm(cls, ram_usage):
+        ram_usage_alarm = cls.query.filter_by(name="ram_usage").first()
+
+        if ram_usage_alarm.activated:
+            ram_usage_alarm.check_alarm(ram_usage)
+        else:
+            ram_usage_alarm.set_alarm_flag(False)
+
+    @classmethod
+    def check_snmp_swap_alarm(cls, swap_usage):
+        swap_usage_alarm = cls.query.filter_by(name="swap_usage").first()
+
+        if swap_usage_alarm.activated:
+            swap_usage_alarm.check_alarm(swap_usage)
+        else:
+            swap_usage_alarm.set_alarm_flag(False)

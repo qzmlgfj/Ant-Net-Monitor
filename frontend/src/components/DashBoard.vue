@@ -67,11 +67,16 @@ export default {
             });
         },
         updateAlarmFlag(data) {
+            let count = 0;
             for (let i = 0; i < data.length; i++) {
                 this.alarmFlag[i].flag = data[i].flag;
                 this.alarmFlag[i].activated = data[i].activated;
                 this.alarmFlag[i].intervalTime = data[i].interval_time;
+                if (this.alarmFlag[i].flag) {
+                    count++;
+                }
             }
+            this.$store.commit("updateAlarmCount", count);
         },
         checkAlarm() {
             this.alarmFlag.forEach((item) => {
@@ -109,18 +114,12 @@ export default {
     },
     beforeMount() {
         setInterval(() => {
-            if (process.env.NODE_ENV === "development") {
-                this.CPUStatus.value = (Math.random() * 100).toFixed(1);
-                this.RAMStatus.value = (Math.random() * 100).toFixed(1);
-                this.SwapStatus.value = (Math.random() * 100).toFixed(1);
-            } else {
-                getBasicStatus(process.env.NODE_ENV).then((response) => {
-                    this.status = response.data;
-                    this.CPUStatus.value = this.status.cpu_percent;
-                    this.RAMStatus.value = this.status.ram_percent;
-                    this.SwapStatus.value = this.status.swap_percent;
-                });
-            }
+            getBasicStatus(process.env.NODE_ENV).then((response) => {
+                this.status = response.data;
+                this.CPUStatus.value = this.status.cpu_percent;
+                this.RAMStatus.value = this.status.ram_percent;
+                this.SwapStatus.value = this.status.swap_percent;
+            });
         }, 1000);
 
         setInterval(() => {
@@ -133,7 +132,7 @@ export default {
                 this.checkAlarm();
             });
         }, 5000);
-    }
+    },
 };
 </script>
 

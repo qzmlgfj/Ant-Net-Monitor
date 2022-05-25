@@ -29,3 +29,20 @@ def return_disk_status():
 @status_bp.route("network_status", methods=["GET"])
 def return_network_status():
     return jsonify(Status.utils.get_network_status(request.args.get("type")))
+
+@status_bp.route("load_status", methods=["GET"])
+def return_load_status():
+    return jsonify(Status.utils.get_load_status(request.args.get("type")))
+
+@status_bp.route("swap_status", methods=["GET"])
+def return_swap_status():
+    return jsonify(Status.utils.get_swap_status(request.args.get("type")))
+
+
+@status_bp.route("interrupt_status", methods=["GET"])
+def return_interrupt_status():
+    return jsonify(Status.utils.get_interrupt_status(request.args.get("type")))
+
+@status_bp.route("system_info", methods=["GET"])
+def return_system_info():
+    return jsonify(Status.utils.get_system_info())

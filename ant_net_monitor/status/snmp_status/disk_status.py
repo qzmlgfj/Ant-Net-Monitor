@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import extract
 
 from ...extensions import db
-from .snmp_utils import snmp_walk
+from .snmp_utils import snmp_walk_int
 
 
 class DiskStatus:
@@ -12,7 +12,7 @@ class DiskStatus:
         self.read_bytes = sum(
             [
                 value
-                for value in snmp_walk(
+                for value in snmp_walk_int(
                     agent.host, agent.community, "UCD-DISKIO-MIB", "diskIONRead"
                 )
             ]
@@ -20,7 +20,7 @@ class DiskStatus:
         self.write_bytes = sum(
             [
                 value
-                for value in snmp_walk(
+                for value in snmp_walk_int(
                     agent.host, agent.community, "UCD-DISKIO-MIB", "diskIONWritten"
                 )
             ]
@@ -32,7 +32,7 @@ class DiskStatus:
         read_bytes = sum(
             [
                 value
-                for value in snmp_walk(
+                for value in snmp_walk_int(
                     self.agent.host,
                     self.agent.community,
                     "UCD-DISKIO-MIB",
@@ -43,7 +43,7 @@ class DiskStatus:
         write_bytes = sum(
             [
                 value
-                for value in snmp_walk(
+                for value in snmp_walk_int(
                     self.agent.host,
                     self.agent.community,
                     "UCD-DISKIO-MIB",

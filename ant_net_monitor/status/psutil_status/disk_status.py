@@ -1,8 +1,10 @@
-from datetime import datetime, timedelta
-import psutil
-from ...extensions import db
 from dataclasses import dataclass
+from datetime import datetime, timedelta
+
+import psutil
 from sqlalchemy import extract
+
+from ...extensions import db
 
 
 @dataclass
@@ -23,8 +25,8 @@ class DiskStatus(db.Model):
     def __init__(self):
         read_bytes = psutil.disk_io_counters().read_bytes
         write_bytes = psutil.disk_io_counters().write_bytes
-        self.read_speed = format((read_bytes - self.read_bytes) / 1024 ** 2, ".2f")
-        self.write_speed = format((write_bytes - self.write_bytes) / 1024 ** 2, ".2f")
+        self.read_speed = format((read_bytes - self.read_bytes) / 1024**2, ".2f")
+        self.write_speed = format((write_bytes - self.write_bytes) / 1024**2, ".2f")
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
         DiskStatus.set_counter(read_bytes, write_bytes)
 

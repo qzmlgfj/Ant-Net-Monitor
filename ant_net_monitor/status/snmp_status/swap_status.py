@@ -7,52 +7,46 @@ from ...extensions import db
 from .snmp_utils import snmp_get_value
 
 
-class CPUStatus:
+class SwapStatus:
     def __init__(self, agent):
         self.agent = agent
 
     def save(self):
-        user_percent = snmp_get_value(
-            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "ssCpuUser"
+        swap_total = snmp_get_value(
+            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "memTotalSwap"
         )
-        system_percent = snmp_get_value(
-            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "ssCpuSystem"
+        swap_free = snmp_get_value(
+            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "memAvailSwap"
         )
-        used_percent = 100 - snmp_get_value(
-            self.agent.host, self.agent.community, "UCD-SNMP-MIB", "ssCpuIdle"
-        )
+        swap_percent = format(100 - swap_free / swap_total * 100, ".2f")
+        swap_used = format((swap_total - swap_free) / 1024**2, ".2f")
 
-        db.session.add(
-            CPUStatusInfo(user_percent, system_percent, used_percent, self.agent)
-        )
+        db.session.add(SwapStatusInfo(swap_percent, swap_used, self.agent))
         db.session.commit()
 
 
 @dataclass
-class CPUStatusInfo(db.Model):
+class SwapStatusInfo(db.Model):
     id: int
-    user_percent: int
-    system_percent: int
-    #used_percent: int
+    # percent: float
+    used: float
     time_stamp: datetime
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     time_stamp = db.Column(db.DateTime)
-    user_percent = db.Column(db.Integer)
-    system_percent = db.Column(db.Integer)
-    used_percent = db.Column(db.Integer)
+    percent = db.Column(db.Float)
+    used = db.Column(db.Float)
 
     agent_id = db.Column(db.Integer, db.ForeignKey("snmp_agent.id"))
     agent = db.relationship(
-        "SnmpAgent", backref=db.backref("cpu_status_info", lazy="dynamic")
+        "SnmpAgent", backref=db.backref("swap_status_info", lazy="dynamic")
     )
 
-    def __init__(self, user_percent, system_percent, used_percent, agent):
-        self.user_percent = user_percent
-        self.system_percent = system_percent
-        self.used_percent = used_percent
-        self.agent = agent
+    def __init__(self, percent, used, agent):
+        self.percent = percent
+        self.used = used
         self.time_stamp = datetime.utcnow().replace(microsecond=0)
+        self.agent = agent
 
     @classmethod
     def get_last(cls, agent):
@@ -70,8 +64,8 @@ class CPUStatusInfo(db.Model):
         if count > 100:
             count = 100
         return (
-            cls.query.order_by(cls.time_stamp.desc())
-            .filter(cls.agent == agent)
+            cls.query.filter(cls.agent == agent)
+            .order_by(cls.time_stamp.desc())
             .limit(count)
             .all()[::-1]
         )

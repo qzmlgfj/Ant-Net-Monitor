@@ -14,6 +14,8 @@ from .blueprint.alarm_blueprint import alarm_bp
 
 from .alarm.alarm import Alarm
 
+__version__ = "0.1.1dev5"
+
 
 def create_app(*, ENABLE_SNMP=False):
     """create and configure the app"""
@@ -28,6 +30,7 @@ def create_app(*, ENABLE_SNMP=False):
     try:
         gunicorn_error_logger = logging.getLogger("gunicorn.error")
         app.logger.handlers.extend(gunicorn_error_logger.handlers)
+        app.logger.setLevel(logging.INFO)
     except Exception as e:
         print(e)
 
@@ -48,6 +51,8 @@ def create_app(*, ENABLE_SNMP=False):
         "sqlite:///" + app.instance_path + "/backend.sqlite"
     )
 
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"connect_args": {"timeout": 15}}
+
     @app.route("/favicon.png")
     def fav():
         return send_from_directory(os.path.join(app.root_path, "dist"), "favicon.png")
@@ -58,10 +63,14 @@ def create_app(*, ENABLE_SNMP=False):
     def catch_all(path):
         return render_template("index.html")
 
+    @app.route("/api/version")
+    def return_version():
+        return __version__
+
     if app.config["ENV"] == "development":
         app.config["ENABLE_SNMP"] = False
     else:
-        app.config["ENABLE_SNMP"] = False
+        app.config["ENABLE_SNMP"] = ENABLE_SNMP
 
     app.logger.info("SNMP MODE:" + str(app.config["ENABLE_SNMP"]))
 
@@ -81,8 +90,9 @@ def create_app(*, ENABLE_SNMP=False):
         # TODO 仅作测试
         Status.init_agent(app, "localhost", "antrol")
         Status.init_agent_list(app)
+        Alarm.init_snmp_alarm(app)
     else:
-        Alarm.init_alarm(app) # 仅在psutil模式下使用
+        Alarm.init_alarm(app)
 
     set_all_threads(app)
 

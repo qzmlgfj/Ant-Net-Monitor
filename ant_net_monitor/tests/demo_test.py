@@ -36,11 +36,6 @@ class TestClientMethods(unittest.TestCase):
             yield current
             current += delta
 
-    # def test_hello(self):
-    #    logging.info(self.app.config["APPLICATION_ENV"])
-    #    ret = self.app.test_client().get("/hello")
-    #    self.assertEqual(b"Hello, World!", ret.data)
-
     def test_get_status(self):
         with self.app_context:
             Status.utils.BasicStatus.save()
