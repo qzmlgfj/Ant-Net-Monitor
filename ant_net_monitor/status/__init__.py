@@ -44,8 +44,8 @@ class Status:
 
             alarm_value = (
                 new_basic_status.cpu_percent,
-                new_cpu_status.iowait_percent,
-                new_cpu_status.steal_percent,
+                new_cpu_status.iowait,
+                new_cpu_status.steal,
             )
             cls.Alarm.check_cpu_alarm(*alarm_value)
             cls.Alarm.check_ram_alarm(new_basic_status.ram_percent)

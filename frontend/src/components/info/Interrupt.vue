@@ -1,7 +1,7 @@
 <template>
     <div>
         <n-h1>Interrupt</n-h1>
-        <n-p>当前系统范围内的中断数</n-p>
+        <n-p>当前系统范围内每秒钟的中断数.</n-p>
     </div>
 </template>
 

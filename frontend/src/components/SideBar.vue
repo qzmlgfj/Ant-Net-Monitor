@@ -120,7 +120,7 @@ const menuOptions = [
                     default: () => "NetWork",
                 }
             ),
-        key: "NetWork-Info",
+        key: "Network-Info",
         icon: renderIcon(NetworkPublic),
     },
     {

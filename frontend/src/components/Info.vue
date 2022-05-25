@@ -2,7 +2,9 @@
     <div id="info">
         <n-space wrap="false" size="large" justify="space-between">
             <n-card id="info-sider" hoverable>
-                <router-view />
+                <n-scrollbar style="height: 30vh">
+                    <router-view />
+                </n-scrollbar>
             </n-card>
             <n-card hoverable id="info-chart">
                 <n-switch v-model:value="historyMode">
@@ -16,7 +18,7 @@
 </template>
 
 <script>
-import { NCard, NSpace, NSwitch } from "naive-ui";
+import { NCard, NSpace, NSwitch, NScrollbar } from "naive-ui";
 
 import LineChart from "@/components/charts/LineChart.vue";
 import {
@@ -32,6 +34,7 @@ export default {
         NCard,
         NSpace,
         NSwitch,
+        NScrollbar,
         LineChart,
     },
     data() {
