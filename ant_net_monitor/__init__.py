@@ -14,7 +14,7 @@ from .blueprint.alarm_blueprint import alarm_bp
 
 from .alarm.alarm import Alarm
 
-__version__ = "0.1.1dev4"
+__version__ = "0.1.1dev5"
 
 
 def create_app(*, ENABLE_SNMP=False):
