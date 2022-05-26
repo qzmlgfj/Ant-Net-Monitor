@@ -77,6 +77,9 @@ class InterruptStatus(db.Model):
         return (
             cls.query.filter(cls.time_stamp >= start)
             .filter(extract("minute", cls.time_stamp) % 5 == 0)
-            .group_by(extract("minute", cls.time_stamp))
+            .group_by(
+                extract("hour", cls.time_stamp),
+                extract("minute", cls.time_stamp)
+            )
             .all()
         )

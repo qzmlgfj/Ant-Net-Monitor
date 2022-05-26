@@ -77,6 +77,9 @@ class NetworkStatus(db.Model):
         return (
             NetworkStatus.query.filter(NetworkStatus.time_stamp > start)
             .filter(extract("minute", NetworkStatus.time_stamp) % 5 == 0)
-            .group_by(extract("minute", NetworkStatus.time_stamp))
+            .group_by(
+                extract("hour", NetworkStatus.time_stamp),
+                extract("minute", NetworkStatus.time_stamp)
+            )
             .all()
         )
