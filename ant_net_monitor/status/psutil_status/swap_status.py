@@ -62,5 +62,6 @@ class SwapStatus(db.Model):
                 extract("hour", SwapStatus.time_stamp),
                 extract("minute", SwapStatus.time_stamp)
             )
+            .order_by(SwapStatus.id)
             .all()
         )

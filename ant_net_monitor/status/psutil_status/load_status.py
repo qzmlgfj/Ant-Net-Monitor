@@ -64,5 +64,6 @@ class LoadStatus(db.Model):
                 extract("hour", LoadStatus.time_stamp),
                 extract("minute", LoadStatus.time_stamp)
             )
+            .order_by(LoadStatus.id)
             .all()
         )

@@ -86,5 +86,6 @@ class RAMStatus(db.Model):
                 extract("hour", RAMStatus.time_stamp),
                 extract("minute", RAMStatus.time_stamp)
             )
+            .order_by(RAMStatus.id)
             .all()
         )

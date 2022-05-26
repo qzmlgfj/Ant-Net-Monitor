@@ -81,5 +81,6 @@ class DiskStatus(db.Model):
                 extract("hour", DiskStatus.time_stamp),
                 extract("minute", DiskStatus.time_stamp)
             )
+            .order_by(DiskStatus.id)
             .all()
         )

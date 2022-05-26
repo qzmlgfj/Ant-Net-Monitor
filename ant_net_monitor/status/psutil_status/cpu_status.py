@@ -111,5 +111,6 @@ class CPUStatus(db.Model):
                 extract("hour", CPUStatus.time_stamp),
                 extract("minute", CPUStatus.time_stamp)
             )
+            .order_by(CPUStatus.id)
             .all()
         )

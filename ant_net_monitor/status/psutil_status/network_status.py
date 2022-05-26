@@ -81,5 +81,6 @@ class NetworkStatus(db.Model):
                 extract("hour", NetworkStatus.time_stamp),
                 extract("minute", NetworkStatus.time_stamp)
             )
+            .order_by(NetworkStatus.id)
             .all()
         )

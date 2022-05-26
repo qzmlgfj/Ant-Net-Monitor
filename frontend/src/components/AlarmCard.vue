@@ -38,6 +38,7 @@
                     inline
                     :label-width="80"
                     :model="formValue"
+                    :rules="rules"
                     size="medium"
                 >
                     <n-space vertical>
@@ -192,13 +193,36 @@ export default {
         const message = useMessage();
         const formValue = ref({
             alarmItem: {
-                name: "",
                 alarmValue: 0,
+                intervalTime: 0,
+                durationTime: 0,
                 activated: true,
             },
         });
         const alarmItemVisiable = ref(false);
-        const formRef = ref({});
+        const formRef = ref(null);
+        const rules = {
+            alarmItem: {
+                alarmValue: {
+                    type: "number",
+                    required: true,
+                    message: "请输入警告阈值",
+                    trigger: ["input", "blur"],
+                },
+                intervalTime: {
+                    type: "number",
+                    required: true,
+                    message: "请输入警告间隔",
+                    trigger: ["input", "blur"],
+                },
+                durationTime: {
+                    type: "number",
+                    required: true,
+                    message: "请输入触发时长",
+                    trigger: ["input", "blur"],
+                },
+            },
+        };
 
         // TODO 解决一下响应性问题
         const initData = function () {
@@ -224,6 +248,31 @@ export default {
             };
         };
 
+        const switchAlarmItemVisiable = () => {
+            alarmItemVisiable.value = !alarmItemVisiable.value;
+        };
+
+        const handleAlarmItemUpdate = (e) => {
+            e.preventDefault();
+            formRef.value?.validate((errors) => {
+                if (!errors) {
+                    updateAlarmFlag(formValue.value.alarmItem).then(
+                        (response) => {
+                            if (response.data.status === "success") {
+                                initData();
+                                switchAlarmItemVisiable();
+                                message.success("更新成功");
+                            } else {
+                                message.error("更新失败");
+                            }
+                        }
+                    );
+                } else {
+                    message.error("请检查参数填写");
+                }
+            });
+        };
+
         initData();
 
         return {
@@ -237,25 +286,14 @@ export default {
             alarmItemVisiable,
             formValue,
             formRef,
+            rules,
+            switchAlarmItemVisiable,
+            handleAlarmItemUpdate,
         };
     },
     methods: {
         switchAlarm() {
             this.$emit("switchAlarm");
-        },
-        switchAlarmItemVisiable() {
-            this.alarmItemVisiable = !this.alarmItemVisiable;
-        },
-        handleAlarmItemUpdate() {
-            updateAlarmFlag(this.formValue.alarmItem).then((response) => {
-                if (response.data.status === "success") {
-                    this.initData();
-                    this.switchAlarmItemVisiable();
-                    this.message.success("更新成功");
-                } else {
-                    this.message.error("更新失败");
-                }
-            });
         },
     },
 };
