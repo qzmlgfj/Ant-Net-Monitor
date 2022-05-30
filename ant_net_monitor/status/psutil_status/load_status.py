@@ -60,6 +60,10 @@ class LoadStatus(db.Model):
         return (
             LoadStatus.query.filter(LoadStatus.time_stamp >= start)
             .filter(extract("minute", LoadStatus.time_stamp) % 5 == 0)
-            .filter(extract("second", LoadStatus.time_stamp) == 0)
+            .group_by(
+                extract("hour", LoadStatus.time_stamp),
+                extract("minute", LoadStatus.time_stamp)
+            )
+            .order_by(LoadStatus.id)
             .all()
         )

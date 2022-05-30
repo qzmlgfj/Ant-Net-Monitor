@@ -46,7 +46,7 @@ class SnmpStatus:
 
         Alarm.check_snmp_cpu_alarm(cpu_status_info.used_percent)
         Alarm.check_snmp_ram_alarm(ram_status_info.used_percent)
-        Alarm.check_snmp_swap_alarm(swap_status_info.used_percent)
+        Alarm.check_snmp_swap_alarm(swap_status_info.percent)
 
     def init_system_status(self):
         self.System.save()

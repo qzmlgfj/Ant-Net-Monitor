@@ -107,6 +107,10 @@ class CPUStatus(db.Model):
         return (
             CPUStatus.query.filter(CPUStatus.time_stamp >= start)
             .filter(extract("minute", CPUStatus.time_stamp) % 5 == 0)
-            .filter(extract("second", CPUStatus.time_stamp) == 0)
+            .group_by(
+                extract("hour", CPUStatus.time_stamp),
+                extract("minute", CPUStatus.time_stamp)
+            )
+            .order_by(CPUStatus.id)
             .all()
         )

@@ -36,10 +36,16 @@ class Alarm(db.Model):
         self.last_warning_time = datetime.utcnow().replace(microsecond=0)
         self.last_recover_time = datetime.utcnow().replace(microsecond=0)
 
-    def set_alarm_flag(self, flag):
+    def reset_timer(self):
+        self.last_warning_time = datetime.utcnow().replace(microsecond=0)
+        self.last_recover_time = datetime.utcnow().replace(microsecond=0)
+        db.session.commit()
+
+    def set_alarm_flag(self, flag, updateLog=True):
         self.flag = flag
-        status = 'warning' if flag else 'recover'
-        AlarmLog.save(self.name, status)
+        if updateLog:
+            status = "warning" if flag else "recover"
+            AlarmLog.save(self.name, status)
 
     def check_alarm(self, value):
         if self.alarm_value < value:
@@ -109,6 +115,9 @@ class Alarm(db.Model):
         target = cls.query.filter_by(name=alarm["name"]).first()
         target.alarm_value = alarm["alarmValue"]
         target.activated = alarm["activated"]
+        if target.activated == False: # 警报被禁用时更新Flag，不写入日志，同时重设计时器
+            target.set_alarm_flag(False, False)
+            target.reset_timer()
         target.interval_time = alarm["intervalTime"]
         target.duration_time = alarm["durationTime"]
         db.session.commit()
@@ -121,16 +130,13 @@ class Alarm(db.Model):
 
         if cpu_usage_alarm.activated:
             cpu_usage_alarm.check_alarm(cpu_usage)
-        else:
-            cpu_usage_alarm.set_alarm_flag(False)
+
         if cpu_iowait_alarm.activated:
             cpu_iowait_alarm.check_alarm(cpu_iowait)
-        else:
-            cpu_iowait_alarm.set_alarm_flag(False)
+
         if cpu_steal_alarm.activated:
             cpu_steal_alarm.check_alarm(cpu_steal)
-        else:
-            cpu_steal_alarm.set_alarm_flag(False)
+
 
     @classmethod
     def check_ram_alarm(cls, ram_usage):
@@ -138,8 +144,6 @@ class Alarm(db.Model):
 
         if ram_usage_alarm.activated:
             ram_usage_alarm.check_alarm(ram_usage)
-        else:
-            ram_usage_alarm.set_alarm_flag(False)
 
     @classmethod
     def check_swap_alarm(cls, swap_usage):
@@ -147,11 +151,8 @@ class Alarm(db.Model):
 
         if swap_usage_alarm.activated:
             swap_usage_alarm.check_alarm(swap_usage)
-        else:
-            swap_usage_alarm.set_alarm_flag(False)
 
-
-    #XXX:以下为SNMP方式下的相关方法
+    # XXX:以下为SNMP方式下的相关方法
     @classmethod
     def create_snmp_cpu_alarm(cls):
         db.session.add(cls(name="cpu_usage", alarm_value=80))
@@ -181,8 +182,6 @@ class Alarm(db.Model):
 
         if cpu_usage_alarm.activated:
             cpu_usage_alarm.check_alarm(cpu_usage)
-        else:
-            cpu_usage_alarm.set_alarm_flag(False)
 
     @classmethod
     def check_snmp_ram_alarm(cls, ram_usage):
@@ -190,8 +189,6 @@ class Alarm(db.Model):
 
         if ram_usage_alarm.activated:
             ram_usage_alarm.check_alarm(ram_usage)
-        else:
-            ram_usage_alarm.set_alarm_flag(False)
 
     @classmethod
     def check_snmp_swap_alarm(cls, swap_usage):
@@ -199,5 +196,3 @@ class Alarm(db.Model):
 
         if swap_usage_alarm.activated:
             swap_usage_alarm.check_alarm(swap_usage)
-        else:
-            swap_usage_alarm.set_alarm_flag(False)

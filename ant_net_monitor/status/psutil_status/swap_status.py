@@ -58,6 +58,10 @@ class SwapStatus(db.Model):
         return (
             SwapStatus.query.filter(SwapStatus.time_stamp >= start)
             .filter(extract("minute", SwapStatus.time_stamp) % 5 == 0)
-            .filter(extract("second", SwapStatus.time_stamp) == 0)
+            .group_by(
+                extract("hour", SwapStatus.time_stamp),
+                extract("minute", SwapStatus.time_stamp)
+            )
+            .order_by(SwapStatus.id)
             .all()
         )

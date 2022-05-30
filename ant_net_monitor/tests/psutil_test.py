@@ -25,7 +25,6 @@ class TestPsutilMethods(unittest.TestCase):
     def tearDown(self):
         with self.app_context:
             db.session.remove()
-            db.drop_all()
         self.app.config["FINISH_TESTING"] = True
         logging.info("Finish testing.")
 
@@ -46,4 +45,8 @@ class TestPsutilMethods(unittest.TestCase):
             for i in range(10):
                 Status.utils.CPUStatus.save()
         ret = self.app.test_client().get("/api/status/cpu_status?type=init")
+        logging.info(ret.data)
+
+    def test_24h_cpu_status(self):
+        ret = self.app.test_client().get("/api/status/cpu_status?type=day")
         logging.info(ret.data)
