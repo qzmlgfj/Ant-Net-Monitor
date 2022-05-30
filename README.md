@@ -27,8 +27,10 @@ $ pip install ant-net-monitor
 参照[Flask Docs](https://dormousehole.readthedocs.io/en/latest/deploying/wsgi-standalone.html)，可使用`Gunicorn`进行部署，即：
 
 ```bash
-$ gunicorn -b 127.0.0.1:5000 "ant_net_monitor:create_app()"
+$ gunicorn -b 127.0.0.1:5000 "ant_net_monitor:create_app(ENABLE_SNMP)"
 ```
+
+通过设置`ENABLE_SNMP`为`True`或`False`控制数据采集方式.
 
 玩得愉快！
 
