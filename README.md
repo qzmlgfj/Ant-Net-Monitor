@@ -1,6 +1,6 @@
-# Graduation Project
+# Ant Net Monitor
 
-这事Ant的毕业设计，基于Web的Linux服务器状态监控.
+本项目曾经事Ant的毕业设计，基于Web的Linux服务器状态监控，在毕业后作为个人兴趣继续进行开发.
 
 ## 为什么要做这个
 
@@ -27,10 +27,8 @@ $ pip install ant-net-monitor
 参照[Flask Docs](https://dormousehole.readthedocs.io/en/latest/deploying/wsgi-standalone.html)，可使用`Gunicorn`进行部署，即：
 
 ```bash
-$ gunicorn -b 127.0.0.1:5000 "ant_net_monitor:create_app(ENABLE_SNMP)"
+$ gunicorn -b 127.0.0.1:5000 "ant_net_monitor:create_app()"
 ```
-
-通过设置`ENABLE_SNMP`为`True`或`False`控制数据采集方式.
 
 玩得愉快！
 

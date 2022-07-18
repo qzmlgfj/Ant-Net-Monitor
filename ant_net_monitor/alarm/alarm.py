@@ -115,7 +115,7 @@ class Alarm(db.Model):
         target = cls.query.filter_by(name=alarm["name"]).first()
         target.alarm_value = alarm["alarmValue"]
         target.activated = alarm["activated"]
-        if target.activated == False: # 警报被禁用时更新Flag，不写入日志，同时重设计时器
+        if target.activated == False:  # 警报被禁用时更新Flag，不写入日志，同时重设计时器
             target.set_alarm_flag(False, False)
             target.reset_timer()
         target.interval_time = alarm["intervalTime"]
@@ -137,7 +137,6 @@ class Alarm(db.Model):
         if cpu_steal_alarm.activated:
             cpu_steal_alarm.check_alarm(cpu_steal)
 
-
     @classmethod
     def check_ram_alarm(cls, ram_usage):
         ram_usage_alarm = cls.query.filter_by(name="ram_usage").first()
@@ -153,46 +152,3 @@ class Alarm(db.Model):
             swap_usage_alarm.check_alarm(swap_usage)
 
     # XXX:以下为SNMP方式下的相关方法
-    @classmethod
-    def create_snmp_cpu_alarm(cls):
-        db.session.add(cls(name="cpu_usage", alarm_value=80))
-        db.session.commit()
-
-    @classmethod
-    def create_snmp_ram_alarm(cls):
-        db.session.add(cls(name="ram_usage", alarm_value=80))
-        db.session.commit()
-
-    @classmethod
-    def create_snmp_swap_alarm(cls):
-        db.session.add(cls(name="swap_usage", alarm_value=80))
-        db.session.commit()
-
-    @classmethod
-    def init_snmp_alarm(cls, app):
-        with app.app_context():
-            if len(cls.get_all_alarm_items()) == 0:
-                cls.create_snmp_cpu_alarm()
-                cls.create_snmp_ram_alarm()
-                cls.create_snmp_swap_alarm()
-
-    @classmethod
-    def check_snmp_cpu_alarm(cls, cpu_usage):
-        cpu_usage_alarm = cls.query.filter_by(name="cpu_usage").first()
-
-        if cpu_usage_alarm.activated:
-            cpu_usage_alarm.check_alarm(cpu_usage)
-
-    @classmethod
-    def check_snmp_ram_alarm(cls, ram_usage):
-        ram_usage_alarm = cls.query.filter_by(name="ram_usage").first()
-
-        if ram_usage_alarm.activated:
-            ram_usage_alarm.check_alarm(ram_usage)
-
-    @classmethod
-    def check_snmp_swap_alarm(cls, swap_usage):
-        swap_usage_alarm = cls.query.filter_by(name="swap_usage").first()
-
-        if swap_usage_alarm.activated:
-            swap_usage_alarm.check_alarm(swap_usage)

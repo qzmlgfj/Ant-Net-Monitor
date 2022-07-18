@@ -17,7 +17,7 @@ from .alarm.alarm import Alarm
 __version__ = "1.0.0"
 
 
-def create_app(*, ENABLE_SNMP=False):
+def create_app():
     """create and configure the app"""
     app = Flask(
         __name__,
@@ -67,17 +67,12 @@ def create_app(*, ENABLE_SNMP=False):
     def return_version():
         return __version__
 
-    if app.config["ENV"] == "development":
-        app.config["ENABLE_SNMP"] = False
-    else:
-        app.config["ENABLE_SNMP"] = ENABLE_SNMP
-
-    app.logger.info("SNMP MODE:" + str(app.config["ENABLE_SNMP"]))
+    # app.logger.info("SNMP MODE:" + str(app.config["ENABLE_SNMP"]))
 
     CORS(app)
     register_extensions(app)
 
-    Status.init_app(app)
+    Status.init_app()
 
     check_table_exist(app)
 
@@ -86,13 +81,7 @@ def create_app(*, ENABLE_SNMP=False):
 
     add_command(app)
 
-    if app.config["ENABLE_SNMP"]:
-        # TODO 仅作测试
-        Status.init_agent(app, "localhost", "antrol")
-        Status.init_agent_list(app)
-        Alarm.init_snmp_alarm(app)
-    else:
-        Alarm.init_alarm(app)
+    Alarm.init_alarm(app)
 
     set_all_threads(app)
 
