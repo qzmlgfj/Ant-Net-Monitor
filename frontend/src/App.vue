@@ -5,8 +5,8 @@
                 <n-layout-header id="head-bar" bordered>
                     <head-bar @changeTheme="changeTheme" @alarm="switchAlarm" />
                 </n-layout-header>
-                <n-layout has-sider>
-                    <n-layout-sider id="side-bar">
+                <n-layout has-sider id="content">
+                    <n-layout-sider width='14vw'>
                         <side-bar />
                     </n-layout-sider>
                     <n-layout-content id="main-content">
@@ -129,18 +129,21 @@ body {
     height: 100vh;
 }
 
-#side-bar {
-    width: 12vw;
+#head-bar {
+    height: 7vh;
+}
+
+#content {
+    height: 89vh;
 }
 
 #main-content {
     width: 82vw;
-    height: 90vh;
-    padding-right: 10px;
+    padding: 5px;
 }
 
 #foot-bar {
-    height: 3vh;
+    height: 4vh;
     display: flex;
     align-items: center;
     justify-content: center;

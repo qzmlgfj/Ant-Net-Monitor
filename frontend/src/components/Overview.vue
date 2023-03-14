@@ -1,13 +1,13 @@
 <template>
     <div id="overview">
         <n-space wrap="false" size="large" justify="space-between">
-            <n-card id="alarm-timeline" title="警报历史" hoverable>
-                <n-scrollbar style="height: 30vh">
+            <n-card id="alarm-timeline" title="警报历史" hoverable content-style="padding-bottom: 0;">
+                <n-scrollbar style="height: 28vh">
                     <alarm-time-line />
                 </n-scrollbar>
             </n-card>
-            <n-card id="system-info" title="系统详情" hoverable>
-                <n-scrollbar style="height: 30vh">
+            <n-card id="system-info" title="系统详情" hoverable content-style="padding-bottom: 0;">
+                <n-scrollbar style="height: 28vh">
                     <system-info />
                 </n-scrollbar>
             </n-card>

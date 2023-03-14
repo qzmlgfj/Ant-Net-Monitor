@@ -148,7 +148,7 @@ export default {
 */
 
 #dashboard {
-    height: 45%;
+    height: 47vh;
 }
 
 #dashboard-container {

@@ -119,12 +119,12 @@ export default {
 
 #info-sider {
     height: 39vh;
-    width: 30vw;
+    width: 32vw;
 }
 
 #info-chart {
     height: 39vh;
-    width: 52.5vw;
+    width: 52vw;
 }
 
 .n-button {
